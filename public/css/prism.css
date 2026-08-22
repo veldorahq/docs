@@ -1,0 +1,150 @@
+/* ────────────────────────────────────────────────────────────
+   Veldora Modern High-Contrast IDE Dark Theme for Prism.js
+   Vibrant, distinct syntax colors for PHP, HTML, Blade, JS, BASH, CSS
+   ─────────────────────────────────────────────────────────── */
+
+code[class*="language-"],
+pre[class*="language-"],
+pre.code-block code,
+.comp-code code,
+.code-block-wrapper code {
+    font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    word-wrap: normal;
+    tab-size: 4;
+    hyphens: none;
+    color: #e2e8f0;
+    background: none;
+    text-shadow: none;
+}
+
+pre[class*="language-"],
+pre.code-block {
+    padding: 18px 22px;
+    margin: 0;
+    overflow-x: auto;
+    background: #09090b !important;
+}
+
+/* ─── Syntax Highlighting Tokens ────────────────────────────────────────────── */
+
+/* Comments (Italic Slate Gray) */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+    color: #71717a !important;
+    font-style: italic;
+}
+
+/* Punctuations (Subtle Gray-White) */
+.token.punctuation {
+    color: #94a3b8 !important;
+}
+
+/* HTML / Blade Tags (<x-button>, <x-slot>, <nav>, <div>) (Vibrant Pink/Rose) */
+.token.tag,
+.token.tag .token.punctuation,
+.token.property,
+.token.symbol,
+.token.deleted {
+    color: #f43f5e !important;
+    font-weight: 500;
+}
+
+.token.tag .token.tag-id,
+.token.tag .token.class-name {
+    color: #f43f5e !important;
+}
+
+/* Attribute Names (variant, name, size, type, class, href) (Sky Blue / Cyan) */
+.token.attr-name,
+.token.selector,
+.token.builtin,
+.token.char,
+.token.inserted {
+    color: #38bdf8 !important;
+    font-weight: 500;
+}
+
+/* Attribute Values, Strings ('...', "...") (Emerald Green) */
+.token.attr-value,
+.token.string {
+    color: #4ade80 !important;
+}
+.token.attr-value .token.punctuation {
+    color: #4ade80 !important;
+}
+
+/* Numbers, Booleans (true, false, 123) (Coral Orange) */
+.token.boolean,
+.token.number,
+.token.constant {
+    color: #fb923c !important;
+    font-weight: 500;
+}
+
+/* PHP Keywords, Blade Directives, Operators (return, function, if, echo, class, @extends) (Purple) */
+.token.keyword,
+.token.atrule,
+.token.operator,
+.token.entity,
+.token.url {
+    color: #c084fc !important;
+    font-weight: 600;
+}
+
+/* Functions & Classes (render, make, DB, Router) (Amber Gold) */
+.token.function,
+.token.class-name {
+    color: #facc15 !important;
+}
+
+/* Variables ($request, $user, $slot, $attributes) (Azure Blue) */
+.token.variable {
+    color: #60a5fa !important;
+}
+
+/* Regex & Important */
+.token.regex,
+.token.important {
+    color: #fb7185 !important;
+}
+
+.token.important,
+.token.bold {
+    font-weight: 700;
+}
+
+.token.italic {
+    font-style: italic;
+}
+
+/* ─── Scrollbar for Code Blocks ────────────────────────────────────────────── */
+pre.code-block::-webkit-scrollbar,
+.comp-code pre::-webkit-scrollbar,
+pre[class*="language-"]::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+}
+pre.code-block::-webkit-scrollbar-track,
+.comp-code pre::-webkit-scrollbar-track,
+pre[class*="language-"]::-webkit-scrollbar-track {
+    background: #09090b;
+}
+pre.code-block::-webkit-scrollbar-thumb,
+.comp-code pre::-webkit-scrollbar-thumb,
+pre[class*="language-"]::-webkit-scrollbar-thumb {
+    background: #27272a;
+    border-radius: 4px;
+}
+pre.code-block::-webkit-scrollbar-thumb:hover,
+.comp-code pre::-webkit-scrollbar-thumb:hover,
+pre[class*="language-"]::-webkit-scrollbar-thumb:hover {
+    background: #3f3f46;
+}
