@@ -466,12 +466,14 @@ window.toggleMobileNav = function(e) {
         }
     } else if (headerNav) {
         // On non-Docs page: Toggle Header Links Menu Dropdown
-        const isOpen = headerNav.classList.contains('open');
+        const isOpen = headerNav.classList.contains('open') || document.body.classList.contains('nav-open');
         if (isOpen) {
             headerNav.classList.remove('open');
+            document.body.classList.remove('nav-open');
             if (backdrop) backdrop.classList.remove('active');
         } else {
             headerNav.classList.add('open');
+            document.body.classList.add('nav-open');
             if (backdrop) backdrop.classList.add('active');
         }
     }
@@ -485,6 +487,7 @@ window.closeMobileNav = function() {
     if (headerNav) headerNav.classList.remove('open');
     if (backdrop) backdrop.classList.remove('active');
     document.body.classList.remove('sidebar-open');
+    document.body.classList.remove('nav-open');
 };
 
 document.addEventListener('click', (e) => {
