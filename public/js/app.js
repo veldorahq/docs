@@ -449,49 +449,45 @@ window.toggleMobileNav = function(e) {
         e.stopPropagation();
     }
     const docsSidebar = document.getElementById('docs-sidebar');
-    const headerNav = document.getElementById('main-nav');
+    const mobileDrawer = document.getElementById('mobile-drawer');
     const backdrop = document.getElementById('sidebar-backdrop');
 
     if (docsSidebar) {
         // On Docs page: Toggle Docs 22 Chapters Sidebar Drawer
         const isOpen = docsSidebar.classList.contains('open') || document.body.classList.contains('sidebar-open');
         if (isOpen) {
-            docsSidebar.classList.remove('open');
-            if (backdrop) backdrop.classList.remove('active');
-            document.body.classList.remove('sidebar-open');
+            window.closeMobileNav();
         } else {
             docsSidebar.classList.add('open');
             if (backdrop) backdrop.classList.add('active');
             document.body.classList.add('sidebar-open');
         }
-    } else if (headerNav) {
-        // On non-Docs page: Toggle Header Links Menu Dropdown
-        const isOpen = headerNav.classList.contains('open') || document.body.classList.contains('nav-open');
+    } else if (mobileDrawer) {
+        // On non-Docs page: Toggle Dedicated Mobile Navigation Drawer
+        const isOpen = mobileDrawer.classList.contains('open') || document.body.classList.contains('nav-open');
         if (isOpen) {
-            headerNav.classList.remove('open');
-            document.body.classList.remove('nav-open');
-            if (backdrop) backdrop.classList.remove('active');
+            window.closeMobileNav();
         } else {
-            headerNav.classList.add('open');
-            document.body.classList.add('nav-open');
+            mobileDrawer.classList.add('open');
             if (backdrop) backdrop.classList.add('active');
+            document.body.classList.add('nav-open');
         }
     }
 };
 
 window.closeMobileNav = function() {
     const docsSidebar = document.getElementById('docs-sidebar');
-    const headerNav = document.getElementById('main-nav');
+    const mobileDrawer = document.getElementById('mobile-drawer');
     const backdrop = document.getElementById('sidebar-backdrop');
     if (docsSidebar) docsSidebar.classList.remove('open');
-    if (headerNav) headerNav.classList.remove('open');
+    if (mobileDrawer) mobileDrawer.classList.remove('open');
     if (backdrop) backdrop.classList.remove('active');
     document.body.classList.remove('sidebar-open');
     document.body.classList.remove('nav-open');
 };
 
 document.addEventListener('click', (e) => {
-    if (e.target.matches('.sidebar-nav a, .header-nav a')) {
+    if (e.target.matches('.sidebar-nav a, .mobile-nav-links a')) {
         if (window.innerWidth <= 860) {
             window.closeMobileNav();
         }
