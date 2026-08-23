@@ -255,13 +255,20 @@ img { max-width: 100%; }
     left: 0;
     width: var(--nav-w);
     height: calc(100vh - var(--header-h));
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding: 20px 0 40px;
+    display: flex;
+    flex-direction: column;
+    padding: 12px 0 0;
     border-right: 1px solid var(--border);
     background: var(--surface);
     z-index: 100;
     flex-shrink: 0;
+}
+
+.sidebar nav {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 20px;
 }
 
 .sidebar-section-label {
@@ -1967,10 +1974,7 @@ th.vui-sort-active { color: var(--accent, #7c6ef5); }
 
 /* ─── Sidebar Footer ──────────────────────────────────────────────────────────── */
 .sidebar-footer {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    flex-shrink: 0;
     padding: 12px 16px;
     display: flex;
     align-items: center;
@@ -2057,5 +2061,106 @@ th.vui-sort-active { color: var(--accent, #7c6ef5); }
     .ai-skills-inner { flex-direction: column; align-items: flex-start; gap: 14px; }
     .ai-skills-actions { width: 100%; }
 }
+
+/* ─── Real Terminal Mockup (CLI output & interactive wizard) ─────────────────── */
+.terminal-mockup {
+    margin: 24px 0;
+    background: #08080a;
+    border: 1px solid #27272a;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+}
+
+.terminal-mockup-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background: #121216;
+    border-bottom: 1px solid #27272a;
+}
+
+.terminal-dots {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.terminal-mockup-title {
+    font-size: 11.5px;
+    font-family: var(--font-mono);
+    color: var(--text-dim);
+    letter-spacing: 0.02em;
+}
+
+.terminal-mockup-body {
+    padding: 18px 22px;
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.7;
+    color: #e4e4e7;
+    background: #08080a !important;
+    border: none !important;
+    border-radius: 0 !important;
+    overflow-x: auto;
+    white-space: pre;
+}
+
+/* ─── AI Prompt Card ──────────────────────────────────────────────────────────── */
+.ai-prompt-card {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(139, 92, 246, 0.04) 100%);
+    border: 1px solid rgba(139, 92, 246, 0.35);
+    border-radius: var(--radius-xl);
+    padding: 24px;
+    margin-bottom: 28px;
+    box-shadow: 0 8px 30px rgba(139, 92, 246, 0.12);
+}
+
+.ai-prompt-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.ai-prompt-card-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.ai-prompt-card-title svg {
+    color: var(--accent);
+}
+
+.ai-prompt-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.ai-prompt-card-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Table responsive wrapper */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    margin: 1.2rem 0;
+    -webkit-overflow-scrolling: touch;
+}
+
 
 

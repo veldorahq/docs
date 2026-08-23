@@ -11,5 +11,8 @@ $router->get('/', [App\Controllers\HomeController::class, 'index']);
 $router->get('/docs', [App\Controllers\DocsController::class, 'index']);
 $router->get('/docs/{section}', [App\Controllers\DocsController::class, 'section']);
 
+// AI Context & Skill Downloads
+$router->get('/download/veldora-ai-prompt.md', [App\Controllers\DocsController::class, 'downloadPrompt']);
+
 // Component showcase
 $router->get('/components', [App\Controllers\ComponentsController::class, 'index']);

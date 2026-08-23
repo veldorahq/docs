@@ -250,7 +250,7 @@ php veldora serve
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
                 </div>
                 <div class="feature-title">Template Engine</div>
-                <p class="feature-desc">Blade-inspired <code>@directives</code>, <code>{{ expressions }}</code>, layout inheritance, and reusable components.</p>
+                <p class="feature-desc">Blade-inspired <code>&#64;directives</code>, <code>&#123;&#123; $variable &#125;&#125;</code>, layout inheritance, and reusable components.</p>
             </article>
 
             <article class="feature-card">
@@ -266,7 +266,7 @@ php veldora serve
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                 </div>
                 <div class="feature-title">Guard-based Auth</div>
-                <p class="feature-desc">Session guards, <code>@auth/@guest</code> directives, CSRF protection, and a complete login/register scaffold.</p>
+                <p class="feature-desc">Session guards, <code>&#64;auth / &#64;guest</code> directives, CSRF protection, and a complete login/register scaffold.</p>
             </article>
 
             <article class="feature-card">

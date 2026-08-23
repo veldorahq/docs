@@ -24,10 +24,8 @@ class DocsController
         $nav      = $this->parser->getNav();
 
         // Redirect to first section
-        foreach ($sections as $s) {
-            if ($s['level'] === 2) {
-                return new Response('', 302, ['Location' => '/docs/' . $s['slug']]);
-            }
+        if (!empty($sections)) {
+            return new Response('', 302, ['Location' => '/docs/' . $sections[0]['slug']]);
         }
 
         $html = $this->view->render('pages.docs', [
@@ -42,9 +40,8 @@ class DocsController
     /** Route: /docs/{section} — $section injected by Router via param name match */
     public function section(string $section): Response
     {
-        $data    = $this->parser->getSection($section);
-        $nav     = $this->parser->getNav();
-        $adj     = $this->parser->getAdjacentSections($section);
+        $data = $this->parser->getSection($section);
+        $nav  = $this->parser->getNav();
 
         if (!$data) {
             $html = $this->view->render('pages.docs', [
@@ -57,7 +54,7 @@ class DocsController
             return new Response($html, 404, ['Content-Type' => 'text/html; charset=UTF-8']);
         }
 
-        // Convert markdown to HTML
+        $adj  = $this->parser->getAdjacentSections($data['slug']);
         $html = $this->parseMarkdown($data['content']);
 
         $body = $this->view->render('pages.docs', [
@@ -65,10 +62,22 @@ class DocsController
             'section' => array_merge($data, ['html' => $html]),
             'prev'    => $adj['prev'],
             'next'    => $adj['next'],
-            'current' => $section,
+            'current' => $data['slug'],
         ]);
 
         return new Response($body, 200, ['Content-Type' => 'text/html; charset=UTF-8']);
+    }
+
+    /** Route: /download/veldora-ai-prompt.md */
+    public function downloadPrompt(): Response
+    {
+        $data = $this->parser->getSection('22-ai-context-prompt-ai-skills');
+        $content = $data['content'] ?? '# Veldora AI Context Prompt';
+
+        return new Response($content, 200, [
+            'Content-Type'        => 'text/markdown; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="veldora-ai-master-prompt.md"',
+        ]);
     }
 
     private function parseMarkdown(string $content): string
@@ -79,7 +88,7 @@ class DocsController
         // Extract code blocks first to protect them from being parsed or escaped
         $codeBlocks = [];
         $content = preg_replace_callback('/```(\w*)\n([\s\S]*?)\n```/', function ($matches) use (&$codeBlocks) {
-            $lang = $matches[1] ?: 'php';
+            $lang = strtolower($matches[1] ?: 'php');
             $code = $matches[2];
             $placeholder = '__CODE_BLOCK_PLACEHOLDER_' . count($codeBlocks) . '__';
             $codeBlocks[] = [
@@ -107,23 +116,20 @@ class DocsController
 
             // Handle Tables (pipe-separated)
             if (str_starts_with($trimmed, '|')) {
-                // If this is the separator line (e.g. |---|---|), skip it
                 if (preg_match('/^\|[\s|:-]+\|$/', $trimmed)) {
                     continue;
                 }
-                // Parse table cells
                 $cells = array_map('trim', explode('|', trim($trimmed, '|')));
                 $tableRows[] = $cells;
                 $inTable = true;
                 continue;
             } else {
                 if ($inTable) {
-                    // Render the table
-                    $tableHtml = '<table><thead>';
+                    $tableHtml = '<div class="table-responsive"><table><thead>';
                     foreach ($tableRows as $rowIndex => $row) {
                         $tag = ($rowIndex === 0) ? 'th' : 'td';
                         if ($rowIndex === 1 && count($tableRows) > 1 && $tableRows[0] === $row) {
-                            continue; // skip duplicate separator
+                            continue;
                         }
                         $tableHtml .= '<tr>';
                         foreach ($row as $cell) {
@@ -134,7 +140,7 @@ class DocsController
                             $tableHtml .= '</thead><tbody>';
                         }
                     }
-                    $tableHtml .= '</tbody></table>';
+                    $tableHtml .= '</tbody></table></div>';
                     $html[] = $tableHtml;
                     $tableRows = [];
                     $inTable = false;
@@ -167,7 +173,7 @@ class DocsController
                 }
             }
 
-            // Handle Blockquotes (escaped > by htmlspecialchars is &gt;)
+            // Handle Blockquotes
             if (str_starts_with($trimmed, '&gt;')) {
                 $bqContent = preg_replace('/^&gt;\s?/', '', $trimmed);
                 $blockquoteLines[] = $this->parseInline($bqContent);
@@ -181,11 +187,11 @@ class DocsController
                 }
             }
 
-            // Handle Headers
-            if (preg_match('/^(#{1,6})\s+(.+)$/', $line, $m)) {
+            // Handle Subheaders (h3, h4)
+            if (preg_match('/^(#{3,6})\s+(.+)$/', $line, $m)) {
                 $level = strlen($m[1]);
                 $title = $this->parseInline(trim($m[2]));
-                $id = strtolower(preg_replace('/[^a-z0-9]+/i', '-', $title));
+                $id = strtolower(preg_replace('/[^a-z0-9]+/i', '-', strip_tags($title)));
                 $html[] = "<h{$level} id=\"{$id}\">{$title}</h{$level}>";
                 continue;
             }
@@ -207,7 +213,7 @@ class DocsController
 
         // Clean up unclosed states
         if ($inTable) {
-            $tableHtml = '<table><thead>';
+            $tableHtml = '<div class="table-responsive"><table><thead>';
             foreach ($tableRows as $rowIndex => $row) {
                 $tag = ($rowIndex === 0) ? 'th' : 'td';
                 $tableHtml .= '<tr>';
@@ -219,7 +225,7 @@ class DocsController
                     $tableHtml .= '</thead><tbody>';
                 }
             }
-            $tableHtml .= '</tbody></table>';
+            $tableHtml .= '</tbody></table></div>';
             $html[] = $tableHtml;
         }
         if ($inList) {
@@ -231,21 +237,36 @@ class DocsController
 
         $parsedHtml = implode("\n", $html);
 
-        // Put back protected code blocks with proper formatting and Copy button
+        // Put back protected code blocks with appropriate layout (Terminal mockup vs Standard code block)
         foreach ($codeBlocks as $index => $block) {
             $placeholder = '__CODE_BLOCK_PLACEHOLDER_' . $index . '__';
-            $codeMarkup = '<div class="code-block-wrapper">';
-            $codeMarkup .= '<div class="code-block-header">';
-            $codeMarkup .= '<span class="code-block-lang">' . htmlspecialchars(strtoupper($block['lang']), ENT_QUOTES, 'UTF-8') . '</span>';
-            $codeMarkup .= '<button class="code-copy-btn" onclick="copyCode(this)">';
-            $codeMarkup .= '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
-            $codeMarkup .= ' Copy</button>';
-            $codeMarkup .= '</div>';
-            $lang = !empty($block['lang']) ? $block['lang'] : 'bash';
-            $codeMarkup .= '<pre class="code-block language-' . htmlspecialchars($lang, ENT_QUOTES, 'UTF-8') . '"><code class="language-' . htmlspecialchars($lang, ENT_QUOTES, 'UTF-8') . '">' . $block['code'] . '</code></pre>';
-            $codeMarkup .= '</div>';
+            $lang = $block['lang'];
+            $isTerminal = ($lang === 'terminal' || $lang === 'cmd' || $lang === 'shell' || str_contains($block['code'], '▲ Veldora Framework'));
 
-            $parsedHtml = str_replace($placeholder, $codeMarkup, $parsedHtml);
+            if ($isTerminal) {
+                $markup = '<div class="terminal-mockup">';
+                $markup .= '<div class="terminal-mockup-header">';
+                $markup .= '<div class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>';
+                $markup .= '<span class="terminal-mockup-title">bash &bull; Interactive CLI Setup</span>';
+                $markup .= '<button type="button" class="code-copy-btn" onclick="copyCode(this)" aria-label="Copy terminal text">';
+                $markup .= '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy';
+                $markup .= '</button>';
+                $markup .= '</div>';
+                $markup .= '<pre class="terminal-mockup-body code-block"><code>' . $block['code'] . '</code></pre>';
+                $markup .= '</div>';
+            } else {
+                $markup = '<div class="code-block-wrapper">';
+                $markup .= '<div class="code-block-header">';
+                $markup .= '<span class="code-block-lang">' . htmlspecialchars(strtoupper($lang ?: 'PHP'), ENT_QUOTES, 'UTF-8') . '</span>';
+                $markup .= '<button type="button" class="code-copy-btn" onclick="copyCode(this)" aria-label="Copy code">';
+                $markup .= '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy';
+                $markup .= '</button>';
+                $markup .= '</div>';
+                $markup .= '<pre class="code-block language-' . htmlspecialchars($lang, ENT_QUOTES, 'UTF-8') . '"><code class="language-' . htmlspecialchars($lang, ENT_QUOTES, 'UTF-8') . '">' . $block['code'] . '</code></pre>';
+                $markup .= '</div>';
+            }
+
+            $parsedHtml = str_replace($placeholder, $markup, $parsedHtml);
         }
 
         return $parsedHtml;
@@ -253,6 +274,11 @@ class DocsController
 
     private function parseInline(string $text): string
     {
+        // Unescape entities for directives and tags
+        $text = str_replace(['&amp;#64;', '&#64;'], '@', $text);
+        $text = str_replace(['&amp;#123;', '&#123;'], '{', $text);
+        $text = str_replace(['&amp;#125;', '&#125;'], '}', $text);
+
         // Inline code `code`
         $text = preg_replace('/`([^`]+)`/', '<code>$1</code>', $text) ?? $text;
 
@@ -267,7 +293,7 @@ class DocsController
             $label = $m[1];
             $url   = trim($m[2]);
 
-            // Convert hash anchors (e.g. #1-project-structure) to /docs/1-project-structure
+            // Convert hash anchors to /docs/...
             if (str_starts_with($url, '#')) {
                 $rawSlug = ltrim($url, '#');
                 $slug = strtolower((string) preg_replace('/[\s_-]+/', '-', $rawSlug));
