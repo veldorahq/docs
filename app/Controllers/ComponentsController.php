@@ -327,7 +327,9 @@ CODE,
         <div class="vui-modal-container vui-modal-md">
             <div class="vui-modal-header">
                 <h2 id="demo-vui-modal-title" class="vui-modal-title">Confirm Deployment</h2>
-                <button type="button" class="vui-modal-close" onclick="document.getElementById('demo-vui-modal').setAttribute('aria-hidden','true')" aria-label="Close">✕</button>
+                <button type="button" class="vui-modal-close" onclick="document.getElementById('demo-vui-modal').setAttribute('aria-hidden','true')" aria-label="Close" style="display:inline-flex;align-items:center;justify-content:center;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
             </div>
             <div class="vui-modal-body">
                 <p style="color:var(--vui-text);margin:0 0 8px 0;">Deploy latest changes to the production branch?</p>
@@ -424,7 +426,9 @@ CODE,
         <button type="button" class="vui-dropdown-trigger" aria-haspopup="true" aria-expanded="false" onclick="toggleDropdown(this)">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
             Project Settings
-            <span class="vui-dropdown-caret" aria-hidden="true">▾</span>
+            <span class="vui-dropdown-caret" aria-hidden="true" style="display:inline-flex;align-items:center;">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </span>
         </button>
         <ul class="vui-dropdown-menu" role="menu">
             <li>
@@ -456,7 +460,9 @@ CODE,
                 <span class="vui-avatar-initials">AK</span>
             </span>
             Account Menu
-            <span class="vui-dropdown-caret" aria-hidden="true">▾</span>
+            <span class="vui-dropdown-caret" aria-hidden="true" style="display:inline-flex;align-items:center;">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </span>
         </button>
         <ul class="vui-dropdown-menu" role="menu">
             <li><a href="javascript:void(0)" onclick="window.showToast('My Profile opened')">My Profile</a></li>
@@ -513,8 +519,9 @@ CODE,
 
             <!-- Action buttons & toggle -->
             <div class="vui-navbar-actions" style="display:flex;align-items:center;gap:8px;">
-                <button type="button" class="vui-btn vui-btn-primary vui-btn-sm" onclick="window.showToast('New project created!')" style="font-size:12px;padding:5px 10px;">
-                    + New App
+                <button type="button" class="vui-btn vui-btn-primary vui-btn-sm" onclick="window.showToast('New project created!')" style="font-size:12px;padding:5px 10px;display:inline-flex;align-items:center;gap:5px;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    <span>New App</span>
                 </button>
                 <!-- Mobile burger toggle -->
                 <button type="button" class="vui-navbar-toggle" aria-label="Toggle navigation" aria-expanded="false"
@@ -544,7 +551,7 @@ HTML,
     <a href="/releases">Releases</a>
 
     <x-slot name="actions">
-        <x-button variant="primary" size="sm">+ New App</x-button>
+        <x-button variant="primary" size="sm" icon="plus">New App</x-button>
     </x-slot>
 </x-navbar>
 CODE,
@@ -1297,7 +1304,9 @@ CODE,
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;left:10px;opacity:.5;pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <input type="text" id="demo-cb1-input" class="vui-input vui-combobox-input" placeholder="Search country..." autocomplete="off" value="Japan"
                    oninput="vuiCbFilter('demo-cb1')" onfocus="vuiCbOpen('demo-cb1')" style="padding-left:32px;padding-right:32px;">
-            <button type="button" onclick="document.getElementById('demo-cb1-input').value='';vuiCbFilter('demo-cb1');" style="position:absolute;right:8px;background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:14px;padding:2px 6px;">&times;</button>
+            <button type="button" onclick="document.getElementById('demo-cb1-input').value='';vuiCbFilter('demo-cb1');" style="position:absolute;right:8px;background:none;border:none;color:var(--text-muted);cursor:pointer;padding:2px 6px;display:flex;align-items:center;justify-content:center;" aria-label="Clear selection">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
         </div>
         <input type="hidden" name="country" value="jp">
         <ul class="vui-combobox-list" id="demo-cb1-list" role="listbox" style="position:static;margin-top:8px;box-shadow:none;border-color:var(--vui-border);">
