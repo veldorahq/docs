@@ -493,42 +493,42 @@ CODE,
                 'desc'    => 'Full responsive top navigation bar with brand icon, navigation links, and mobile burger toggle.',
                 'cli'     => 'php veldora add navbar',
                 'preview' => <<<'HTML'
-<div style="width:100%;background:var(--vui-surface);border:1px solid var(--vui-border);border-radius:var(--radius-lg);overflow:hidden;">
-    <nav class="vui-navbar" role="navigation" aria-label="Demo Navbar" style="border:none;">
+<div class="vui-navbar-preview-wrap" style="width:100%;background:var(--vui-surface);border:1px solid var(--vui-border);border-radius:var(--vui-radius-lg);position:relative;">
+    <nav class="vui-navbar" role="navigation" aria-label="Demo Navbar" style="border:none;background:transparent;">
         <div class="vui-navbar-inner">
             <a href="javascript:void(0)" class="vui-navbar-brand" style="display:flex;align-items:center;gap:8px;text-decoration:none;">
-                <span style="width:26px;height:26px;background:var(--vui-accent);border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 0 10px rgba(124,110,245,0.4);">
+                <span style="width:26px;height:26px;background:var(--vui-accent);border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 0 10px rgba(124,110,245,0.4);flex-shrink:0;">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="white" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
                 </span>
-                <span style="font-weight:700;letter-spacing:-0.02em;color:var(--vui-text);">Veldora App</span>
+                <span style="font-weight:700;letter-spacing:-0.02em;color:var(--vui-text);white-space:nowrap;">Veldora App</span>
             </a>
 
-            <!-- Desktop Links -->
-            <div class="vui-navbar-menu" id="demo-nav-menu" style="display:flex;gap:4px;align-items:center;">
+            <!-- Desktop / Mobile Collapsible Menu -->
+            <div class="vui-navbar-menu" id="demo-nav-menu">
                 <a href="javascript:void(0)" class="active" onclick="window.showToast('Dashboard clicked')">Dashboard</a>
                 <a href="javascript:void(0)" onclick="window.showToast('Documentation clicked')">Documentation</a>
                 <a href="javascript:void(0)" onclick="window.showToast('Components clicked')">Components</a>
                 <a href="javascript:void(0)" onclick="window.showToast('Releases clicked')">Releases</a>
             </div>
 
-            <!-- Action buttons -->
-            <div style="display:flex;align-items:center;gap:8px;">
-                <button type="button" class="vui-btn vui-btn-primary vui-btn-sm" onclick="window.showToast('New project created!')">
+            <!-- Action buttons & toggle -->
+            <div class="vui-navbar-actions" style="display:flex;align-items:center;gap:8px;">
+                <button type="button" class="vui-btn vui-btn-primary vui-btn-sm" onclick="window.showToast('New project created!')" style="font-size:12px;padding:5px 10px;">
                     + New App
                 </button>
                 <!-- Mobile burger toggle -->
-                <button type="button" class="vui-navbar-toggle" aria-label="Toggle navigation"
+                <button type="button" class="vui-navbar-toggle" aria-label="Toggle navigation" aria-expanded="false"
                         onclick="(function(btn){
                             var menu = document.getElementById('demo-nav-menu');
-                            if (menu.style.display === 'none' || !menu.classList.contains('vui-navbar-open')) {
-                                menu.classList.add('vui-navbar-open');
-                                menu.style.display = 'flex';
-                            } else {
-                                menu.classList.remove('vui-navbar-open');
-                                menu.style.display = '';
-                            }
+                            var isOpen = menu.classList.toggle('vui-navbar-open');
+                            btn.classList.toggle('vui-toggle-active', isOpen);
+                            btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
                         })(this)">
-                    <span class="vui-navbar-burger"></span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <line x1="3" y1="12" x2="21" y2="12"/>
+                        <line x1="3" y1="18" x2="21" y2="18"/>
+                    </svg>
                 </button>
             </div>
         </div>

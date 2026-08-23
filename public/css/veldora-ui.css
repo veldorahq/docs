@@ -494,76 +494,137 @@
    Navbar
    ───────────────────────────────────────────────────────────────────────────── */
 .vui-navbar {
+    width: 100%;
     background: var(--vui-surface);
     border-bottom: 1px solid var(--vui-border);
     font-family: var(--vui-font);
+    position: relative;
+    box-sizing: border-box;
 }
-.vui-navbar-sticky { position: sticky; top: 0; z-index: 100; }
+
+.vui-navbar-sticky {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
 .vui-navbar-inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 20px;
-    height: 58px;
+    padding: 0 16px;
+    height: 56px;
+    gap: 12px;
+    box-sizing: border-box;
 }
+
 .vui-navbar-brand {
-    font-size: 18px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
     font-weight: 700;
-    color: var(--vui-text);
-    text-decoration: none;
+    color: var(--vui-text) !important;
+    text-decoration: none !important;
     letter-spacing: -0.02em;
+    flex-shrink: 0;
 }
+
 .vui-navbar-menu {
     display: flex;
     align-items: center;
     gap: 4px;
 }
+
 .vui-navbar-menu a {
-    font-size: 14px;
+    font-size: 13.5px;
     font-weight: 500;
     color: var(--vui-text-muted);
-    text-decoration: none;
+    text-decoration: none !important;
     padding: 6px 12px;
     border-radius: var(--vui-radius);
     transition: color var(--vui-trans), background var(--vui-trans);
+    white-space: nowrap;
 }
-.vui-navbar-menu a:hover, .vui-navbar-menu a.active {
+
+.vui-navbar-menu a:hover,
+.vui-navbar-menu a.active {
     color: var(--vui-text);
     background: var(--vui-surface-2);
 }
+
+.vui-navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
 .vui-navbar-toggle {
     display: none;
-    background: none; border: none; cursor: pointer;
-    padding: 6px;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: var(--vui-surface-2);
+    border: 1px solid var(--vui-border);
+    border-radius: var(--vui-radius);
+    color: var(--vui-text);
+    cursor: pointer;
+    padding: 0;
+    transition: all var(--vui-trans);
 }
-.vui-navbar-burger, .vui-navbar-burger::before, .vui-navbar-burger::after {
-    display: block;
-    width: 22px; height: 2px;
-    background: var(--vui-text); border-radius: 2px;
-    transition: transform var(--vui-trans);
-}
-.vui-navbar-burger { position: relative; }
-.vui-navbar-burger::before, .vui-navbar-burger::after {
-    content: ''; position: absolute; left: 0;
-}
-.vui-navbar-burger::before { top: -6px; }
-.vui-navbar-burger::after  { top:  6px; }
 
-@media (max-width: 640px) {
-    .vui-navbar-toggle { display: block; }
+.vui-navbar-toggle:hover {
+    background: var(--vui-border);
+    color: #fff;
+}
+
+.vui-navbar-toggle.vui-toggle-active {
+    background: var(--vui-accent);
+    color: #fff;
+    border-color: var(--vui-accent);
+}
+
+@media (max-width: 768px) {
+    .vui-navbar-toggle {
+        display: inline-flex;
+    }
+
     .vui-navbar-menu {
+        display: none;
         position: absolute;
-        top: 58px; left: 0; right: 0;
-        background: var(--vui-surface);
-        border-bottom: 1px solid var(--vui-border);
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 120;
+        background: #151518;
+        border: 1px solid var(--vui-border);
+        border-top: none;
+        border-radius: 0 0 var(--vui-radius-lg) var(--vui-radius-lg);
         flex-direction: column;
         align-items: stretch;
         padding: 10px;
-        display: none;
+        gap: 4px;
+        box-shadow: 0 16px 36px rgba(0,0,0,0.55);
     }
-    .vui-navbar-menu.vui-navbar-open { display: flex; }
+
+    .vui-navbar-menu.vui-navbar-open {
+        display: flex !important;
+        animation: vuiNavFade 0.18s ease-in-out;
+    }
+
+    .vui-navbar-menu a {
+        padding: 9px 14px;
+        font-size: 14px;
+    }
+}
+
+@keyframes vuiNavFade {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
