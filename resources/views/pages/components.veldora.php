@@ -2,7 +2,7 @@
 
 @section('page_title', 'UI Components')
 @section('page_title_suffix', 'Veldora')
-@section('meta_desc', 'Interactive showcase of all 21 Veldora UI components with live previews and template usage.')
+@section('meta_desc', 'Interactive showcase of all 39 Veldora UI components with live previews and template usage.')
 
 @section('content')
 <main class="components-page" id="main-content">
@@ -15,7 +15,7 @@
         </div>
         <h1 class="section-title">Component Showcase</h1>
         <p class="section-sub">
-            21 production-ready UI components built for Veldora. Live preview is shown by default — click <strong style="color:var(--accent)">Code</strong> to view template syntax, and <strong style="color:var(--accent)">Copy</strong> to copy it directly.
+            39 production-ready UI components built for Veldora. Live preview is shown by default — click <strong style="color:var(--accent)">Code</strong> to view template syntax, and <strong style="color:var(--accent)">Copy</strong> to copy it directly.
         </p>
     </header>
 

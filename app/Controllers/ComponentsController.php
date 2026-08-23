@@ -859,6 +859,614 @@ HTML,
 </x-table>
 CODE,
             ],
+
+            // ── 22. Switch ────────────────────────────────────────────────────────────
+            [
+                'id'      => 'switch',
+                'name'    => 'Switch',
+                'desc'    => 'Toggle switch for boolean on/off states. Supports label, checked, disabled, and sm/md/lg sizes.',
+                'cli'     => 'php veldora add switch',
+                'preview' => <<<'HTML'
+<div style="display:flex;flex-direction:column;gap:14px;">
+    <label class="vui-switch-wrapper">
+        <input type="checkbox" class="vui-switch-input" role="switch" aria-checked="false">
+        <span class="vui-switch-track vui-switch-md"><span class="vui-switch-thumb"></span></span>
+        <span class="vui-switch-label">Notifications</span>
+    </label>
+    <label class="vui-switch-wrapper">
+        <input type="checkbox" class="vui-switch-input" role="switch" aria-checked="true" checked>
+        <span class="vui-switch-track vui-switch-md"><span class="vui-switch-thumb"></span></span>
+        <span class="vui-switch-label">Dark Mode (on)</span>
+    </label>
+    <label class="vui-switch-wrapper vui-switch-disabled">
+        <input type="checkbox" class="vui-switch-input" role="switch" disabled>
+        <span class="vui-switch-track vui-switch-md"><span class="vui-switch-thumb"></span></span>
+        <span class="vui-switch-label">Disabled</span>
+    </label>
+</div>
+HTML,
+                'code'    => <<<'CODE'
+<x-switch name="notifications" label="Notifications" />
+<x-switch name="dark_mode" label="Dark Mode" :checked="true" />
+<x-switch name="feature" label="Disabled" :disabled="true" />
+CODE,
+            ],
+
+            // ── 23. Pagination ────────────────────────────────────────────────────────
+            [
+                'id'      => 'pagination',
+                'name'    => 'Pagination',
+                'desc'    => 'Page navigation bar with prev/next arrows, numbered pages, ellipsis for large ranges, and active state.',
+                'cli'     => 'php veldora add pagination',
+                'preview' => <<<'HTML'
+<nav class="vui-pagination" aria-label="Pagination">
+    <a class="vui-page-btn vui-page-disabled" aria-disabled="true">&#8592;</a>
+    <a class="vui-page-btn">1</a>
+    <a class="vui-page-btn vui-page-active" aria-current="page">2</a>
+    <a class="vui-page-btn">3</a>
+    <span class="vui-page-ellipsis">&hellip;</span>
+    <a class="vui-page-btn">10</a>
+    <a class="vui-page-btn">&#8594;</a>
+</nav>
+HTML,
+                'code'    => <<<'CODE'
+<x-pagination :current="2" :total="10" url="/posts?page=" />
+CODE,
+            ],
+
+            // ── 24. Skeleton ──────────────────────────────────────────────────────────
+            [
+                'id'      => 'skeleton',
+                'name'    => 'Skeleton',
+                'desc'    => 'Animated shimmer placeholder for loading states. Supports text lines, circle avatar, and rect block modes.',
+                'cli'     => 'php veldora add skeleton',
+                'preview' => <<<'HTML'
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;width:100%;">
+    <div class="vui-skeleton-wrap" aria-busy="true" aria-label="Loading...">
+        <div class="vui-skeleton vui-skeleton-text" style="width:100%"></div>
+        <div class="vui-skeleton vui-skeleton-text" style="width:100%"></div>
+        <div class="vui-skeleton vui-skeleton-text" style="width:70%"></div>
+    </div>
+    <div class="vui-skeleton-wrap" style="display:flex;gap:12px;align-items:center;" aria-busy="true">
+        <div class="vui-skeleton vui-skeleton-circle" style="width:2.5rem;height:2.5rem;flex-shrink:0"></div>
+        <div style="flex:1">
+            <div class="vui-skeleton vui-skeleton-text" style="width:100%"></div>
+            <div class="vui-skeleton vui-skeleton-text" style="width:60%"></div>
+        </div>
+    </div>
+</div>
+HTML,
+                'code'    => <<<'CODE'
+{{-- Text lines --}}
+<x-skeleton lines="3" />
+
+{{-- With avatar --}}
+<x-skeleton lines="2" :avatar="true" />
+
+{{-- Rect block --}}
+<x-skeleton type="rect" width="100%" height="120px" />
+CODE,
+            ],
+
+            // ── 25. Empty ─────────────────────────────────────────────────────────────
+            [
+                'id'      => 'empty',
+                'name'    => 'Empty',
+                'desc'    => 'Zero-data state component with icon, title, description, and an optional action slot.',
+                'cli'     => 'php veldora add empty',
+                'preview' => <<<'HTML'
+<div class="vui-empty" style="padding:2rem 0;">
+    <div class="vui-empty-icon">
+        <svg width="64" height="64" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+            <circle cx="32" cy="32" r="30" stroke="currentColor" stroke-width="2" stroke-dasharray="6 4"/>
+            <path d="M22 32h20M32 22v20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+    </div>
+    <h3 class="vui-empty-title">No results found</h3>
+    <p class="vui-empty-desc">Try adjusting your search or filters.</p>
+    <div class="vui-empty-action">
+        <button class="vui-btn vui-btn-primary vui-btn-sm">Clear Filters</button>
+    </div>
+</div>
+HTML,
+                'code'    => <<<'CODE'
+<x-empty title="No results found" description="Try adjusting your search or filters.">
+    <x-button variant="primary" size="sm">Clear Filters</x-button>
+</x-empty>
+CODE,
+            ],
+
+            // ── 26. Divider ───────────────────────────────────────────────────────────
+            [
+                'id'      => 'divider',
+                'name'    => 'Divider',
+                'desc'    => 'Horizontal or vertical separator. Supports an optional centered text label (e.g. "OR").',
+                'cli'     => 'php veldora add divider',
+                'preview' => <<<'HTML'
+<div style="display:flex;flex-direction:column;gap:20px;width:100%;">
+    <hr class="vui-divider">
+    <div class="vui-divider-labeled">
+        <span class="vui-divider-line"></span>
+        <span class="vui-divider-label">OR</span>
+        <span class="vui-divider-line"></span>
+    </div>
+    <div style="display:flex;align-items:center;height:40px;gap:16px;">
+        <span>Left</span>
+        <div class="vui-divider-vertical" style="height:100%;"></div>
+        <span>Right</span>
+    </div>
+</div>
+HTML,
+                'code'    => <<<'CODE'
+{{-- Plain --}}
+<x-divider />
+
+{{-- Labeled --}}
+<x-divider label="OR" />
+
+{{-- Vertical --}}
+<x-divider orientation="vertical" />
+CODE,
+            ],
+
+            // ── 27. Drawer ────────────────────────────────────────────────────────────
+            [
+                'id'      => 'drawer',
+                'name'    => 'Drawer',
+                'desc'    => 'Slide-in panel from left, right, top, or bottom. Includes overlay backdrop and close button.',
+                'cli'     => 'php veldora add drawer',
+                'preview' => <<<'HTML'
+<div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <button class="vui-btn vui-btn-primary vui-btn-sm" onclick="vui.openDrawer('demo-drawer-right')">Open Right Drawer</button>
+</div>
+<div id="demo-drawer-right" class="vui-drawer-backdrop" role="dialog" aria-modal="true" aria-hidden="true"
+     onclick="if(event.target===this)this.setAttribute('aria-hidden','true')">
+    <div class="vui-drawer vui-drawer-right" style="max-width:320px;">
+        <div class="vui-drawer-header">
+            <h2 class="vui-drawer-title">Settings</h2>
+            <button class="vui-drawer-close" aria-label="Close" onclick="vui.closeDrawer('demo-drawer-right')">&times;</button>
+        </div>
+        <div class="vui-drawer-body">
+            <p style="color:var(--text-muted);">Drawer content goes here. This can contain forms, menus, or any content.</p>
+        </div>
+    </div>
+</div>
+<script>window.vui=window.vui||{};vui.openDrawer=function(id){document.getElementById(id).setAttribute('aria-hidden','false');};vui.closeDrawer=function(id){document.getElementById(id).setAttribute('aria-hidden','true');};</script>
+HTML,
+                'code'    => <<<'CODE'
+{{-- Trigger --}}
+<button onclick="vui.openDrawer('my-drawer')">Open Drawer</button>
+
+{{-- Drawer Component --}}
+<x-drawer id="my-drawer" position="right" title="Settings">
+    <p>Drawer content goes here.</p>
+</x-drawer>
+CODE,
+            ],
+
+            // ── 28. Popover ───────────────────────────────────────────────────────────
+            [
+                'id'      => 'popover',
+                'name'    => 'Popover',
+                'desc'    => 'Floating info panel anchored to a trigger button. Supports top/bottom/left/right placement.',
+                'cli'     => 'php veldora add popover',
+                'preview' => <<<'HTML'
+<div style="display:flex;gap:16px;flex-wrap:wrap;padding:20px 0;">
+    <div class="vui-popover-wrap">
+        <button class="vui-btn vui-btn-secondary vui-btn-sm" type="button"
+                onclick="const p=document.getElementById('demo-pop1');p.hidden=!p.hidden">More Info</button>
+        <div id="demo-pop1" class="vui-popover vui-popover-bottom" hidden role="tooltip">
+            <div class="vui-popover-title">Did you know?</div>
+            <div class="vui-popover-body">Popovers can contain rich content including links and buttons.</div>
+        </div>
+    </div>
+</div>
+HTML,
+                'code'    => <<<'CODE'
+<x-popover trigger="More Info" title="Did you know?" placement="bottom">
+    Popovers can contain rich content including links and buttons.
+</x-popover>
+CODE,
+            ],
+
+            // ── 29. Confirm ───────────────────────────────────────────────────────────
+            [
+                'id'      => 'confirm',
+                'name'    => 'Confirm',
+                'desc'    => 'Accessible confirmation dialog for destructive actions. Includes cancel/confirm buttons with form POST support.',
+                'cli'     => 'php veldora add confirm',
+                'preview' => <<<'HTML'
+<button class="vui-btn vui-btn-danger vui-btn-sm" onclick="vui.confirm('demo-confirm')">Delete Item</button>
+<div id="demo-confirm" class="vui-modal-backdrop" role="alertdialog" aria-modal="true" aria-hidden="true" aria-labelledby="demo-confirm-title">
+    <div class="vui-modal vui-confirm-dialog">
+        <div class="vui-modal-header"><h3 id="demo-confirm-title" class="vui-modal-title">Delete item?</h3></div>
+        <div class="vui-modal-body"><p>This action cannot be undone.</p></div>
+        <div class="vui-modal-footer">
+            <button type="button" class="vui-btn vui-btn-secondary" onclick="document.getElementById('demo-confirm').setAttribute('aria-hidden','true')">Cancel</button>
+            <button type="button" class="vui-btn vui-btn-danger">Delete</button>
+        </div>
+    </div>
+</div>
+<script>window.vui=window.vui||{};vui.confirm=function(id){document.getElementById(id).setAttribute('aria-hidden','false');};</script>
+HTML,
+                'code'    => <<<'CODE'
+{{-- Trigger --}}
+<button onclick="vui.confirm('del-confirm')">Delete Item</button>
+
+{{-- Dialog --}}
+<x-confirm
+    id="del-confirm"
+    title="Delete item?"
+    message="This action cannot be undone."
+    action="/items/1"
+    method="DELETE"
+    confirm-label="Delete"
+    :danger="true"
+/>
+CODE,
+            ],
+
+            // ── 30. DatePicker ────────────────────────────────────────────────────────
+            [
+                'id'      => 'datepicker',
+                'name'    => 'DatePicker',
+                'desc'    => 'Styled native date input with label, min/max constraints, required marker, and helper text.',
+                'cli'     => 'php veldora add datepicker',
+                'preview' => <<<'HTML'
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;width:100%;">
+    <div class="vui-field">
+        <label for="demo-dp1" class="vui-label">Date of Birth <span class="vui-required" aria-hidden="true">*</span></label>
+        <input type="date" id="demo-dp1" class="vui-input vui-datepicker" required>
+    </div>
+    <div class="vui-field">
+        <label for="demo-dp2" class="vui-label">Event Date</label>
+        <input type="date" id="demo-dp2" class="vui-input vui-datepicker" min="2026-01-01">
+        <p class="vui-helper">Must be in 2026 or later</p>
+    </div>
+</div>
+HTML,
+                'code'    => <<<'CODE'
+<x-datepicker name="dob" label="Date of Birth" :required="true" />
+<x-datepicker name="event_date" label="Event Date" min="2026-01-01" helper="Must be in 2026 or later" />
+CODE,
+            ],
+
+            // ── 31. FileUpload ────────────────────────────────────────────────────────
+            [
+                'id'      => 'fileupload',
+                'name'    => 'FileUpload',
+                'desc'    => 'Styled drag-and-drop file upload zone with file type filters, multiple selection, and size hint.',
+                'cli'     => 'php veldora add fileupload',
+                'preview' => <<<'HTML'
+<div style="max-width:400px;">
+    <label for="demo-fu1" class="vui-label">Profile Picture</label>
+    <label for="demo-fu1" class="vui-fileupload-zone">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        <span class="vui-fileupload-text">Drag &amp; drop or <strong>browse</strong></span>
+        <span class="vui-fileupload-hint">Max 2MB &mdash; JPG, PNG, WebP</span>
+        <input type="file" id="demo-fu1" accept="image/*" class="vui-fileupload-input">
+    </label>
+</div>
+HTML,
+                'code'    => <<<'CODE'
+<x-fileupload name="avatar" label="Profile Picture" accept="image/*" max-size="2MB" />
+
+{{-- Multiple files --}}
+<x-fileupload name="docs[]" label="Documents" accept=".pdf,.docx" :multiple="true" />
+CODE,
+            ],
+
+            // ── 32. Combobox ──────────────────────────────────────────────────────────
+            [
+                'id'      => 'combobox',
+                'name'    => 'Combobox',
+                'desc'    => 'Searchable select dropdown with autocomplete filtering. Keyboard-friendly and fully accessible.',
+                'cli'     => 'php veldora add combobox',
+                'preview' => <<<'HTML'
+<div style="max-width:300px;">
+    <div class="vui-field vui-combobox-wrap" id="demo-cb1">
+        <label class="vui-label" for="demo-cb1-input">Country</label>
+        <div class="vui-combobox">
+            <input type="text" id="demo-cb1-input" class="vui-input vui-combobox-input" placeholder="Search country..." autocomplete="off"
+                   oninput="vuiCbFilter('demo-cb1')" onfocus="vuiCbOpen('demo-cb1')">
+            <input type="hidden" name="country" value="">
+            <ul class="vui-combobox-list" id="demo-cb1-list" role="listbox" hidden>
+                <li class="vui-combobox-option" role="option" onclick="vuiCbSelect('demo-cb1','bd',this.textContent.trim())">Bangladesh</li>
+                <li class="vui-combobox-option" role="option" onclick="vuiCbSelect('demo-cb1','us',this.textContent.trim())">United States</li>
+                <li class="vui-combobox-option" role="option" onclick="vuiCbSelect('demo-cb1','gb',this.textContent.trim())">United Kingdom</li>
+                <li class="vui-combobox-option" role="option" onclick="vuiCbSelect('demo-cb1','ca',this.textContent.trim())">Canada</li>
+                <li class="vui-combobox-option" role="option" onclick="vuiCbSelect('demo-cb1','au',this.textContent.trim())">Australia</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+function vuiCbOpen(u){document.getElementById(u+'-list').hidden=false;}
+function vuiCbFilter(u){var q=document.querySelector('#'+u+' .vui-combobox-input').value.toLowerCase();document.querySelectorAll('#'+u+'-list .vui-combobox-option').forEach(function(o){o.hidden=!o.textContent.toLowerCase().includes(q);});document.getElementById(u+'-list').hidden=false;}
+function vuiCbSelect(u,val,lbl){document.querySelector('#'+u+' .vui-combobox-input').value=lbl;document.querySelector('#'+u+' input[type=hidden]').value=val;document.getElementById(u+'-list').hidden=true;}
+document.addEventListener('click',function(e){document.querySelectorAll('.vui-combobox-list').forEach(function(l){if(!l.closest('.vui-combobox-wrap').contains(e.target))l.hidden=true;});});
+</script>
+HTML,
+                'code'    => <<<'CODE'
+<?php
+$countries = ['bd' => 'Bangladesh', 'us' => 'United States', 'gb' => 'United Kingdom'];
+?>
+<x-combobox name="country" label="Country" :options="$countries" placeholder="Search country..." />
+CODE,
+            ],
+
+            // ── 33. InputGroup ────────────────────────────────────────────────────────
+            [
+                'id'      => 'inputgroup',
+                'name'    => 'InputGroup',
+                'desc'    => 'Input field with attached prefix and/or suffix addons (text, currency symbols, units, icons).',
+                'cli'     => 'php veldora add inputgroup',
+                'preview' => <<<'HTML'
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;width:100%;">
+    <div class="vui-field">
+        <label class="vui-label">Price</label>
+        <div class="vui-input-group">
+            <span class="vui-input-addon vui-input-prefix">$</span>
+            <input type="number" class="vui-input" placeholder="0.00">
+            <span class="vui-input-addon vui-input-suffix">USD</span>
+        </div>
+    </div>
+    <div class="vui-field">
+        <label class="vui-label">Website</label>
+        <div class="vui-input-group">
+            <span class="vui-input-addon vui-input-prefix">https://</span>
+            <input type="text" class="vui-input" placeholder="example.com">
+        </div>
+    </div>
+</div>
+HTML,
+                'code'    => <<<'CODE'
+<x-inputgroup name="price" label="Price" prefix="$" suffix="USD" type="number" placeholder="0.00" />
+<x-inputgroup name="website" label="Website" prefix="https://" placeholder="example.com" />
+CODE,
+            ],
+
+            // ── 34. Stat ──────────────────────────────────────────────────────────────
+            [
+                'id'      => 'stat',
+                'name'    => 'Stat',
+                'desc'    => 'Metric display card with label, value, optional icon, and trend indicator (up/down with percentage).',
+                'cli'     => 'php veldora add stat',
+                'preview' => <<<'HTML'
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;width:100%;">
+    <div class="vui-stat">
+        <div class="vui-stat-body">
+            <p class="vui-stat-label">Total Users</p>
+            <p class="vui-stat-value">12,403</p>
+            <span class="vui-stat-trend vui-trend-up">&#9650; +8.2%</span>
+        </div>
+    </div>
+    <div class="vui-stat">
+        <div class="vui-stat-body">
+            <p class="vui-stat-label">Revenue</p>
+            <p class="vui-stat-value">$48,290</p>
+            <span class="vui-stat-trend vui-trend-up">&#9650; +12.4%</span>
+        </div>
+    </div>
+    <div class="vui-stat">
+        <div class="vui-stat-body">
+            <p class="vui-stat-label">Churn Rate</p>
+            <p class="vui-stat-value">3.2%</p>
+            <span class="vui-stat-trend vui-trend-down">&#9660; -0.5%</span>
+        </div>
+    </div>
+</div>
+HTML,
+                'code'    => <<<'CODE'
+<x-stat label="Total Users" value="12,403" trend="+8.2%" :trend-up="true" />
+<x-stat label="Revenue" value="48,290" prefix="$" trend="+12.4%" :trend-up="true" />
+<x-stat label="Churn Rate" value="3.2" suffix="%" trend="-0.5%" :trend-up="false" />
+CODE,
+            ],
+
+            // ── 35. DataTable ─────────────────────────────────────────────────────────
+            [
+                'id'      => 'datatable',
+                'name'    => 'DataTable',
+                'desc'    => 'Interactive table with client-side search, column sort, and pagination. No server round-trips needed.',
+                'cli'     => 'php veldora add datatable',
+                'preview' => <<<'HTML'
+<div class="vui-datatable-wrap" id="demo-dt1">
+    <div class="vui-datatable-toolbar">
+        <input type="search" class="vui-input vui-datatable-search" placeholder="Search..." oninput="vuiDt_demo_dt1_search(this.value)" style="max-width:220px;">
+    </div>
+    <div class="vui-table-responsive">
+        <table class="vui-table vui-table-hover vui-table-striped">
+            <thead><tr>
+                <th onclick="vuiDt_demo_dt1_sort('name')" style="cursor:pointer">Name &#8597;</th>
+                <th onclick="vuiDt_demo_dt1_sort('role')" style="cursor:pointer">Role &#8597;</th>
+                <th onclick="vuiDt_demo_dt1_sort('status')" style="cursor:pointer">Status &#8597;</th>
+            </tr></thead>
+            <tbody id="demo-dt1-tbody">
+                <tr><td>Alice</td><td>Engineer</td><td>Active</td></tr>
+                <tr><td>Bob</td><td>Designer</td><td>Away</td></tr>
+                <tr><td>Carol</td><td>Manager</td><td>Active</td></tr>
+                <tr><td>Dave</td><td>QA</td><td>Inactive</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="demo-dt1-pages" class="vui-datatable-pages"></div>
+</div>
+<script>
+(function(){
+    var uid='demo-dt1',perPage=3,page=1,q='',asc=true,sKey='';
+    var tbody=document.getElementById(uid+'-tbody');
+    var allRows=Array.from(tbody.querySelectorAll('tr'));
+    function filtered(){return q?allRows.filter(function(r){return r.textContent.toLowerCase().includes(q);}):allRows.slice();}
+    function render(){var f=filtered();var tot=Math.ceil(f.length/perPage)||1;if(page>tot)page=1;tbody.innerHTML='';f.slice((page-1)*perPage,page*perPage).forEach(function(r){tbody.appendChild(r);});var pg=document.getElementById(uid+'-pages');pg.innerHTML='';for(var i=1;i<=tot;i++){var b=document.createElement('button');b.textContent=i;b.className='vui-page-btn'+(i===page?' vui-page-active':'');(function(p){b.onclick=function(){page=p;render();};})(i);pg.appendChild(b);}}
+    window['vuiDt_'+uid+'_search']=function(v){q=v.toLowerCase();page=1;render();};
+    window['vuiDt_'+uid+'_sort']=function(k){var keys=['name','role','status'];if(sKey===k)asc=!asc;else{sKey=k;asc=true;}var idx=keys.indexOf(k);allRows.sort(function(a,b){var av=(a.cells[idx]||{}).textContent||'';var bv=(b.cells[idx]||{}).textContent||'';return asc?av.localeCompare(bv,undefined,{numeric:true}):bv.localeCompare(av,undefined,{numeric:true});});render();};
+    render();
+}());
+</script>
+HTML,
+                'code'    => <<<'CODE'
+<?php
+$columns = ['name' => 'Name', 'role' => 'Role', 'status' => 'Status'];
+$rows    = [
+    ['name' => 'Alice', 'role' => 'Engineer', 'status' => 'Active'],
+    ['name' => 'Bob',   'role' => 'Designer', 'status' => 'Away'],
+];
+?>
+<x-datatable :columns="$columns" :rows="$rows" :searchable="true" :per-page="10" />
+CODE,
+            ],
+
+            // ── 36. Timeline ──────────────────────────────────────────────────────────
+            [
+                'id'      => 'timeline',
+                'name'    => 'Timeline',
+                'desc'    => 'Vertical timeline for activity logs, changelogs, or order tracking with icons, descriptions, and timestamps.',
+                'cli'     => 'php veldora add timeline',
+                'preview' => <<<'HTML'
+<ol class="vui-timeline">
+    <li class="vui-timeline-item">
+        <div class="vui-timeline-marker" style="background:#22c55e">✓</div>
+        <div class="vui-timeline-content">
+            <p class="vui-timeline-title">Order Placed</p>
+            <p class="vui-timeline-desc">Your order #1042 has been confirmed.</p>
+            <time class="vui-timeline-time">Aug 23, 2026 &middot; 10:04 AM</time>
+        </div>
+    </li>
+    <li class="vui-timeline-item">
+        <div class="vui-timeline-marker" style="background:#3b82f6">⬆</div>
+        <div class="vui-timeline-content">
+            <p class="vui-timeline-title">Shipped</p>
+            <p class="vui-timeline-desc">Package dispatched via DHL Express.</p>
+            <time class="vui-timeline-time">Aug 24, 2026 &middot; 2:30 PM</time>
+        </div>
+    </li>
+    <li class="vui-timeline-item">
+        <div class="vui-timeline-marker">◎</div>
+        <div class="vui-timeline-content">
+            <p class="vui-timeline-title">Out for Delivery</p>
+            <time class="vui-timeline-time">Expected Aug 25, 2026</time>
+        </div>
+    </li>
+</ol>
+HTML,
+                'code'    => <<<'CODE'
+<?php
+$events = [
+    ['title' => 'Order Placed',    'description' => 'Order #1042 confirmed.', 'time' => 'Aug 23, 2026', 'color' => '#22c55e'],
+    ['title' => 'Shipped',         'description' => 'Via DHL Express.',        'time' => 'Aug 24, 2026', 'color' => '#3b82f6'],
+    ['title' => 'Out for Delivery','time' => 'Aug 25, 2026'],
+];
+?>
+<x-timeline :items="$events" />
+CODE,
+            ],
+
+            // ── 37. Stepper ───────────────────────────────────────────────────────────
+            [
+                'id'      => 'stepper',
+                'name'    => 'Stepper',
+                'desc'    => 'Multi-step wizard progress indicator. Completed steps show a checkmark; active step is highlighted.',
+                'cli'     => 'php veldora add stepper',
+                'preview' => <<<'HTML'
+<ol class="vui-stepper" aria-label="Progress">
+    <li class="vui-stepper-step vui-step-done">
+        <span class="vui-step-circle"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>
+        <span class="vui-step-label">Account</span>
+        <span class="vui-step-line" aria-hidden="true"></span>
+    </li>
+    <li class="vui-stepper-step vui-step-active" aria-current="step">
+        <span class="vui-step-circle">2</span>
+        <span class="vui-step-label">Profile</span>
+        <span class="vui-step-line" aria-hidden="true"></span>
+    </li>
+    <li class="vui-stepper-step vui-step-pending">
+        <span class="vui-step-circle">3</span>
+        <span class="vui-step-label">Confirm</span>
+    </li>
+</ol>
+HTML,
+                'code'    => <<<'CODE'
+<x-stepper :steps="['Account', 'Profile', 'Confirm']" :current="2" />
+CODE,
+            ],
+
+            // ── 38. Sidebar ───────────────────────────────────────────────────────────
+            [
+                'id'      => 'sidebar',
+                'name'    => 'Sidebar',
+                'desc'    => 'Application navigation sidebar with logo, nav links, active state, icons, and collapsible sub-menus.',
+                'cli'     => 'php veldora add sidebar',
+                'preview' => <<<'HTML'
+<aside class="vui-sidebar" role="navigation" style="max-width:220px;border-radius:12px;position:relative;height:280px;">
+    <div class="vui-sidebar-header"><span class="vui-sidebar-logo">MyApp</span></div>
+    <nav><ul class="vui-sidebar-nav">
+        <li class="vui-nav-item vui-nav-active">
+            <a href="#" class="vui-nav-link"><span class="vui-nav-icon">⚡</span><span class="vui-nav-label">Dashboard</span></a>
+        </li>
+        <li class="vui-nav-item">
+            <a href="#" class="vui-nav-link"><span class="vui-nav-icon">👤</span><span class="vui-nav-label">Users</span></a>
+        </li>
+        <li class="vui-nav-item">
+            <a href="#" class="vui-nav-link"><span class="vui-nav-icon">⚙️</span><span class="vui-nav-label">Settings</span></a>
+        </li>
+    </ul></nav>
+</aside>
+HTML,
+                'code'    => <<<'CODE'
+<?php
+$navItems = [
+    ['label' => 'Dashboard', 'href' => '/dashboard', 'icon' => '⚡', 'active' => true],
+    ['label' => 'Users',     'href' => '/users',     'icon' => '👤'],
+    ['label' => 'Settings',  'href' => '/settings',  'icon' => '⚙️', 'children' => [
+        ['label' => 'Profile', 'href' => '/settings/profile'],
+        ['label' => 'Security', 'href' => '/settings/security'],
+    ]],
+];
+?>
+<x-sidebar :items="$navItems" logo="MyApp" />
+CODE,
+            ],
+
+            // ── 39. Container ─────────────────────────────────────────────────────────
+            [
+                'id'      => 'container',
+                'name'    => 'Container',
+                'desc'    => 'Responsive max-width wrapper with configurable size (sm/md/lg/xl/full) and auto-centering.',
+                'cli'     => 'php veldora add container',
+                'preview' => <<<'HTML'
+<div style="display:flex;flex-direction:column;gap:10px;width:100%;">
+    <div class="vui-container vui-container-sm vui-container-center" style="background:var(--surface-2,rgba(255,255,255,.06));border-radius:8px;padding:10px 16px;text-align:center;">
+        <code style="font-size:12px;opacity:.7">size="sm" — 640px max</code>
+    </div>
+    <div class="vui-container vui-container-lg vui-container-center" style="background:var(--surface-2,rgba(255,255,255,.06));border-radius:8px;padding:10px 16px;text-align:center;">
+        <code style="font-size:12px;opacity:.7">size="lg" — 1024px max</code>
+    </div>
+    <div class="vui-container vui-container-full vui-container-center" style="background:var(--surface-2,rgba(255,255,255,.06));border-radius:8px;padding:10px 16px;text-align:center;">
+        <code style="font-size:12px;opacity:.7">size="full" — 100%</code>
+    </div>
+</div>
+HTML,
+                'code'    => <<<'CODE'
+{{-- Small centered container --}}
+<x-container size="sm">
+    <p>Narrow content area (640px max)</p>
+</x-container>
+
+{{-- Default large container --}}
+<x-container size="lg">
+    <p>Standard page content (1024px max)</p>
+</x-container>
+
+{{-- Full width --}}
+<x-container size="full" :center="false">
+    <p>Edge-to-edge layout</p>
+</x-container>
+CODE,
+            ],
         ];
     }
 }
