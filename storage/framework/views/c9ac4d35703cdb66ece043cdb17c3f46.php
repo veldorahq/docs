@@ -12,7 +12,7 @@
 
         <div class="hero-badge">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="13 2 13 9 20 9"/><polygon points="22 12 12 2 2 12 2 22 22 22"/></svg>
-            v1.0.0 — 87 Tests Passing · 21 UI Components
+            v1.0.0 — Modern PHP Framework · Zero Magic
         </div>
 
         <h1 class="hero-title">
@@ -82,10 +82,6 @@ $router->post(\'/logout\', [AuthController::class, \'logout\'])->middleware([\'a
     <section class="stats-section" aria-label="Framework stats">
         <div class="stats-inner">
             <div class="stat-item">
-                <div class="stat-number">87</div>
-                <div class="stat-label">Tests Passing</div>
-            </div>
-            <div class="stat-item">
                 <div class="stat-number">21</div>
                 <div class="stat-label">UI Components</div>
             </div>
@@ -95,15 +91,11 @@ $router->post(\'/logout\', [AuthController::class, \'logout\'])->middleware([\'a
             </div>
             <div class="stat-item">
                 <div class="stat-number"><?= $sectionCount ?></div>
-                <div class="stat-label">Doc Sections</div>
+                <div class="stat-label">Doc Chapters</div>
             </div>
             <div class="stat-item">
                 <div class="stat-number">PHP 8.2+</div>
-                <div class="stat-label">Required</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">MIT</div>
-                <div class="stat-label">License</div>
+                <div class="stat-label">Modern & Fast</div>
             </div>
         </div>
     </section>
