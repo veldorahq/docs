@@ -1624,23 +1624,25 @@ th.vui-sort-active { color: var(--accent, #7c6ef5); }
     .docs-nav { flex-direction: column; gap: 8px; }
 
     /* Components page mobile */
-    .components-page { padding: 70px 14px 48px; }
-    .components-header { margin-bottom: 24px; }
+    .components-page { padding: 70px 14px 48px; width: 100%; max-width: 100%; box-sizing: border-box; }
+    .components-header { margin-bottom: 24px; text-align: center; }
     .section-title { font-size: 1.5rem; word-break: break-word; }
-    .comp-quick-nav { margin-bottom: 24px; gap: 6px; flex-direction: column; }
-    .comp-quick-nav-links { gap: 3px; flex-wrap: wrap; }
+    .comp-quick-nav { margin-bottom: 24px; gap: 8px; flex-direction: column; width: 100%; }
+    .comp-quick-nav-links { gap: 4px; flex-wrap: wrap; justify-content: center; }
     .comp-quick-nav-links .btn { font-size: 11px; padding: 4px 9px; }
-    .comp-tabs-list { width: 100%; }
-    .comp-tab-btn { flex: 1; justify-content: center; font-size: 12px; padding: 7px 10px; }
-    .comp-box-header { flex-direction: column; align-items: stretch; padding: 10px 12px; gap: 8px; }
-    .comp-box-actions { display: flex; justify-content: flex-end; }
-    .comp-preview { padding: 16px 12px; }
-    .comp-code-panel pre.code-block { font-size: 12px; padding: 16px 14px; }
-    .component-section-name h2 { font-size: 1rem; }
+    .component-section { width: 100%; max-width: 100%; box-sizing: border-box; overflow: hidden; margin-bottom: 28px; border-radius: var(--radius-lg); }
+    .component-section-header { padding: 14px 16px; flex-direction: column; align-items: flex-start; gap: 8px; }
+    .component-section-name { flex-wrap: wrap; gap: 6px; width: 100%; }
+    .component-section-name h2 { font-size: 1.05rem; }
     .comp-badge { font-size: 10px; padding: 2px 7px; }
-    .comp-cli-badge { font-size: 10px; padding: 2px 7px; }
-    .component-section-header { padding: 16px; }
-    .component-section { border-radius: var(--radius-lg); }
+    .comp-cli-badge { font-size: 10px; padding: 3px 8px; max-width: 100%; }
+    .comp-box { width: 100%; max-width: 100%; box-sizing: border-box; overflow: hidden; }
+    .comp-box-header { flex-direction: row; justify-content: space-between; align-items: center; padding: 10px 12px; gap: 8px; flex-wrap: wrap; }
+    .comp-tabs-list { width: auto; }
+    .comp-tab-btn { font-size: 12px; padding: 5px 11px; }
+    .comp-preview-panel { padding: 20px 14px; width: 100%; max-width: 100%; box-sizing: border-box; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .comp-code-panel { width: 100%; max-width: 100%; box-sizing: border-box; }
+    .comp-code-panel pre.code-block { font-size: 11.5px; padding: 14px 12px; max-width: 100%; box-sizing: border-box; overflow-x: auto; }
 
     /* Docs page mobile */
     .doc-hero { padding: 48px 16px 40px; }

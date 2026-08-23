@@ -1324,7 +1324,21 @@
 /* ─────────────────────────────────────────────────────────────────────────────
    Responsive
    ───────────────────────────────────────────────────────────────────────────── */
+/* ─────────────────────────────────────────────────────────────────────────────
+   Responsive Overhaul for All Devices (Mobile & Tablet)
+   ───────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+    .vui-stat { padding: 14px 16px; gap: 10px; width: 100%; }
+    .vui-stat-value { font-size: 22px; }
+    .vui-card { width: 100%; max-width: 100%; }
+    .vui-table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; display: block; }
+    .vui-fileupload-wrap { width: 100%; max-width: 100%; }
+}
+
 @media (max-width: 768px) {
+    /* Container & Layout */
+    .vui-container { padding: 0 12px; }
+
     /* Sidebar */
     .vui-sidebar { width: 100%; min-height: auto; flex-direction: row; border-right: none; border-bottom: 1px solid var(--vui-border); }
     .vui-sidebar-nav { display: flex; flex-wrap: wrap; padding: 6px; gap: 2px; }
@@ -1332,20 +1346,49 @@
     .vui-sidebar-header { padding: 12px 16px; min-height: auto; border-right: 1px solid var(--vui-border); border-bottom: none; }
 
     /* Stepper: vertical on mobile */
-    .vui-stepper { flex-direction: column; gap: 8px; }
-    .vui-stepper-step { flex-direction: row; flex: none; align-items: center; gap: 12px; }
-    .vui-step-line { position: static; width: 2px; height: 20px; margin-left: 15px; }
+    .vui-stepper { flex-direction: column; gap: 8px; width: 100%; max-width: 100%; }
+    .vui-stepper-step { flex-direction: row; flex: none; align-items: center; gap: 12px; width: 100%; text-align: left; }
+    .vui-step-line { position: static; width: 2px; height: 20px; margin-left: 17px; }
+    .vui-step-label { margin-top: 0; text-align: left; }
 
-    /* DataTable */
+    /* DataTable & Tables */
+    .vui-table-responsive { width: 100%; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; display: block; border-radius: var(--vui-radius); }
     .vui-table th, .vui-table td { font-size: 12px; padding: 8px 10px; white-space: nowrap; }
-    .vui-datatable-toolbar { flex-direction: column; }
-    .vui-datatable-search { max-width: 100%; }
-    .vui-datatable-pages { gap: 3px; }
+    .vui-datatable-wrap { width: 100%; max-width: 100%; overflow-x: auto; }
+    .vui-datatable-toolbar { flex-direction: column; align-items: stretch; gap: 8px; width: 100%; }
+    .vui-datatable-search { max-width: 100%; width: 100%; }
+    .vui-datatable-pages { gap: 3px; justify-content: center; }
     .vui-datatable-pages .vui-page-btn { min-width: 28px; height: 28px; font-size: 11px; }
 
     /* Tabs */
-    .vui-tabs-list { flex-wrap: wrap; }
-    .vui-tab-btn { flex: 1; min-width: 80px; text-align: center; }
+    .vui-tabs-list { flex-wrap: wrap; width: 100%; }
+    .vui-tab-btn { flex: 1; min-width: 80px; text-align: center; font-size: 12.5px; padding: 6px 12px; }
+    .vui-tabs-content { padding: 16px; }
+
+    /* Cards & Modals */
+    .vui-card-body { padding: 16px; }
+    .vui-card-footer { padding: 12px 16px; }
+    .vui-modal-overlay { padding: 12px; }
+    .vui-modal-container { width: min(520px, calc(100vw - 24px)); max-width: 100%; }
+    .vui-modal-body { padding: 16px; }
+    .vui-modal-header { padding: 14px 16px; }
+    .vui-modal-footer { padding: 12px 16px; flex-wrap: wrap; gap: 8px; }
+
+    /* Forms */
+    .vui-input-group { width: 100%; }
+    .vui-combobox-wrap { width: 100%; max-width: 100%; }
+
+    /* File Upload */
+    .vui-fileupload-zone { padding: 20px 14px; width: 100%; box-sizing: border-box; }
+    .vui-file-item { padding: 8px 10px; gap: 8px; }
+
+    /* Timeline */
+    .vui-timeline { width: 100%; max-width: 100%; }
+    .vui-timeline-marker { width: 32px; height: 32px; font-size: 12px; }
+
+    /* Accordion */
+    .vui-accordion-header { padding: 12px 14px; font-size: 13.5px; }
+    .vui-accordion-inner { padding: 12px 14px; font-size: 13px; }
 }
 
 @media (max-width: 480px) {
@@ -1354,21 +1397,29 @@
     .vui-input-group { width: 100%; }
     .vui-select { width: 100%; }
     .vui-textarea { width: 100%; }
+    .vui-input { width: 100%; }
 
     /* Stepper labels smaller */
     .vui-step-label { font-size: 11px; }
 
     /* Timeline compact */
-    .vui-timeline-marker { width: 30px; height: 30px; }
-    .vui-timeline-item { gap: 12px; }
+    .vui-timeline-marker { width: 28px; height: 28px; }
+    .vui-timeline-item { gap: 10px; }
 
     /* Modal full-screen */
-    .vui-modal { max-width: calc(100vw - 24px); margin: 12px; }
-    .vui-modal-body { padding: 16px; }
+    .vui-modal-container { width: calc(100vw - 20px) !important; margin: 10px auto; }
+    .vui-modal-body { padding: 14px; }
 
     /* Drawer full-width */
-    .vui-drawer-panel { width: 100% !important; max-width: none; }
+    .vui-drawer { width: 100% !important; max-width: none; }
+    .vui-drawer-body { padding: 14px; }
 
-    /* Buttons smaller on tiny screens */
+    /* Buttons */
     .vui-btn-lg { padding: 9px 18px; font-size: 14px; }
+    .vui-btn-md { padding: 7px 14px; font-size: 13px; }
+    .vui-btn { max-width: 100%; text-overflow: ellipsis; }
+
+    /* Pagination */
+    .vui-pagination { justify-content: center; gap: 2px; }
+    .vui-page-btn { min-width: 30px; height: 30px; padding: 0 6px; font-size: 12px; }
 }
