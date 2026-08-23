@@ -96,7 +96,7 @@ class DocsController
         // Extract code blocks first to protect them from being parsed or escaped
         $codeBlocks = [];
         $content = preg_replace_callback('/```(\w*)\n([\s\S]*?)\n```/', function ($matches) use (&$codeBlocks) {
-            $lang = strtolower($matches[1] ?: 'php');
+            $lang = strtolower(trim($matches[1] ?: 'php'));
             $code = $matches[2];
             $placeholder = '__CODE_BLOCK_PLACEHOLDER_' . count($codeBlocks) . '__';
             $codeBlocks[] = [
@@ -133,7 +133,7 @@ class DocsController
                 continue;
             } else {
                 if ($inTable) {
-                    $tableHtml = '<div class="table-responsive"><table><thead>';
+                    $tableHtml = '<div class="table-responsive"><table class="vui-table"><thead>';
                     foreach ($tableRows as $rowIndex => $row) {
                         $tag = ($rowIndex === 0) ? 'th' : 'td';
                         if ($rowIndex === 1 && count($tableRows) > 1 && $tableRows[0] === $row) {
@@ -221,7 +221,7 @@ class DocsController
 
         // Clean up unclosed states
         if ($inTable) {
-            $tableHtml = '<div class="table-responsive"><table><thead>';
+            $tableHtml = '<div class="table-responsive"><table class="vui-table"><thead>';
             foreach ($tableRows as $rowIndex => $row) {
                 $tag = ($rowIndex === 0) ? 'th' : 'td';
                 $tableHtml .= '<tr>';
@@ -245,32 +245,71 @@ class DocsController
 
         $parsedHtml = implode("\n", $html);
 
-        // Put back protected code blocks with appropriate layout (Terminal mockup vs Standard code block)
+        // Put back protected code blocks with distinct Terminal vs IDE Editor mockups
         foreach ($codeBlocks as $index => $block) {
             $placeholder = '__CODE_BLOCK_PLACEHOLDER_' . $index . '__';
             $lang = $block['lang'];
-            $isTerminal = ($lang === 'terminal' || $lang === 'cmd' || $lang === 'shell' || str_contains($block['code'], '▲ Veldora Framework'));
+            $code = $block['code'];
+
+            $isTerminal = in_array($lang, ['bash', 'sh', 'cmd', 'terminal', 'shell', 'console', 'cli'], true)
+                || str_contains($code, '▲ Veldora')
+                || str_contains($code, 'php veldora')
+                || str_contains($code, 'npx create-veldora')
+                || str_contains($code, 'npm install')
+                || str_contains($code, 'composer create-project')
+                || str_contains($code, '? What is your project named?');
 
             if ($isTerminal) {
+                // ── Terminal Mockup Window (CLI / Terminal commands) ──
+                $title = str_contains($code, '▲ Veldora') ? 'Terminal &bull; Interactive CLI Setup' : 'Terminal &bull; bash';
                 $markup = '<div class="terminal-mockup">';
                 $markup .= '<div class="terminal-mockup-header">';
                 $markup .= '<div class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>';
-                $markup .= '<span class="terminal-mockup-title">bash &bull; Interactive CLI Setup</span>';
-                $markup .= '<button type="button" class="code-copy-btn" onclick="copyCode(this)" aria-label="Copy terminal text">';
+                $markup .= '<span class="terminal-mockup-title">' . $title . '</span>';
+                $markup .= '<button type="button" class="code-copy-btn" onclick="copyCode(this)" aria-label="Copy terminal command">';
                 $markup .= '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy';
                 $markup .= '</button>';
                 $markup .= '</div>';
-                $markup .= '<pre class="terminal-mockup-body code-block"><code>' . $block['code'] . '</code></pre>';
+                $markup .= '<pre class="terminal-mockup-body code-block language-bash"><code class="language-bash">' . $code . '</code></pre>';
                 $markup .= '</div>';
             } else {
-                $markup = '<div class="code-block-wrapper">';
-                $markup .= '<div class="code-block-header">';
-                $markup .= '<span class="code-block-lang">' . htmlspecialchars(strtoupper($lang ?: 'PHP'), ENT_QUOTES, 'UTF-8') . '</span>';
+                // ── IDE Code Editor Window (PHP, HTML, JS, JSON, INI files) ──
+                $label = strtoupper($lang ?: 'PHP');
+                $filename = 'Source Code';
+                if ($lang === 'php') {
+                    if (str_contains($code, '$router-&gt;') || str_contains($code, '$router->')) {
+                        $filename = 'routes/web.php';
+                    } elseif (str_contains($code, 'class Post') || str_contains($code, 'extends Model')) {
+                        $filename = 'app/Models/Post.php';
+                    } elseif (str_contains($code, 'class PostController') || str_contains($code, 'Controller')) {
+                        $filename = 'app/Controllers/PostController.php';
+                    } elseif (str_contains($code, 'CreatePostsTable') || str_contains($code, 'Schema::create')) {
+                        $filename = 'database/migrations/create_posts_table.php';
+                    } else {
+                        $filename = 'example.php';
+                    }
+                } elseif ($lang === 'html') {
+                    $filename = 'template.veldora.php';
+                } elseif ($lang === 'ini') {
+                    $filename = '.env';
+                } elseif ($lang === 'json') {
+                    $filename = 'package.json';
+                }
+
+                $markup = '<div class="ide-code-wrapper">';
+                $markup .= '<div class="ide-code-header">';
+                $markup .= '<div class="ide-code-tab">';
+                $markup .= '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
+                $markup .= '<span>' . htmlspecialchars($filename, ENT_QUOTES, 'UTF-8') . '</span>';
+                $markup .= '</div>';
+                $markup .= '<div class="ide-code-actions">';
+                $markup .= '<span class="ide-code-lang">' . htmlspecialchars($label, ENT_QUOTES, 'UTF-8') . '</span>';
                 $markup .= '<button type="button" class="code-copy-btn" onclick="copyCode(this)" aria-label="Copy code">';
                 $markup .= '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy';
                 $markup .= '</button>';
                 $markup .= '</div>';
-                $markup .= '<pre class="code-block language-' . htmlspecialchars($lang, ENT_QUOTES, 'UTF-8') . '"><code class="language-' . htmlspecialchars($lang, ENT_QUOTES, 'UTF-8') . '">' . $block['code'] . '</code></pre>';
+                $markup .= '</div>';
+                $markup .= '<pre class="ide-code-body code-block language-' . htmlspecialchars($lang, ENT_QUOTES, 'UTF-8') . '"><code class="language-' . htmlspecialchars($lang, ENT_QUOTES, 'UTF-8') . '">' . $code . '</code></pre>';
                 $markup .= '</div>';
             }
 
@@ -288,7 +327,7 @@ class DocsController
         $text = str_replace(['&amp;#125;', '&#125;'], '}', $text);
 
         // Inline code `code`
-        $text = preg_replace('/`([^`]+)`/', '<code>$1</code>', $text) ?? $text;
+        $text = preg_replace('/`([^`]+)`/', '<code class="inline-code">$1</code>', $text) ?? $text;
 
         // Bold **text**
         $text = preg_replace('/\*\*(.+?)\*\*/', '<strong>$1</strong>', $text) ?? $text;

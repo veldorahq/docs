@@ -2096,7 +2096,7 @@ th.vui-sort-active { color: var(--accent, #7c6ef5); }
     align-items: center;
     justify-content: space-between;
     padding: 10px 16px;
-    background: #121216;
+    background: #111115;
     border-bottom: 1px solid #27272a;
 }
 
@@ -2119,12 +2119,82 @@ th.vui-sort-active { color: var(--accent, #7c6ef5); }
     font-family: var(--font-mono);
     font-size: 13px;
     line-height: 1.7;
-    color: #e4e4e7;
+    color: #38bdf8;
     background: #08080a !important;
     border: none !important;
     border-radius: 0 !important;
     overflow-x: auto;
     white-space: pre;
+}
+
+/* ─── IDE Code Editor Wrapper (PHP, HTML, JS, JSON files) ─────────────────────── */
+.ide-code-wrapper {
+    margin: 24px 0;
+    background: #0e0f14;
+    border: 1px solid #23242c;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+.ide-code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px 0 0;
+    background: #15171e;
+    border-bottom: 1px solid #23242c;
+    height: 38px;
+}
+
+.ide-code-tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 100%;
+    padding: 0 18px;
+    background: #0e0f14;
+    border-right: 1px solid #23242c;
+    border-top: 2px solid var(--accent);
+    color: var(--text);
+    font-size: 12px;
+    font-family: var(--font-mono);
+    font-weight: 500;
+}
+
+.ide-code-tab svg {
+    color: var(--accent);
+    flex-shrink: 0;
+}
+
+.ide-code-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ide-code-lang {
+    font-size: 10.5px;
+    font-family: var(--font-mono);
+    font-weight: 600;
+    color: var(--text-dim);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 7px;
+    letter-spacing: .05em;
+}
+
+.ide-code-body {
+    padding: 20px 24px;
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 13.5px;
+    line-height: 1.65;
+    background: #0e0f14 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    overflow-x: auto;
 }
 
 /* ─── AI Prompt Card ──────────────────────────────────────────────────────────── */
@@ -2392,10 +2462,31 @@ th.vui-sort-active { color: var(--accent, #7c6ef5); }
 }
 
 .ext-feature-card p {
-    font-size: 13px;
+    font-size: 13.5px;
     color: var(--text-muted);
-    line-height: 1.6;
-    margin: 0;
+    line-height: 1.65;
+    margin: 0 0 16px 0;
+}
+
+.ext-card-tags {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: auto;
+}
+
+.ext-tag {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: #c4b5fd;
+    background: rgba(139, 92, 246, 0.1);
+    border: 1px solid rgba(139, 92, 246, 0.25);
+    border-radius: 6px;
+    padding: 3px 8px;
+    white-space: nowrap;
 }
 
 .ext-snippets-section {

@@ -68,7 +68,12 @@
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
                 </div>
                 <h3>Syntax Highlighting</h3>
-                <p>Full TextMate grammar highlighting for <code>&#64;directives</code>, <code>&#123;&#123; expressions &#125;&#125;</code>, and embedded PHP blocks with theme-adaptive colors.</p>
+                <p>Full TextMate grammar highlighting for template tags, directives, and embedded PHP blocks with theme-adaptive colors.</p>
+                <div class="ext-card-tags">
+                    <span class="ext-tag">&#64;directives</span>
+                    <span class="ext-tag">&#123;&#123; $variable &#125;&#125;</span>
+                    <span class="ext-tag">&#123;!! $raw !!&#125;</span>
+                </div>
             </div>
 
             <div class="ext-feature-card">
@@ -76,7 +81,13 @@
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
                 </div>
                 <h3>32 Fast Snippets</h3>
-                <p>Type <code>v-if</code>, <code>v-foreach</code>, <code>v-extends</code>, <code>v-comp</code> and hit Tab to instantly generate standard boilerplate.</p>
+                <p>Type snippet prefixes and press Tab to instantly expand complete template structures and boilerplate.</p>
+                <div class="ext-card-tags">
+                    <span class="ext-tag">v-if</span>
+                    <span class="ext-tag">v-foreach</span>
+                    <span class="ext-tag">v-extends</span>
+                    <span class="ext-tag">v-comp</span>
+                </div>
             </div>
 
             <div class="ext-feature-card">
@@ -84,7 +95,12 @@
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
                 </div>
                 <h3>Directive Bracket Matching</h3>
-                <p>Opening directives like <code>&#64;if</code> pair with <code>&#64;endif</code> and <code>&#64;section</code> pairs with <code>&#64;endsection</code> with folding support.</p>
+                <p>Pairs opening and closing directives with smart code folding and bracket colorization.</p>
+                <div class="ext-card-tags">
+                    <span class="ext-tag">&#64;if / &#64;endif</span>
+                    <span class="ext-tag">&#64;section / &#64;endsection</span>
+                    <span class="ext-tag">&#64;auth / &#64;endauth</span>
+                </div>
             </div>
 
             <div class="ext-feature-card">
@@ -92,7 +108,13 @@
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
                 </div>
                 <h3>PHP IntelliSense</h3>
-                <p>Variables, classes, and global helper functions enjoy complete IntelliSense autocompletion inside template tags.</p>
+                <p>Variables, classes, methods, and global helper functions enjoy complete autocompletion inside template tags.</p>
+                <div class="ext-card-tags">
+                    <span class="ext-tag">auth()</span>
+                    <span class="ext-tag">csrf_token()</span>
+                    <span class="ext-tag">route()</span>
+                    <span class="ext-tag">config()</span>
+                </div>
             </div>
         </div>
     </section>
