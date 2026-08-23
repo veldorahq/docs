@@ -49,11 +49,11 @@
 
         <!-- Sidebar footer -->
         <div class="sidebar-footer">
-            <a href="https://github.com/veldorahq/veldora-vscode/releases" target="_blank" rel="noopener noreferrer" class="sidebar-footer-link">
+            <a href="https://github.com/veldorahq/veldora-core" target="_blank" rel="noopener noreferrer" class="sidebar-footer-link">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-                View on GitHub
+                GitHub
             </a>
-            <span class="sidebar-version">v0.4.0</span>
+            <span class="sidebar-version">v1.0.0</span>
         </div>
     </aside>
 
@@ -85,6 +85,41 @@
         <article class="prose" id="doc-content">
             <?= $section['html'] ?>
         </article>
+
+        <!-- ── AI Prompt Banner (shows on AI Context Prompt section) ── -->
+        <?php if (isset($current) && str_contains($current, 'ai-context')): ?>
+        <div class="ai-prompt-actions" style="margin-top: 24px;">
+            <button class="btn btn-primary" id="copy-ai-prompt" onclick="copyAiPrompt()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Copy AI Prompt
+            </button>
+            <a href="/docs/ai-context-prompt" class="btn btn-secondary" download="veldora-ai-context.md">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download as .md
+            </a>
+        </div>
+        <?php endif; ?>
+
+        <!-- ── AI Skills Banner (show on every page) ─────────────── -->
+        <div class="ai-skills-banner" id="ai-skills-banner">
+            <div class="ai-skills-inner">
+                <div class="ai-skills-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-1H1a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/></svg>
+                </div>
+                <div class="ai-skills-text">
+                    <div class="ai-skills-title">Use Veldora with AI assistants</div>
+                    <div class="ai-skills-sub">Copy the AI context prompt to give any AI assistant (Claude, ChatGPT, Gemini) full knowledge of the Veldora API — so it generates correct code every time.</div>
+                </div>
+                <div class="ai-skills-actions">
+                    <a href="/docs/ai-context-prompt" class="btn btn-primary btn-sm" id="ai-skills-view-prompt">
+                        View AI Prompt
+                    </a>
+                    <button class="btn btn-secondary btn-sm" id="ai-skills-dismiss" onclick="dismissAiBanner()" aria-label="Dismiss banner">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
 
         <!-- Prev / Next navigation -->
         <?php if ($prev || $next): ?>
@@ -144,6 +179,40 @@ document.addEventListener('keydown', (e) => {
 const activeItem = document.querySelector('.sidebar-nav li.active');
 if (activeItem) {
     activeItem.scrollIntoView({ block: 'center', behavior: 'smooth' });
+}
+
+// AI banner dismiss
+function dismissAiBanner() {
+    const banner = document.getElementById('ai-skills-banner');
+    if (banner) {
+        banner.style.opacity = '0';
+        banner.style.transform = 'translateY(-8px)';
+        setTimeout(() => banner.style.display = 'none', 300);
+        try { sessionStorage.setItem('veldora_ai_banner_dismissed', '1'); } catch(e) {}
+    }
+}
+
+// Auto-hide if already dismissed this session
+if (typeof sessionStorage !== 'undefined') {
+    try {
+        if (sessionStorage.getItem('veldora_ai_banner_dismissed')) {
+            const b = document.getElementById('ai-skills-banner');
+            if (b) b.style.display = 'none';
+        }
+    } catch(e) {}
+}
+
+// Copy AI prompt text from the blockquote in the AI Context section
+function copyAiPrompt() {
+    const el = document.querySelector('#doc-content blockquote');
+    if (!el) return;
+    navigator.clipboard.writeText(el.innerText).then(() => {
+        const btn = document.getElementById('copy-ai-prompt');
+        if (btn) {
+            btn.textContent = '✓ Copied!';
+            setTimeout(() => { btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy AI Prompt'; }, 2000);
+        }
+    });
 }
 </script>
 @endsection
