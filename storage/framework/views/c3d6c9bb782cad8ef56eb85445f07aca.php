@@ -2,7 +2,7 @@
 
 <?php $this->startSection('page_title', 'UI Components'); ?>
 <?php $this->startSection('page_title_suffix', 'Veldora'); ?>
-<?php $this->startSection('meta_desc', 'Interactive showcase of all 21 Veldora UI components with live previews and template usage.'); ?>
+<?php $this->startSection('meta_desc', 'Interactive showcase of all 39 Veldora UI components with live previews and template usage.'); ?>
 
 <?php $this->startSection('content'); ?>
 <main class="components-page" id="main-content">
@@ -15,7 +15,7 @@
         </div>
         <h1 class="section-title">Component Showcase</h1>
         <p class="section-sub">
-            21 production-ready UI components built for Veldora. Live preview is shown by default — click <strong style="color:var(--accent)">Code</strong> to view template syntax, and <strong style="color:var(--accent)">Copy</strong> to copy it directly.
+            39 production-ready UI components built for Veldora. Live preview is shown by default — click <strong style="color:var(--accent)">Code</strong> to view template syntax, and <strong style="color:var(--accent)">Copy</strong> to copy it directly.
         </p>
     </header>
 

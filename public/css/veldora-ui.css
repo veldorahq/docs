@@ -1252,3 +1252,84 @@
 .vui-container-lg   { max-width:1024px; }
 .vui-container-xl   { max-width:1280px; }
 .vui-container-full { max-width:100%; }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Global Link Reset — no underlines on component links
+   ───────────────────────────────────────────────────────────────────────────── */
+.vui-btn,
+.vui-nav-link,
+.vui-nav-sub-link,
+.vui-breadcrumb-link,
+.vui-page-btn,
+.vui-tab-btn,
+.vui-dropdown-item {
+    text-decoration: none !important;
+}
+.vui-nav-link:hover,
+.vui-nav-sub-link:hover,
+.vui-breadcrumb-link:hover { text-decoration: none !important; }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Sort Icon (DataTable)
+   ───────────────────────────────────────────────────────────────────────────── */
+.vui-sort-icon {
+    opacity: .4;
+    flex-shrink: 0;
+    transition: opacity .15s, transform .2s cubic-bezier(0.16, 1, 0.3, 1), color .15s;
+    pointer-events: none;
+}
+.vui-table th:hover .vui-sort-icon { opacity: .7; }
+.vui-table th.vui-sort-active .vui-sort-icon { opacity: 1; color: var(--vui-accent); }
+.vui-table th.vui-sort-active { color: var(--vui-accent); }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Responsive
+   ───────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+    /* Sidebar */
+    .vui-sidebar { width: 100%; min-height: auto; flex-direction: row; border-right: none; border-bottom: 1px solid var(--vui-border); }
+    .vui-sidebar-nav { display: flex; flex-wrap: wrap; padding: 6px; gap: 2px; }
+    .vui-nav-item { border-radius: var(--vui-radius); }
+    .vui-sidebar-header { padding: 12px 16px; min-height: auto; border-right: 1px solid var(--vui-border); border-bottom: none; }
+
+    /* Stepper: vertical on mobile */
+    .vui-stepper { flex-direction: column; gap: 8px; }
+    .vui-stepper-step { flex-direction: row; flex: none; align-items: center; gap: 12px; }
+    .vui-step-line { position: static; width: 2px; height: 20px; margin-left: 15px; }
+
+    /* DataTable */
+    .vui-table th, .vui-table td { font-size: 12px; padding: 8px 10px; white-space: nowrap; }
+    .vui-datatable-toolbar { flex-direction: column; }
+    .vui-datatable-search { max-width: 100%; }
+    .vui-datatable-pages { gap: 3px; }
+    .vui-datatable-pages .vui-page-btn { min-width: 28px; height: 28px; font-size: 11px; }
+
+    /* Tabs */
+    .vui-tabs-list { flex-wrap: wrap; }
+    .vui-tab-btn { flex: 1; min-width: 80px; text-align: center; }
+}
+
+@media (max-width: 480px) {
+    /* Form elements full-width */
+    .vui-field { width: 100%; }
+    .vui-input-group { width: 100%; }
+    .vui-select { width: 100%; }
+    .vui-textarea { width: 100%; }
+
+    /* Stepper labels smaller */
+    .vui-step-label { font-size: 11px; }
+
+    /* Timeline compact */
+    .vui-timeline-marker { width: 30px; height: 30px; }
+    .vui-timeline-item { gap: 12px; }
+
+    /* Modal full-screen */
+    .vui-modal { max-width: calc(100vw - 24px); margin: 12px; }
+    .vui-modal-body { padding: 16px; }
+
+    /* Drawer full-width */
+    .vui-drawer-panel { width: 100% !important; max-width: none; }
+
+    /* Buttons smaller on tiny screens */
+    .vui-btn-lg { padding: 9px 18px; font-size: 14px; }
+}

@@ -1236,26 +1236,44 @@ CODE,
                 'desc'    => 'Metric display card with label, value, optional icon, and trend indicator (up/down with percentage).',
                 'cli'     => 'php veldora add stat',
                 'preview' => <<<'HTML'
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;width:100%;">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;width:100%;">
     <div class="vui-stat">
+        <div class="vui-stat-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
         <div class="vui-stat-body">
             <p class="vui-stat-label">Total Users</p>
             <p class="vui-stat-value">12,403</p>
-            <span class="vui-stat-trend vui-trend-up">&#9650; +8.2%</span>
+            <span class="vui-stat-trend vui-trend-up">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+                +8.2% vs last month
+            </span>
         </div>
     </div>
     <div class="vui-stat">
+        <div class="vui-stat-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
         <div class="vui-stat-body">
-            <p class="vui-stat-label">Revenue</p>
+            <p class="vui-stat-label">Total Revenue</p>
             <p class="vui-stat-value">$48,290</p>
-            <span class="vui-stat-trend vui-trend-up">&#9650; +12.4%</span>
+            <span class="vui-stat-trend vui-trend-up">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+                +12.4% vs last month
+            </span>
         </div>
     </div>
     <div class="vui-stat">
+        <div class="vui-stat-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        </div>
         <div class="vui-stat-body">
-            <p class="vui-stat-label">Churn Rate</p>
-            <p class="vui-stat-value">3.2%</p>
-            <span class="vui-stat-trend vui-trend-down">&#9660; -0.5%</span>
+            <p class="vui-stat-label">Bounce Rate</p>
+            <p class="vui-stat-value">2.4%</p>
+            <span class="vui-stat-trend vui-trend-down">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                -0.8% decrease
+            </span>
         </div>
     </div>
 </div>
@@ -1263,7 +1281,7 @@ HTML,
                 'code'    => <<<'CODE'
 <x-stat label="Total Users" value="12,403" trend="+8.2%" :trend-up="true" />
 <x-stat label="Revenue" value="48,290" prefix="$" trend="+12.4%" :trend-up="true" />
-<x-stat label="Churn Rate" value="3.2" suffix="%" trend="-0.5%" :trend-up="false" />
+<x-stat label="Churn Rate" value="2.4" suffix="%" trend="-0.8%" :trend-up="false" />
 CODE,
             ],
 
@@ -1275,45 +1293,85 @@ CODE,
                 'cli'     => 'php veldora add datatable',
                 'preview' => <<<'HTML'
 <div class="vui-datatable-wrap" id="demo-dt1">
-    <div class="vui-datatable-toolbar">
-        <input type="search" class="vui-input vui-datatable-search" placeholder="Search..." oninput="vuiDt_demo_dt1_search(this.value)" style="max-width:220px;">
+    <div class="vui-datatable-toolbar" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
+        <div style="position:relative;width:240px;">
+            <input type="search" class="vui-input vui-datatable-search" placeholder="Search members..." oninput="vuiDtSearch('demo-dt1', this.value)" style="padding-left:32px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);opacity:.5;pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <span style="font-size:12px;color:var(--text-muted);" id="demo-dt1-count">Showing 4 members</span>
     </div>
-    <div class="vui-table-responsive">
-        <table class="vui-table vui-table-hover vui-table-striped">
+    <div class="vui-table-responsive" style="overflow-x:auto;">
+        <table class="vui-table vui-table-hover vui-table-striped" style="width:100%;">
             <thead><tr>
-                <th onclick="vuiDt_demo_dt1_sort('name')" style="cursor:pointer">Name &#8597;</th>
-                <th onclick="vuiDt_demo_dt1_sort('role')" style="cursor:pointer">Role &#8597;</th>
-                <th onclick="vuiDt_demo_dt1_sort('status')" style="cursor:pointer">Status &#8597;</th>
+                <th onclick="vuiDtSort('demo-dt1', 0, this)" class="vui-sortable" style="cursor:pointer;user-select:none;">
+                    <div style="display:flex;align-items:center;gap:6px;">
+                        <span>Name</span>
+                        <svg class="vui-sort-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg>
+                    </div>
+                </th>
+                <th onclick="vuiDtSort('demo-dt1', 1, this)" class="vui-sortable" style="cursor:pointer;user-select:none;">
+                    <div style="display:flex;align-items:center;gap:6px;">
+                        <span>Role</span>
+                        <svg class="vui-sort-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg>
+                    </div>
+                </th>
+                <th onclick="vuiDtSort('demo-dt1', 2, this)" class="vui-sortable" style="cursor:pointer;user-select:none;">
+                    <div style="display:flex;align-items:center;gap:6px;">
+                        <span>Department</span>
+                        <svg class="vui-sort-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg>
+                    </div>
+                </th>
+                <th onclick="vuiDtSort('demo-dt1', 3, this)" class="vui-sortable" style="cursor:pointer;user-select:none;">
+                    <div style="display:flex;align-items:center;gap:6px;">
+                        <span>Status</span>
+                        <svg class="vui-sort-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg>
+                    </div>
+                </th>
             </tr></thead>
             <tbody id="demo-dt1-tbody">
-                <tr><td>Alice</td><td>Engineer</td><td>Active</td></tr>
-                <tr><td>Bob</td><td>Designer</td><td>Away</td></tr>
-                <tr><td>Carol</td><td>Manager</td><td>Active</td></tr>
-                <tr><td>Dave</td><td>QA</td><td>Inactive</td></tr>
+                <tr>
+                    <td style="font-weight:600;color:var(--vui-text);">Alice Smith</td>
+                    <td>Principal Engineer</td>
+                    <td>Engineering</td>
+                    <td><span class="vui-badge vui-badge-success">Active</span></td>
+                </tr>
+                <tr>
+                    <td style="font-weight:600;color:var(--vui-text);">Bob Martinez</td>
+                    <td>Product Designer</td>
+                    <td>Design</td>
+                    <td><span class="vui-badge vui-badge-warning">Away</span></td>
+                </tr>
+                <tr>
+                    <td style="font-weight:600;color:var(--vui-text);">Carol White</td>
+                    <td>Engineering Lead</td>
+                    <td>Engineering</td>
+                    <td><span class="vui-badge vui-badge-success">Active</span></td>
+                </tr>
+                <tr>
+                    <td style="font-weight:600;color:var(--vui-text);">Dave Johnson</td>
+                    <td>QA Architect</td>
+                    <td>Quality</td>
+                    <td><span class="vui-badge vui-badge-danger">Offline</span></td>
+                </tr>
             </tbody>
         </table>
     </div>
-    <div id="demo-dt1-pages" class="vui-datatable-pages"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;flex-wrap:wrap;gap:10px;">
+        <span style="font-size:12.5px;color:var(--text-muted);">Page 1 of 2</span>
+        <div class="vui-pagination">
+            <button type="button" class="vui-page-btn vui-page-active">1</button>
+            <button type="button" class="vui-page-btn" onclick="window.showToast('Showing page 2')">2</button>
+            <button type="button" class="vui-page-btn" onclick="window.showToast('Next page')">&rarr;</button>
+        </div>
+    </div>
 </div>
-<script>
-(function(){
-    var uid='demo-dt1',perPage=3,page=1,q='',asc=true,sKey='';
-    var tbody=document.getElementById(uid+'-tbody');
-    var allRows=Array.from(tbody.querySelectorAll('tr'));
-    function filtered(){return q?allRows.filter(function(r){return r.textContent.toLowerCase().includes(q);}):allRows.slice();}
-    function render(){var f=filtered();var tot=Math.ceil(f.length/perPage)||1;if(page>tot)page=1;tbody.innerHTML='';f.slice((page-1)*perPage,page*perPage).forEach(function(r){tbody.appendChild(r);});var pg=document.getElementById(uid+'-pages');pg.innerHTML='';for(var i=1;i<=tot;i++){var b=document.createElement('button');b.textContent=i;b.className='vui-page-btn'+(i===page?' vui-page-active':'');(function(p){b.onclick=function(){page=p;render();};})(i);pg.appendChild(b);}}
-    window['vuiDt_'+uid+'_search']=function(v){q=v.toLowerCase();page=1;render();};
-    window['vuiDt_'+uid+'_sort']=function(k){var keys=['name','role','status'];if(sKey===k)asc=!asc;else{sKey=k;asc=true;}var idx=keys.indexOf(k);allRows.sort(function(a,b){var av=(a.cells[idx]||{}).textContent||'';var bv=(b.cells[idx]||{}).textContent||'';return asc?av.localeCompare(bv,undefined,{numeric:true}):bv.localeCompare(av,undefined,{numeric:true});});render();};
-    render();
-}());
-</script>
 HTML,
                 'code'    => <<<'CODE'
 <?php
-$columns = ['name' => 'Name', 'role' => 'Role', 'status' => 'Status'];
+$columns = ['name' => 'Name', 'role' => 'Role', 'dept' => 'Department', 'status' => 'Status'];
 $rows    = [
-    ['name' => 'Alice', 'role' => 'Engineer', 'status' => 'Active'],
-    ['name' => 'Bob',   'role' => 'Designer', 'status' => 'Away'],
+    ['name' => 'Alice Smith',  'role' => 'Principal Engineer', 'dept' => 'Engineering', 'status' => 'Active'],
+    ['name' => 'Bob Martinez', 'role' => 'Product Designer',   'dept' => 'Design',      'status' => 'Away'],
 ];
 ?>
 <x-datatable :columns="$columns" :rows="$rows" :searchable="true" :per-page="10" />
@@ -1329,26 +1387,33 @@ CODE,
                 'preview' => <<<'HTML'
 <ol class="vui-timeline">
     <li class="vui-timeline-item">
-        <div class="vui-timeline-marker" style="background:#22c55e">✓</div>
+        <div class="vui-timeline-marker" style="background:rgba(34,197,94,0.15);border-color:#22c55e;color:#22c55e;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
         <div class="vui-timeline-content">
-            <p class="vui-timeline-title">Order Placed</p>
-            <p class="vui-timeline-desc">Your order #1042 has been confirmed.</p>
+            <p class="vui-timeline-title">Order Confirmed</p>
+            <p class="vui-timeline-desc">Payment of $149.00 processed via Stripe.</p>
             <time class="vui-timeline-time">Aug 23, 2026 &middot; 10:04 AM</time>
         </div>
     </li>
     <li class="vui-timeline-item">
-        <div class="vui-timeline-marker" style="background:#3b82f6">⬆</div>
+        <div class="vui-timeline-marker" style="background:rgba(59,130,246,0.15);border-color:#3b82f6;color:#3b82f6;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        </div>
         <div class="vui-timeline-content">
-            <p class="vui-timeline-title">Shipped</p>
-            <p class="vui-timeline-desc">Package dispatched via DHL Express.</p>
-            <time class="vui-timeline-time">Aug 24, 2026 &middot; 2:30 PM</time>
+            <p class="vui-timeline-title">Dispatched with DHL Express</p>
+            <p class="vui-timeline-desc">Tracking #DHL-94820491-BD in transit.</p>
+            <time class="vui-timeline-time">Aug 23, 2026 &middot; 02:30 PM</time>
         </div>
     </li>
     <li class="vui-timeline-item">
-        <div class="vui-timeline-marker">◎</div>
+        <div class="vui-timeline-marker" style="background:rgba(167,139,250,0.15);border-color:#a78bfa;color:#a78bfa;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
         <div class="vui-timeline-content">
             <p class="vui-timeline-title">Out for Delivery</p>
-            <time class="vui-timeline-time">Expected Aug 25, 2026</time>
+            <p class="vui-timeline-desc">Courier is en route to destination address.</p>
+            <time class="vui-timeline-time">Expected Aug 24, 2026 &middot; By 05:00 PM</time>
         </div>
     </li>
 </ol>
@@ -1356,9 +1421,9 @@ HTML,
                 'code'    => <<<'CODE'
 <?php
 $events = [
-    ['title' => 'Order Placed',    'description' => 'Order #1042 confirmed.', 'time' => 'Aug 23, 2026', 'color' => '#22c55e'],
-    ['title' => 'Shipped',         'description' => 'Via DHL Express.',        'time' => 'Aug 24, 2026', 'color' => '#3b82f6'],
-    ['title' => 'Out for Delivery','time' => 'Aug 25, 2026'],
+    ['title' => 'Order Confirmed', 'description' => 'Payment processed.', 'time' => 'Aug 23, 2026', 'color' => '#22c55e'],
+    ['title' => 'Dispatched',      'description' => 'Via DHL Express.',   'time' => 'Aug 23, 2026', 'color' => '#3b82f6'],
+    ['title' => 'Out for Delivery','description' => 'En route.',          'time' => 'Aug 24, 2026', 'color' => '#a78bfa'],
 ];
 ?>
 <x-timeline :items="$events" />
@@ -1401,17 +1466,35 @@ CODE,
                 'desc'    => 'Application navigation sidebar with logo, nav links, active state, icons, and collapsible sub-menus.',
                 'cli'     => 'php veldora add sidebar',
                 'preview' => <<<'HTML'
-<aside class="vui-sidebar" role="navigation" style="max-width:220px;border-radius:12px;position:relative;height:280px;">
-    <div class="vui-sidebar-header"><span class="vui-sidebar-logo">MyApp</span></div>
-    <nav><ul class="vui-sidebar-nav">
+<aside class="vui-sidebar" role="navigation" style="width:100%;max-width:240px;border-radius:12px;border:1px solid var(--vui-border);background:var(--vui-surface);overflow:hidden;">
+    <div class="vui-sidebar-header" style="display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid var(--vui-border);">
+        <div style="width:28px;height:28px;border-radius:6px;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px;">V</div>
+        <span class="vui-sidebar-logo" style="font-size:15px;font-weight:700;letter-spacing:-.02em;">Veldora App</span>
+    </div>
+    <nav style="padding:10px 8px;"><ul class="vui-sidebar-nav" style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:3px;">
         <li class="vui-nav-item vui-nav-active">
-            <a href="#" class="vui-nav-link"><span class="vui-nav-icon">⚡</span><span class="vui-nav-label">Dashboard</span></a>
+            <a href="javascript:void(0)" class="vui-nav-link" style="text-decoration:none !important;" onclick="window.showToast('Dashboard selected')">
+                <span class="vui-nav-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                </span>
+                <span class="vui-nav-label">Dashboard</span>
+            </a>
         </li>
         <li class="vui-nav-item">
-            <a href="#" class="vui-nav-link"><span class="vui-nav-icon">👤</span><span class="vui-nav-label">Users</span></a>
+            <a href="javascript:void(0)" class="vui-nav-link" style="text-decoration:none !important;" onclick="window.showToast('Team selected')">
+                <span class="vui-nav-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </span>
+                <span class="vui-nav-label">Team Members</span>
+            </a>
         </li>
         <li class="vui-nav-item">
-            <a href="#" class="vui-nav-link"><span class="vui-nav-icon">⚙️</span><span class="vui-nav-label">Settings</span></a>
+            <a href="javascript:void(0)" class="vui-nav-link" style="text-decoration:none !important;" onclick="window.showToast('Settings selected')">
+                <span class="vui-nav-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                </span>
+                <span class="vui-nav-label">Settings</span>
+            </a>
         </li>
     </ul></nav>
 </aside>
@@ -1419,15 +1502,12 @@ HTML,
                 'code'    => <<<'CODE'
 <?php
 $navItems = [
-    ['label' => 'Dashboard', 'href' => '/dashboard', 'icon' => '⚡', 'active' => true],
-    ['label' => 'Users',     'href' => '/users',     'icon' => '👤'],
-    ['label' => 'Settings',  'href' => '/settings',  'icon' => '⚙️', 'children' => [
-        ['label' => 'Profile', 'href' => '/settings/profile'],
-        ['label' => 'Security', 'href' => '/settings/security'],
-    ]],
+    ['label' => 'Dashboard', 'href' => '/dashboard', 'icon' => 'dashboard', 'active' => true],
+    ['label' => 'Team',      'href' => '/team',      'icon' => 'users'],
+    ['label' => 'Settings',  'href' => '/settings',  'icon' => 'settings'],
 ];
 ?>
-<x-sidebar :items="$navItems" logo="MyApp" />
+<x-sidebar :items="$navItems" logo="Veldora App" />
 CODE,
             ],
 
@@ -1438,15 +1518,43 @@ CODE,
                 'desc'    => 'Responsive max-width wrapper with configurable size (sm/md/lg/xl/full) and auto-centering.',
                 'cli'     => 'php veldora add container',
                 'preview' => <<<'HTML'
-<div style="display:flex;flex-direction:column;gap:10px;width:100%;">
-    <div class="vui-container vui-container-sm vui-container-center" style="background:var(--surface-2,rgba(255,255,255,.06));border-radius:8px;padding:10px 16px;text-align:center;">
-        <code style="font-size:12px;opacity:.7">size="sm" — 640px max</code>
-    </div>
-    <div class="vui-container vui-container-lg vui-container-center" style="background:var(--surface-2,rgba(255,255,255,.06));border-radius:8px;padding:10px 16px;text-align:center;">
-        <code style="font-size:12px;opacity:.7">size="lg" — 1024px max</code>
-    </div>
-    <div class="vui-container vui-container-full vui-container-center" style="background:var(--surface-2,rgba(255,255,255,.06));border-radius:8px;padding:10px 16px;text-align:center;">
-        <code style="font-size:12px;opacity:.7">size="full" — 100%</code>
+<div style="width:100%;background:var(--vui-bg);border:1px solid var(--vui-border);border-radius:12px;padding:20px 16px;box-sizing:border-box;">
+    <div style="display:flex;flex-direction:column;gap:18px;width:100%;">
+        
+        <!-- Large Container (1024px) -->
+        <div style="border:2px dashed var(--accent);border-radius:10px;padding:12px;background:rgba(124,110,245,0.05);position:relative;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:6px;">
+                <span style="font-size:11px;font-family:var(--font-mono);background:var(--accent);color:#fff;padding:2px 8px;border-radius:4px;font-weight:600;">&lt;x-container size="lg"&gt; &mdash; max-width: 1024px</span>
+                <span style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono);">Auto Centered (margin: 0 auto)</span>
+            </div>
+            <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+                <div style="font-size:13.5px;font-weight:600;color:var(--text);">Hero Section / Main Page Content Area</div>
+                <button type="button" class="vui-btn vui-btn-primary vui-btn-sm" style="pointer-events:none;">Action Button</button>
+            </div>
+        </div>
+
+        <!-- Medium Container (768px) -->
+        <div style="width:80%;margin:0 auto;border:2px dashed #3b82f6;border-radius:10px;padding:12px;background:rgba(59,130,246,0.05);position:relative;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:6px;">
+                <span style="font-size:11px;font-family:var(--font-mono);background:#3b82f6;color:#fff;padding:2px 8px;border-radius:4px;font-weight:600;">&lt;x-container size="md"&gt; &mdash; max-width: 768px</span>
+                <span style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono);">Centered Blog / Article</span>
+            </div>
+            <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:12px 16px;">
+                <p style="font-size:13px;color:var(--text-muted);margin:0;">Optimized reading width with automatic left and right gutters.</p>
+            </div>
+        </div>
+
+        <!-- Small Container (640px) -->
+        <div style="width:60%;margin:0 auto;border:2px dashed #22c55e;border-radius:10px;padding:12px;background:rgba(34,197,94,0.05);position:relative;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:6px;">
+                <span style="font-size:11px;font-family:var(--font-mono);background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-weight:600;">&lt;x-container size="sm"&gt; &mdash; max-width: 640px</span>
+                <span style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono);">Login / Form Card</span>
+            </div>
+            <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:12px 16px;text-align:center;">
+                <p style="font-size:13px;color:var(--text-muted);margin:0;">Focused narrow form / auth card wrapper</p>
+            </div>
+        </div>
+
     </div>
 </div>
 HTML,

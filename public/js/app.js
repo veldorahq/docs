@@ -311,3 +311,102 @@ window.copyCompCode = function(id, btn) {
         fallbackCopy(textToCopy, setSuccess);
     }
 };
+
+// ────────────────────────────────────────────────────────────────────────────
+// Copy CLI command from header badge
+// ────────────────────────────────────────────────────────────────────────────
+window.copyCliBadge = function(btn, command) {
+    if (!command) return;
+
+    function setSuccess() {
+        btn.classList.add('copied');
+        const origHTML = btn.innerHTML;
+        btn.innerHTML = `
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            <span style="color:#22c55e;font-weight:600;">Copied: ${command}</span>`;
+
+        window.showToast(`Command copied: ${command}`);
+
+        setTimeout(() => {
+            btn.classList.remove('copied');
+            btn.innerHTML = origHTML;
+        }, 2200);
+    }
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(command).then(setSuccess).catch(() => fallbackCopy(command, setSuccess));
+    } else {
+        fallbackCopy(command, setSuccess);
+    }
+};
+
+// ────────────────────────────────────────────────────────────────────────────
+// Interactive DataTable Client-Side Sort & Search
+// ────────────────────────────────────────────────────────────────────────────
+window.vuiDtSort = function(wrapId, colIdx, thElem) {
+    const wrap = document.getElementById(wrapId);
+    if (!wrap) return;
+
+    const tbody = wrap.querySelector('tbody');
+    if (!tbody) return;
+
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+    const isAsc = thElem.getAttribute('data-sort-dir') !== 'asc';
+
+    // Reset all headers
+    wrap.querySelectorAll('th').forEach(th => {
+        th.removeAttribute('data-sort-dir');
+        th.classList.remove('vui-sort-active');
+        const icon = th.querySelector('.vui-sort-icon');
+        if (icon) {
+            icon.style.transform = '';
+            icon.style.opacity = '.4';
+        }
+    });
+
+    thElem.setAttribute('data-sort-dir', isAsc ? 'asc' : 'desc');
+    thElem.classList.add('vui-sort-active');
+    const sortIcon = thElem.querySelector('.vui-sort-icon');
+    if (sortIcon) {
+        sortIcon.style.transform = isAsc ? 'rotate(180deg)' : 'rotate(0deg)';
+        sortIcon.style.opacity = '1';
+        sortIcon.style.color = 'var(--accent, #7c6ef5)';
+    }
+
+    rows.sort((a, b) => {
+        const aVal = (a.cells[colIdx]?.innerText || '').trim();
+        const bVal = (b.cells[colIdx]?.innerText || '').trim();
+        return isAsc 
+            ? aVal.localeCompare(bVal, undefined, { numeric: true }) 
+            : bVal.localeCompare(aVal, undefined, { numeric: true });
+    });
+
+    tbody.innerHTML = '';
+    rows.forEach(r => tbody.appendChild(r));
+    if (window.showToast) {
+        window.showToast(`Sorted by ${(thElem.querySelector('span')?.textContent || 'column').trim()} (${isAsc ? 'ascending' : 'descending'})`);
+    }
+};
+
+window.vuiDtSearch = function(wrapId, query) {
+    const wrap = document.getElementById(wrapId);
+    if (!wrap) return;
+
+    const q = (query || '').toLowerCase().trim();
+    const rows = wrap.querySelectorAll('tbody tr');
+    let visibleCount = 0;
+
+    rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        const matches = !q || text.includes(q);
+        row.style.display = matches ? '' : 'none';
+        if (matches) visibleCount++;
+    });
+
+    const countElem = wrap.querySelector('#' + wrapId + '-count') || wrap.querySelector('.vui-datatable-count');
+    if (countElem) {
+        countElem.textContent = `Showing ${visibleCount} member${visibleCount === 1 ? '' : 's'}`;
+    }
+};
