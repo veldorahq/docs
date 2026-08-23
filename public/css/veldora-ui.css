@@ -1090,34 +1090,63 @@
 /* ─────────────────────────────────────────────────────────────────────────────
    FileUpload
    ───────────────────────────────────────────────────────────────────────────── */
+.vui-fileupload-wrap { width:100%; max-width:440px; display:flex; flex-direction:column; gap:12px; }
 .vui-fileupload-zone {
-    display:flex; flex-direction:column; align-items:center; gap:8px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
     border:2px dashed var(--vui-border); border-radius:var(--vui-radius-lg);
-    padding:28px 20px; cursor:pointer; transition:border-color var(--vui-trans), background var(--vui-trans);
-    color:var(--vui-text-muted); text-align:center;
+    padding:32px 24px; cursor:pointer; transition:all var(--vui-trans);
+    color:var(--vui-text-muted); text-align:center; background:rgba(255,255,255,0.015);
+    position:relative;
 }
-.vui-fileupload-zone:hover { border-color:var(--vui-accent); background:var(--vui-accent-dim); }
-.vui-fileupload-text { font-size:14px; color:var(--vui-text-muted); }
+.vui-fileupload-zone:hover {
+    border-color:var(--vui-accent); background:var(--vui-accent-dim);
+    transform:translateY(-1px);
+}
+.vui-fileupload-icon-wrap {
+    width:48px; height:48px; border-radius:50%; background:var(--vui-surface-2);
+    border:1px solid var(--vui-border); display:flex; align-items:center;
+    justify-content:center; color:var(--vui-accent); transition:transform .15s;
+}
+.vui-fileupload-zone:hover .vui-fileupload-icon-wrap { transform:scale(1.1); }
+.vui-fileupload-text { font-size:13.5px; color:var(--vui-text); }
 .vui-fileupload-text strong { color:var(--vui-accent); }
-.vui-fileupload-hint { font-size:11.5px; color:var(--vui-text-dim); }
-.vui-fileupload-input { position:absolute; opacity:0; width:0; height:0; }
+.vui-fileupload-hint { font-size:11.5px; color:var(--vui-text-muted); }
+.vui-fileupload-input { position:absolute; opacity:0; width:0; height:0; pointer-events:none; }
+
+.vui-file-item {
+    display:flex; align-items:center; gap:12px; padding:10px 14px;
+    background:var(--vui-surface-2); border:1px solid var(--vui-border);
+    border-radius:var(--vui-radius);
+}
+.vui-file-item-icon {
+    width:32px; height:32px; border-radius:6px; background:rgba(124,110,245,0.12);
+    color:var(--vui-accent); display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.vui-file-item-info { flex:1; min-width:0; }
+.vui-file-item-name { font-size:12.5px; font-weight:600; color:var(--vui-text); margin:0 0 2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.vui-file-item-meta { font-size:11px; color:var(--vui-text-muted); margin:0; }
+.vui-file-item-progress { width:100%; height:3px; background:var(--vui-border); border-radius:2px; margin-top:5px; overflow:hidden; }
+.vui-file-item-bar { height:100%; background:#22c55e; border-radius:2px; }
 
 /* ─────────────────────────────────────────────────────────────────────────────
    Combobox
    ───────────────────────────────────────────────────────────────────────────── */
+.vui-combobox-wrap { width:100%; max-width:320px; position:relative; }
 .vui-combobox { position:relative; }
-.vui-combobox-input { width:100%; }
+.vui-combobox-input { width:100%; padding-right:32px; }
 .vui-combobox-list {
-    position:absolute; top:calc(100% + 4px); left:0; right:0; z-index:150;
+    position:absolute; top:calc(100% + 4px); left:0; right:0; z-index:200;
     background:var(--vui-surface-2); border:1px solid var(--vui-border);
     border-radius:var(--vui-radius-lg); max-height:220px; overflow-y:auto;
-    box-shadow:var(--vui-shadow-md); list-style:none; margin:0; padding:4px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.5); list-style:none; margin:0; padding:6px;
 }
 .vui-combobox-option {
+    display:flex; align-items:center; justify-content:space-between;
     padding:8px 12px; border-radius:var(--vui-radius); cursor:pointer;
-    font-size:13px; color:var(--vui-text); transition:background var(--vui-trans);
+    font-size:13px; color:var(--vui-text); transition:background var(--vui-trans), color var(--vui-trans);
 }
 .vui-combobox-option:hover { background:var(--vui-accent-dim); color:var(--vui-accent); }
+.vui-combobox-option.vui-selected { background:var(--vui-accent-dim); color:var(--vui-accent); font-weight:600; }
 .vui-combobox-option[hidden] { display:none; }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -1159,7 +1188,7 @@
 /* ─────────────────────────────────────────────────────────────────────────────
    DataTable
    ───────────────────────────────────────────────────────────────────────────── */
-.vui-datatable-wrap { display:flex; flex-direction:column; gap:12px; }
+.vui-datatable-wrap { display:flex; flex-direction:column; gap:12px; width:100%; }
 .vui-datatable-toolbar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
 .vui-datatable-search { max-width:260px; }
 .vui-datatable-pages { display:flex; gap:4px; flex-wrap:wrap; margin-top:4px; }
@@ -1171,7 +1200,7 @@
 /* ─────────────────────────────────────────────────────────────────────────────
    Timeline
    ───────────────────────────────────────────────────────────────────────────── */
-.vui-timeline { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:0; }
+.vui-timeline { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:0; width:100%; max-width:480px; }
 .vui-timeline-item { display:flex; gap:16px; padding-bottom:24px; position:relative; }
 .vui-timeline-item:last-child { padding-bottom:0; }
 .vui-timeline-item::before {
@@ -1193,24 +1222,34 @@
 /* ─────────────────────────────────────────────────────────────────────────────
    Stepper
    ───────────────────────────────────────────────────────────────────────────── */
-.vui-stepper { list-style:none; padding:0; margin:0; display:flex; align-items:flex-start; gap:0; }
-.vui-stepper-step { display:flex; flex-direction:column; align-items:center; position:relative; flex:1; }
+.vui-stepper {
+    list-style:none; padding:0; margin:0 auto;
+    display:flex; align-items:flex-start; justify-content:space-between;
+    width:100%; max-width:520px; position:relative;
+}
+.vui-stepper-step {
+    display:flex; flex-direction:column; align-items:center;
+    position:relative; flex:1; min-width:80px; text-align:center;
+}
 .vui-step-circle {
-    width:32px; height:32px; border-radius:50%; display:flex; align-items:center;
-    justify-content:center; font-size:13px; font-weight:600; border:2px solid var(--vui-border);
-    background:var(--vui-surface-2); color:var(--vui-text-muted); z-index:1; flex-shrink:0;
-    transition:background var(--vui-trans), border-color var(--vui-trans), color var(--vui-trans);
+    width:36px; height:36px; border-radius:50%; display:flex; align-items:center;
+    justify-content:center; font-size:13.5px; font-weight:700; border:2px solid var(--vui-border);
+    background:var(--vui-surface-2); color:var(--vui-text-muted); z-index:2; flex-shrink:0;
+    transition:all var(--vui-trans);
 }
-.vui-step-label { font-size:12px; color:var(--vui-text-muted); margin-top:8px; text-align:center; }
+.vui-step-label {
+    font-size:12.5px; font-weight:500; color:var(--vui-text-muted);
+    margin-top:10px; text-align:center; white-space:nowrap;
+}
 .vui-step-line {
-    position:absolute; top:16px; left:calc(50% + 16px); right:calc(-50% + 16px);
-    height:2px; background:var(--vui-border); z-index:0;
+    position:absolute; top:18px; left:50%; width:100%;
+    height:2px; background:var(--vui-border); z-index:1;
 }
-.vui-step-done .vui-step-circle  { background:var(--vui-success); border-color:var(--vui-success); color:#fff; }
-.vui-step-done .vui-step-label   { color:var(--vui-text); }
-.vui-step-done .vui-step-line    { background:var(--vui-success); }
-.vui-step-active .vui-step-circle { background:var(--vui-accent); border-color:var(--vui-accent); color:#fff; }
-.vui-step-active .vui-step-label  { color:var(--vui-text); font-weight:600; }
+.vui-step-done .vui-step-circle  { background:#22c55e; border-color:#22c55e; color:#fff; box-shadow:0 0 12px rgba(34,197,94,0.35); }
+.vui-step-done .vui-step-label   { color:var(--vui-text); font-weight:500; }
+.vui-step-done .vui-step-line    { background:#22c55e; }
+.vui-step-active .vui-step-circle { background:var(--vui-accent); border-color:var(--vui-accent); color:#fff; box-shadow:0 0 14px var(--vui-accent-dim); transform:scale(1.05); }
+.vui-step-active .vui-step-label  { color:var(--vui-accent); font-weight:600; }
 
 /* ─────────────────────────────────────────────────────────────────────────────
    Sidebar

@@ -89,7 +89,7 @@
 
                 <!-- Code Panel (Hidden by default, shown when Code tab is active) -->
                 <div class="comp-code-panel hidden" id="panel-code-<?= $uid ?>" role="tabpanel" aria-labelledby="tab-code-<?= $uid ?>">
-                    <pre class="code-block language-html"><code class="language-html"><?= $safeCode ?></code></pre>
+                    <pre class="code-block language-php"><code class="language-php"><?= $safeCode ?></code></pre>
                 </div>
             </div>
         </section>

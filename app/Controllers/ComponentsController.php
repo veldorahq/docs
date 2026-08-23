@@ -1135,20 +1135,50 @@ CODE,
             [
                 'id'      => 'fileupload',
                 'name'    => 'FileUpload',
-                'desc'    => 'Styled drag-and-drop file upload zone with file type filters, multiple selection, and size hint.',
+                'desc'    => 'Styled drag-and-drop file upload zone with file type filters, upload progress, and file management.',
                 'cli'     => 'php veldora add fileupload',
                 'preview' => <<<'HTML'
-<div style="max-width:400px;">
-    <label for="demo-fu1" class="vui-label">Profile Picture</label>
-    <label for="demo-fu1" class="vui-fileupload-zone">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
-        </svg>
-        <span class="vui-fileupload-text">Drag &amp; drop or <strong>browse</strong></span>
-        <span class="vui-fileupload-hint">Max 2MB &mdash; JPG, PNG, WebP</span>
-        <input type="file" id="demo-fu1" accept="image/*" class="vui-fileupload-input">
-    </label>
+<div class="vui-fileupload-wrap" style="width:100%;max-width:440px;display:flex;flex-direction:column;gap:12px;">
+    <div class="vui-fileupload-zone" onclick="document.getElementById('demo-fu1').click()">
+        <div class="vui-fileupload-icon-wrap">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+        </div>
+        <div>
+            <p class="vui-fileupload-text" style="margin:0 0 4px;font-weight:600;">Drag &amp; drop files here, or <span style="color:var(--accent);text-decoration:underline;">browse</span></p>
+            <p class="vui-fileupload-hint" style="margin:0;">PNG, JPG, PDF, or ZIP &bull; Max 15MB each</p>
+        </div>
+        <input type="file" id="demo-fu1" class="vui-fileupload-input" onchange="window.showToast('File selected: ' + (this.files[0]?.name || 'example.pdf'))">
+    </div>
+
+    <!-- Active Uploaded File Item Preview -->
+    <div class="vui-file-item" style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--vui-surface-2);border:1px solid var(--vui-border);border-radius:8px;">
+        <div class="vui-file-item-icon" style="width:36px;height:36px;border-radius:8px;background:rgba(124,110,245,0.12);color:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <div class="vui-file-item-info" style="flex:1;min-width:0;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+                <span class="vui-file-item-name" style="font-size:13px;font-weight:600;color:var(--vui-text);">brand_identity_v2.pdf</span>
+                <span style="font-size:11px;color:#22c55e;font-weight:600;display:flex;align-items:center;gap:4px;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    Ready
+                </span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--vui-text-muted);">
+                <span>2.4 MB &bull; Upload complete</span>
+                <span>100%</span>
+            </div>
+            <div class="vui-file-item-progress" style="width:100%;height:3px;background:var(--vui-border);border-radius:2px;margin-top:6px;overflow:hidden;">
+                <div class="vui-file-item-bar" style="width:100%;height:100%;background:#22c55e;"></div>
+            </div>
+        </div>
+        <button type="button" class="vui-btn vui-btn-ghost vui-btn-sm" style="padding:4px 8px;font-size:12px;color:var(--vui-text-muted);" onclick="this.closest('.vui-file-item').remove();window.showToast('File removed');" title="Remove file">
+            &times;
+        </button>
+    </div>
 </div>
 HTML,
                 'code'    => <<<'CODE'
@@ -1166,28 +1196,40 @@ CODE,
                 'desc'    => 'Searchable select dropdown with autocomplete filtering. Keyboard-friendly and fully accessible.',
                 'cli'     => 'php veldora add combobox',
                 'preview' => <<<'HTML'
-<div style="max-width:300px;">
-    <div class="vui-field vui-combobox-wrap" id="demo-cb1">
-        <label class="vui-label" for="demo-cb1-input">Country</label>
-        <div class="vui-combobox">
-            <input type="text" id="demo-cb1-input" class="vui-input vui-combobox-input" placeholder="Search country..." autocomplete="off"
-                   oninput="vuiCbFilter('demo-cb1')" onfocus="vuiCbOpen('demo-cb1')">
-            <input type="hidden" name="country" value="">
-            <ul class="vui-combobox-list" id="demo-cb1-list" role="listbox" hidden>
-                <li class="vui-combobox-option" role="option" onclick="vuiCbSelect('demo-cb1','bd',this.textContent.trim())">Bangladesh</li>
-                <li class="vui-combobox-option" role="option" onclick="vuiCbSelect('demo-cb1','us',this.textContent.trim())">United States</li>
-                <li class="vui-combobox-option" role="option" onclick="vuiCbSelect('demo-cb1','gb',this.textContent.trim())">United Kingdom</li>
-                <li class="vui-combobox-option" role="option" onclick="vuiCbSelect('demo-cb1','ca',this.textContent.trim())">Canada</li>
-                <li class="vui-combobox-option" role="option" onclick="vuiCbSelect('demo-cb1','au',this.textContent.trim())">Australia</li>
-            </ul>
+<div class="vui-combobox-wrap" id="demo-cb1" style="width:100%;max-width:320px;margin:0 auto;">
+    <label class="vui-label" for="demo-cb1-input">Select Destination</label>
+    <div class="vui-combobox">
+        <div style="position:relative;display:flex;align-items:center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;left:10px;opacity:.5;pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="demo-cb1-input" class="vui-input vui-combobox-input" placeholder="Search country..." autocomplete="off" value="Japan"
+                   oninput="vuiCbFilter('demo-cb1')" onfocus="vuiCbOpen('demo-cb1')" style="padding-left:32px;padding-right:32px;">
+            <button type="button" onclick="document.getElementById('demo-cb1-input').value='';vuiCbFilter('demo-cb1');" style="position:absolute;right:8px;background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:14px;padding:2px 6px;">&times;</button>
         </div>
+        <input type="hidden" name="country" value="jp">
+        <ul class="vui-combobox-list" id="demo-cb1-list" role="listbox" style="position:static;margin-top:8px;box-shadow:none;border-color:var(--vui-border);">
+            <li class="vui-combobox-option" role="option" onclick="vuiCbSelect('demo-cb1','bd',this.textContent.trim())">
+                <span>🇧🇩 Bangladesh</span>
+            </li>
+            <li class="vui-combobox-option vui-selected" role="option" onclick="vuiCbSelect('demo-cb1','jp',this.textContent.trim())">
+                <span>🇯🇵 Japan</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            </li>
+            <li class="vui-combobox-option" role="option" onclick="vuiCbSelect('demo-cb1','us',this.textContent.trim())">
+                <span>🇺🇸 United States</span>
+            </li>
+            <li class="vui-combobox-option" role="option" onclick="vuiCbSelect('demo-cb1','gb',this.textContent.trim())">
+                <span>🇬🇧 United Kingdom</span>
+            </li>
+            <li class="vui-combobox-option" role="option" onclick="vuiCbSelect('demo-cb1','ca',this.textContent.trim())">
+                <span>🇨🇦 Canada</span>
+            </li>
+        </ul>
     </div>
 </div>
 <script>
-function vuiCbOpen(u){document.getElementById(u+'-list').hidden=false;}
-function vuiCbFilter(u){var q=document.querySelector('#'+u+' .vui-combobox-input').value.toLowerCase();document.querySelectorAll('#'+u+'-list .vui-combobox-option').forEach(function(o){o.hidden=!o.textContent.toLowerCase().includes(q);});document.getElementById(u+'-list').hidden=false;}
-function vuiCbSelect(u,val,lbl){document.querySelector('#'+u+' .vui-combobox-input').value=lbl;document.querySelector('#'+u+' input[type=hidden]').value=val;document.getElementById(u+'-list').hidden=true;}
-document.addEventListener('click',function(e){document.querySelectorAll('.vui-combobox-list').forEach(function(l){if(!l.closest('.vui-combobox-wrap').contains(e.target))l.hidden=true;});});
+function vuiCbOpen(u){var el=document.getElementById(u+'-list');if(el)el.style.display='';}
+function vuiCbFilter(u){var q=document.querySelector('#'+u+' .vui-combobox-input').value.toLowerCase();document.querySelectorAll('#'+u+'-list .vui-combobox-option').forEach(function(o){o.style.display=o.textContent.toLowerCase().includes(q)?'':'none';});}
+function vuiCbSelect(u,val,lbl){document.querySelector('#'+u+' .vui-combobox-input').value=lbl.replace(/[^\w\s]/gi,'').trim();document.querySelectorAll('#'+u+'-list .vui-combobox-option').forEach(function(o){o.classList.remove('vui-selected');});event.currentTarget.classList.add('vui-selected');if(window.showToast)window.showToast('Selected: '+lbl.trim());}
 </script>
 HTML,
                 'code'    => <<<'CODE'
@@ -1437,25 +1479,34 @@ CODE,
                 'desc'    => 'Multi-step wizard progress indicator. Completed steps show a checkmark; active step is highlighted.',
                 'cli'     => 'php veldora add stepper',
                 'preview' => <<<'HTML'
-<ol class="vui-stepper" aria-label="Progress">
-    <li class="vui-stepper-step vui-step-done">
-        <span class="vui-step-circle"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>
-        <span class="vui-step-label">Account</span>
-        <span class="vui-step-line" aria-hidden="true"></span>
-    </li>
-    <li class="vui-stepper-step vui-step-active" aria-current="step">
-        <span class="vui-step-circle">2</span>
-        <span class="vui-step-label">Profile</span>
-        <span class="vui-step-line" aria-hidden="true"></span>
-    </li>
-    <li class="vui-stepper-step vui-step-pending">
-        <span class="vui-step-circle">3</span>
-        <span class="vui-step-label">Confirm</span>
-    </li>
-</ol>
+<div style="width:100%;max-width:540px;margin:0 auto;padding:12px 0;">
+    <ol class="vui-stepper" aria-label="Checkout Progress">
+        <li class="vui-stepper-step vui-step-done">
+            <span class="vui-step-circle">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <span class="vui-step-label">1. Account</span>
+            <span class="vui-step-line" aria-hidden="true"></span>
+        </li>
+        <li class="vui-stepper-step vui-step-active" aria-current="step">
+            <span class="vui-step-circle">2</span>
+            <span class="vui-step-label">2. Shipping</span>
+            <span class="vui-step-line" aria-hidden="true"></span>
+        </li>
+        <li class="vui-stepper-step vui-step-pending">
+            <span class="vui-step-circle">3</span>
+            <span class="vui-step-label">3. Payment</span>
+            <span class="vui-step-line" aria-hidden="true"></span>
+        </li>
+        <li class="vui-stepper-step vui-step-pending">
+            <span class="vui-step-circle">4</span>
+            <span class="vui-step-label">4. Review</span>
+        </li>
+    </ol>
+</div>
 HTML,
                 'code'    => <<<'CODE'
-<x-stepper :steps="['Account', 'Profile', 'Confirm']" :current="2" />
+<x-stepper :steps="['Account', 'Shipping', 'Payment', 'Review']" :current="2" />
 CODE,
             ],
 
@@ -1515,46 +1566,77 @@ CODE,
             [
                 'id'      => 'container',
                 'name'    => 'Container',
-                'desc'    => 'Responsive max-width wrapper with configurable size (sm/md/lg/xl/full) and auto-centering.',
+                'desc'    => 'Responsive max-width layout wrapper that automatically centers page content with balanced side margins.',
                 'cli'     => 'php veldora add container',
                 'preview' => <<<'HTML'
-<div style="width:100%;background:var(--vui-bg);border:1px solid var(--vui-border);border-radius:12px;padding:20px 16px;box-sizing:border-box;">
-    <div style="display:flex;flex-direction:column;gap:18px;width:100%;">
+<div style="width:100%;display:flex;flex-direction:column;gap:16px;">
+    
+    <!-- Browser Window Simulation Canvas -->
+    <div style="width:100%;background:#09090b;border:1px solid var(--vui-border);border-radius:12px;overflow:hidden;box-shadow:0 12px 30px rgba(0,0,0,0.5);">
         
-        <!-- Large Container (1024px) -->
-        <div style="border:2px dashed var(--accent);border-radius:10px;padding:12px;background:rgba(124,110,245,0.05);position:relative;">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:6px;">
-                <span style="font-size:11px;font-family:var(--font-mono);background:var(--accent);color:#fff;padding:2px 8px;border-radius:4px;font-weight:600;">&lt;x-container size="lg"&gt; &mdash; max-width: 1024px</span>
-                <span style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono);">Auto Centered (margin: 0 auto)</span>
+        <!-- Browser Chrome Header -->
+        <div style="background:var(--vui-surface-2);padding:10px 16px;border-bottom:1px solid var(--vui-border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+            <div style="display:flex;align-items:center;gap:6px;">
+                <span style="width:10px;height:10px;border-radius:50%;background:#ef4444;display:inline-block;"></span>
+                <span style="width:10px;height:10px;border-radius:50%;background:#f59e0b;display:inline-block;"></span>
+                <span style="width:10px;height:10px;border-radius:50%;background:#22c55e;display:inline-block;"></span>
+                <span style="font-size:11.5px;color:var(--text-muted);margin-left:8px;font-family:var(--font-mono);">Full Page Viewport (100% Canvas Width)</span>
             </div>
-            <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
-                <div style="font-size:13.5px;font-weight:600;color:var(--text);">Hero Section / Main Page Content Area</div>
-                <button type="button" class="vui-btn vui-btn-primary vui-btn-sm" style="pointer-events:none;">Action Button</button>
-            </div>
-        </div>
-
-        <!-- Medium Container (768px) -->
-        <div style="width:80%;margin:0 auto;border:2px dashed #3b82f6;border-radius:10px;padding:12px;background:rgba(59,130,246,0.05);position:relative;">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:6px;">
-                <span style="font-size:11px;font-family:var(--font-mono);background:#3b82f6;color:#fff;padding:2px 8px;border-radius:4px;font-weight:600;">&lt;x-container size="md"&gt; &mdash; max-width: 768px</span>
-                <span style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono);">Centered Blog / Article</span>
-            </div>
-            <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:12px 16px;">
-                <p style="font-size:13px;color:var(--text-muted);margin:0;">Optimized reading width with automatic left and right gutters.</p>
+            <div style="font-size:11px;color:var(--accent);font-family:var(--font-mono);background:var(--accent-dim);padding:2px 8px;border-radius:4px;border:1px solid var(--accent-glow);">
+                margin: 0 auto &bull; Auto-Centering Gutters
             </div>
         </div>
 
-        <!-- Small Container (640px) -->
-        <div style="width:60%;margin:0 auto;border:2px dashed #22c55e;border-radius:10px;padding:12px;background:rgba(34,197,94,0.05);position:relative;">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:6px;">
-                <span style="font-size:11px;font-family:var(--font-mono);background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-weight:600;">&lt;x-container size="sm"&gt; &mdash; max-width: 640px</span>
-                <span style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono);">Login / Form Card</span>
+        <!-- Viewport Canvas Body -->
+        <div style="padding:22px 16px;background:repeating-linear-gradient(45deg, rgba(255,255,255,0.012), rgba(255,255,255,0.012) 10px, transparent 10px, transparent 20px);display:flex;flex-direction:column;gap:14px;">
+            
+            <!-- Large Container (1024px) -->
+            <div style="width:92%;margin:0 auto;background:var(--vui-surface);border:2px dashed var(--accent);border-radius:10px;padding:14px 18px;position:relative;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px;">
+                    <span style="font-size:11.5px;font-family:var(--font-mono);background:var(--accent);color:#fff;padding:2px 8px;border-radius:4px;font-weight:600;">
+                        &lt;x-container size="lg"&gt;
+                    </span>
+                    <span style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono);background:var(--surface-3);padding:2px 8px;border-radius:4px;">
+                        max-width: 1024px (Standard Page Content)
+                    </span>
+                </div>
+                <div style="background:var(--vui-surface-2);border:1px solid var(--vui-border);border-radius:6px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+                    <div style="font-size:13px;font-weight:600;color:var(--vui-text);">Hero Section / Main Application Dashboard</div>
+                    <span class="vui-badge vui-badge-primary">Page Body</span>
+                </div>
             </div>
-            <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:12px 16px;text-align:center;">
-                <p style="font-size:13px;color:var(--text-muted);margin:0;">Focused narrow form / auth card wrapper</p>
-            </div>
-        </div>
 
+            <!-- Medium Container (768px) -->
+            <div style="width:72%;margin:0 auto;background:var(--vui-surface);border:2px dashed #3b82f6;border-radius:10px;padding:12px 16px;position:relative;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px;">
+                    <span style="font-size:11px;font-family:var(--font-mono);background:#3b82f6;color:#fff;padding:2px 8px;border-radius:4px;font-weight:600;">
+                        &lt;x-container size="md"&gt;
+                    </span>
+                    <span style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono);background:var(--surface-3);padding:2px 6px;border-radius:4px;">
+                        max-width: 768px (Article / Blog Content)
+                    </span>
+                </div>
+                <div style="background:var(--vui-surface-2);border:1px solid var(--vui-border);border-radius:6px;padding:10px 14px;">
+                    <p style="font-size:12.5px;color:var(--vui-text-muted);margin:0;">Optimized single-column reading width with balanced left &amp; right margin gutters.</p>
+                </div>
+            </div>
+
+            <!-- Small Container (640px) -->
+            <div style="width:52%;margin:0 auto;background:var(--vui-surface);border:2px dashed #22c55e;border-radius:10px;padding:10px 14px;position:relative;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px;">
+                    <span style="font-size:11px;font-family:var(--font-mono);background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-weight:600;">
+                        &lt;x-container size="sm"&gt;
+                    </span>
+                    <span style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono);background:var(--surface-3);padding:2px 6px;border-radius:4px;">
+                        max-width: 640px (Auth Card / Form)
+                    </span>
+                </div>
+                <div style="background:var(--vui-surface-2);border:1px solid var(--vui-border);border-radius:6px;padding:10px 12px;text-align:center;">
+                    <p style="font-size:12px;color:var(--vui-text-muted);margin:0;">Centered narrow card for Login, Register &amp; Checkout Modals</p>
+                </div>
+            </div>
+
+        </div>
     </div>
 </div>
 HTML,
