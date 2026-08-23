@@ -26,7 +26,7 @@
 <header class="header">
     <div class="header-inner">
         <!-- Mobile Sidebar Toggle -->
-        <button type="button" class="header-mobile-toggle" id="sidebar-toggle-btn" aria-label="Toggle Navigation Menu">
+        <button type="button" class="header-mobile-toggle" id="sidebar-toggle-btn" onclick="toggleMobileNav(event)" aria-label="Toggle Navigation Menu">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <line x1="3" y1="6" x2="21" y2="6"/>
                 <line x1="3" y1="12" x2="21" y2="12"/>
@@ -74,7 +74,7 @@
 </header>
 
 <!-- Backdrop overlay for mobile drawer sidebar -->
-<div class="sidebar-backdrop" id="sidebar-backdrop" aria-hidden="true"></div>
+<div class="sidebar-backdrop" id="sidebar-backdrop" onclick="closeMobileNav()" aria-hidden="true"></div>
 
 @yield('content')
 

@@ -443,65 +443,57 @@ window.vuiDtSearch = function(wrapId, query) {
 };
 
 // ── Universal Mobile Navigation & Sidebar Drawer Toggle ──────────────────
-function initMobileMenu() {
-    const toggleBtn = document.getElementById('sidebar-toggle-btn');
+window.toggleMobileNav = function(e) {
+    if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
     const docsSidebar = document.getElementById('docs-sidebar');
     const headerNav = document.getElementById('main-nav');
     const backdrop = document.getElementById('sidebar-backdrop');
 
-    function closeAllMenus() {
-        if (docsSidebar) docsSidebar.classList.remove('open');
-        if (headerNav) headerNav.classList.remove('open');
-        if (backdrop) backdrop.classList.remove('active');
-        document.body.classList.remove('sidebar-open');
+    if (docsSidebar) {
+        // On Docs page: Toggle Docs 22 Chapters Sidebar Drawer
+        const isOpen = docsSidebar.classList.contains('open') || document.body.classList.contains('sidebar-open');
+        if (isOpen) {
+            docsSidebar.classList.remove('open');
+            if (backdrop) backdrop.classList.remove('active');
+            document.body.classList.remove('sidebar-open');
+        } else {
+            docsSidebar.classList.add('open');
+            if (backdrop) backdrop.classList.add('active');
+            document.body.classList.add('sidebar-open');
+        }
+    } else if (headerNav) {
+        // On non-Docs page: Toggle Header Links Menu Dropdown
+        const isOpen = headerNav.classList.contains('open');
+        if (isOpen) {
+            headerNav.classList.remove('open');
+            if (backdrop) backdrop.classList.remove('active');
+        } else {
+            headerNav.classList.add('open');
+            if (backdrop) backdrop.classList.add('active');
+        }
     }
+};
 
-    if (toggleBtn) {
-        toggleBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
+window.closeMobileNav = function() {
+    const docsSidebar = document.getElementById('docs-sidebar');
+    const headerNav = document.getElementById('main-nav');
+    const backdrop = document.getElementById('sidebar-backdrop');
+    if (docsSidebar) docsSidebar.classList.remove('open');
+    if (headerNav) headerNav.classList.remove('open');
+    if (backdrop) backdrop.classList.remove('active');
+    document.body.classList.remove('sidebar-open');
+};
 
-            if (docsSidebar) {
-                // On Docs page: Toggle Docs 22 Chapters Sidebar Drawer
-                const isOpen = docsSidebar.classList.contains('open');
-                if (isOpen) {
-                    closeAllMenus();
-                } else {
-                    docsSidebar.classList.add('open');
-                    if (backdrop) backdrop.classList.add('active');
-                    document.body.classList.add('sidebar-open');
-                }
-            } else if (headerNav) {
-                // On non-Docs page: Toggle Header Links Menu Dropdown
-                const isOpen = headerNav.classList.contains('open');
-                if (isOpen) {
-                    closeAllMenus();
-                } else {
-                    headerNav.classList.add('open');
-                    if (backdrop) backdrop.classList.add('active');
-                }
-            }
-        });
+document.addEventListener('click', (e) => {
+    if (e.target.matches('.sidebar-nav a, .header-nav a')) {
+        if (window.innerWidth <= 860) {
+            window.closeMobileNav();
+        }
     }
-
-    if (backdrop) {
-        backdrop.addEventListener('click', closeAllMenus);
-    }
-
-    document.querySelectorAll('.sidebar-nav a, .header-nav a').forEach(link => {
-        link.addEventListener('click', () => {
-            if (window.innerWidth <= 860) {
-                closeAllMenus();
-            }
-        });
-    });
-}
-
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initMobileMenu);
-} else {
-    initMobileMenu();
-}
+});
 
 // ── Instant AI Master Prompt Downloader (Client-side Fallback) ────────────
 window.downloadAiPromptFile = function(e) {
