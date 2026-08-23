@@ -171,15 +171,34 @@ img { max-width: 100%; }
     width: 100%;
 }
 
+.header-mobile-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    cursor: pointer;
+    margin-right: 12px;
+    padding: 0;
+    transition: all .15s ease;
+}
+.header-mobile-toggle:hover {
+    background: var(--surface-3);
+    border-color: var(--accent);
+}
+
 .header-brand {
     display: flex;
     align-items: center;
-    gap: 9px;
-    font-size: 16.5px;
+    gap: 10px;
+    font-size: 17px;
     font-weight: 700;
-    color: var(--text);
-    letter-spacing: -.025em;
-    flex-shrink: 0;
+    letter-spacing: -.02em;
+    color: var(--text) !important;
     text-decoration: none !important;
 }
 .header-brand:hover,
@@ -2162,5 +2181,262 @@ th.vui-sort-active { color: var(--accent, #7c6ef5); }
     -webkit-overflow-scrolling: touch;
 }
 
+/* ─── Mobile Sidebar Drawer & Backdrop ────────────────────────────────────────── */
+.sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    z-index: 190;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+}
 
+.sidebar-backdrop.active {
+    opacity: 1;
+    pointer-events: auto;
+}
 
+@media (max-width: 860px) {
+    .header-mobile-toggle {
+        display: inline-flex;
+    }
+
+    .header-nav {
+        display: none;
+    }
+
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 200;
+        width: min(320px, 85vw);
+        background: #09090b;
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.8);
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .content-wrap {
+        margin-left: 0 !important;
+        padding: 24px 16px 60px !important;
+    }
+}
+
+/* ─── Extension Page Styling ─────────────────────────────────────────────────── */
+.extension-page {
+    padding-top: var(--header-h);
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.ext-hero {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 72px 24px 60px;
+    text-align: center;
+}
+
+.ext-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-dim);
+    border: 1px solid var(--accent-glow);
+    padding: 5px 14px;
+    border-radius: 9999px;
+    margin-bottom: 24px;
+}
+
+.ext-title {
+    font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: var(--text);
+    line-height: 1.15;
+    margin-bottom: 18px;
+}
+
+.ext-title span {
+    background: linear-gradient(135deg, #8b5cf6 0%, #c4b5fd 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.ext-sub {
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    max-width: 580px;
+    margin: 0 auto 36px;
+    line-height: 1.7;
+}
+
+.ext-install-box {
+    max-width: 560px;
+    margin: 0 auto 36px;
+    background: #0c0c0e;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    text-align: left;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+.ext-install-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 14px;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+}
+
+.ext-install-label {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--text-dim);
+    margin-left: 6px;
+}
+
+.ext-install-cmd {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    gap: 12px;
+}
+
+.ext-install-cmd code {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: #c4b5fd;
+    background: transparent;
+    border: none;
+    padding: 0;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.ext-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.ext-features-section {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 72px 24px;
+}
+
+.ext-features-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-top: 44px;
+}
+
+@media (max-width: 980px) {
+    .ext-features-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 580px) {
+    .ext-features-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.ext-feature-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 24px 20px;
+    transition: all 0.2s ease;
+}
+
+.ext-feature-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.ext-feature-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--accent-dim);
+    border: 1px solid var(--accent-glow);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    margin-bottom: 16px;
+}
+
+.ext-feature-card h3 {
+    font-size: 15.5px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+}
+
+.ext-feature-card p {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.ext-snippets-section {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 60px 24px 100px;
+}
+
+.ext-table-wrap {
+    margin-top: 36px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    background: var(--surface);
+}
+
+.ext-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    text-align: left;
+}
+
+.ext-table th {
+    background: var(--surface-2);
+    padding: 12px 18px;
+    color: var(--text);
+    font-weight: 600;
+    border-bottom: 1px solid var(--border);
+}
+
+.ext-table td {
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+}
+
+.ext-table tr:last-child td {
+    border-bottom: none;
+}
+
+.ext-table tr:hover td {
+    background: var(--surface-2);
+}

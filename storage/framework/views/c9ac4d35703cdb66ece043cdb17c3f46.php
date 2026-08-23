@@ -41,72 +41,39 @@
             </a>
         </div>
 
-        <!-- Hero two-column split: code + install -->
-        <div class="hero-split">
-            <div class="hero-code" aria-label="Veldora routes example">
-                <div class="hero-code-toolbar">
-                    <div class="hero-code-toolbar-left">
-                        <span class="dot-red"></span>
-                        <span class="dot-yellow"></span>
-                        <span class="dot-green"></span>
-                        <span class="hero-code-label">routes/web.php</span>
-                    </div>
-                    <button type="button" class="code-copy-btn" onclick="copyCode(this)" aria-label="Copy routes code">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                        Copy
-                    </button>
+        <!-- Hero single prominent code preview -->
+        <div class="hero-code" aria-label="Veldora code example">
+            <div class="hero-code-toolbar">
+                <div class="hero-code-toolbar-left">
+                    <span class="dot-red"></span>
+                    <span class="dot-yellow"></span>
+                    <span class="dot-green"></span>
+                    <span class="hero-code-label">routes/web.php</span>
                 </div>
-                <pre class="code-block language-php"><code class="language-php"><?php echo htmlspecialchars(
+                <button type="button" class="code-copy-btn" onclick="copyCode(this)" aria-label="Copy routes code">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                    Copy
+                </button>
+            </div>
+            <pre class="code-block language-php"><code class="language-php"><?php echo htmlspecialchars(
 '<?php
-// routes/web.php
+// routes/web.php — Expressive routing with groups, middleware & route parameters
 
 $router->get(\'/\', [HomeController::class, \'index\']);
+$router->get(\'/posts/{slug}\', [PostController::class, \'show\']);
 
+// Authenticated route group
 $router->group([\'middleware\' => [\'auth\']], function ($r) {
     $r->get(\'/dashboard\', [DashboardController::class, \'index\']);
-    $r->get(\'/profile\', [ProfileController::class, \'show\']);
+    $r->get(\'/profile\', [ProfileController::class, \'edit\']);
     $r->put(\'/profile\', [ProfileController::class, \'update\']);
 });
 
-$router->post(\'/login\', [AuthController::class, \'login\'])
-       ->middleware([\'guest\']);
+// Auth endpoints
+$router->post(\'/login\', [AuthController::class, \'login\'])->middleware([\'guest\']);
+$router->post(\'/logout\', [AuthController::class, \'logout\'])->middleware([\'auth\']);
 '
 , ENT_QUOTES, 'UTF-8'); ?></code></pre>
-            </div>
-
-            <div class="hero-code" aria-label="Veldora model example">
-                <div class="hero-code-toolbar">
-                    <div class="hero-code-toolbar-left">
-                        <span class="dot-red"></span>
-                        <span class="dot-yellow"></span>
-                        <span class="dot-green"></span>
-                        <span class="hero-code-label">app/Models/Post.php</span>
-                    </div>
-                    <button type="button" class="code-copy-btn" onclick="copyCode(this)" aria-label="Copy model code">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                        Copy
-                    </button>
-                </div>
-                <pre class="code-block language-php"><code class="language-php"><?php echo htmlspecialchars(
-'<?php
-namespace App\Models;
-
-use Veldora\Framework\Database\Model;
-
-class Post extends Model
-{
-    protected array $fillable = [\'title\', \'body\', \'user_id\'];
-    protected array $casts    = [\'published_at\' => \'datetime\'];
-    protected array $hidden   = [];
-
-    public function author(): BelongsTo
-    {
-        return $this->belongsTo(User::class, \'user_id\');
-    }
-}
-'
-, ENT_QUOTES, 'UTF-8'); ?></code></pre>
-            </div>
         </div>
 
     </section>

@@ -72,11 +72,19 @@ class DocsController
     public function downloadPrompt(): Response
     {
         $data = $this->parser->getSection('22-ai-context-prompt-ai-skills');
-        $content = $data['content'] ?? '# Veldora AI Context Prompt';
+        $content = $data['content'] ?? '';
 
-        return new Response($content, 200, [
+        // Extract pure master prompt if fenced
+        if (preg_match('/```(?:\w*)\n([\s\S]+?)\n```/', $content, $m)) {
+            $promptText = trim($m[1]);
+        } else {
+            $promptText = $content ?: '# Veldora AI Developer Master Prompt';
+        }
+
+        return new Response($promptText, 200, [
             'Content-Type'        => 'text/markdown; charset=UTF-8',
             'Content-Disposition' => 'attachment; filename="veldora-ai-master-prompt.md"',
+            'Content-Length'      => (string) strlen($promptText),
         ]);
     }
 

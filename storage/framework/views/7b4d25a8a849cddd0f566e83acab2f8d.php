@@ -13,7 +13,7 @@
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/app.css">
     <link rel="stylesheet" href="/css/veldora-ui.css">
     <link rel="stylesheet" href="/css/prism.css">
@@ -25,6 +25,15 @@
 <!-- ── Header ─────────────────────────────────────────────────────────── -->
 <header class="header">
     <div class="header-inner">
+        <!-- Mobile Sidebar Toggle -->
+        <button type="button" class="header-mobile-toggle" id="sidebar-toggle-btn" aria-label="Toggle Navigation Menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <line x1="3" y1="12" x2="21" y2="12"/>
+                <line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+        </button>
+
         <a href="/" class="header-brand" aria-label="Veldora Home">
             <div class="logo-icon">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="white" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
@@ -32,7 +41,7 @@
             <span>Veldora</span>
         </a>
 
-        <nav class="header-nav" aria-label="Main navigation">
+        <nav class="header-nav" id="main-nav" aria-label="Main navigation">
             <a href="/" <?= $currentPath === '/' ? 'class="active"' : '' ?>>
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                 Home
@@ -45,14 +54,18 @@
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
                 Components
             </a>
+            <a href="/extension" <?= $currentPath === '/extension' ? 'class="active"' : '' ?>>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                VS Code
+            </a>
         </nav>
 
         <div class="header-actions">
-            <a href="https://github.com/veldorahq/" target="_blank" rel="noopener noreferrer" title="View on GitHub" class="header-gh-link">
+            <a href="https://github.com/veldorahq/veldora-core" target="_blank" rel="noopener noreferrer" title="View on GitHub" class="header-gh-link">
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
                 <span class="sr-only">GitHub</span>
             </a>
-            <a href="/docs/getting-started" class="btn btn-primary btn-sm" style="padding:6px 14px;font-size:12.5px;">
+            <a href="/docs/1-getting-started-installation" class="btn btn-primary btn-sm" style="padding:6px 14px;font-size:12.5px;">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
                 Get Started
             </a>
@@ -60,16 +73,25 @@
     </div>
 </header>
 
+<!-- Backdrop overlay for mobile drawer sidebar -->
+<div class="sidebar-backdrop" id="sidebar-backdrop" aria-hidden="true"></div>
+
 <?php echo $this->yieldSection('content'); ?>
 
 <!-- ── Footer ─────────────────────────────────────────────────────────── -->
 <footer class="footer">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-    <span>Built with <a href="/" style="color:var(--accent);font-weight:600;">Veldora</a> &mdash; &copy; <?= date('Y') ?> Veldora. MIT License.</span>
-    <a href="https://github.com/veldorahq" target="_blank" rel="noopener noreferrer">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-        veldorahq
-    </a>
+    <div style="display:flex;align-items:center;gap:8px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        <span>Built with <a href="/" style="color:var(--accent);font-weight:600;">Veldora</a> &mdash; &copy; <?= date('Y') ?> Veldora Framework. MIT License.</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px;">
+        <a href="/extension" style="color:var(--text-muted);">VS Code Extension</a>
+        <a href="/docs/22-ai-context-prompt-ai-skills" style="color:var(--text-muted);">AI Prompt</a>
+        <a href="https://github.com/veldorahq/veldora-core" target="_blank" rel="noopener noreferrer">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            GitHub
+        </a>
+    </div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>

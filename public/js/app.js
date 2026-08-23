@@ -441,3 +441,69 @@ window.vuiDtSearch = function(wrapId, query) {
         countElem.textContent = `Showing ${visibleCount} member${visibleCount === 1 ? '' : 's'}`;
     }
 };
+
+// ── Mobile Sidebar Drawer Toggle ──────────────────────────────────────────
+const toggleBtn = document.getElementById('sidebar-toggle-btn');
+const sidebar = document.getElementById('docs-sidebar');
+const backdrop = document.getElementById('sidebar-backdrop');
+
+function openSidebar() {
+    if (sidebar) sidebar.classList.add('open');
+    if (backdrop) backdrop.classList.add('active');
+    document.body.classList.add('sidebar-open');
+}
+
+function closeSidebar() {
+    if (sidebar) sidebar.classList.remove('open');
+    if (backdrop) backdrop.classList.remove('active');
+    document.body.classList.remove('sidebar-open');
+}
+
+if (toggleBtn) {
+    toggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (sidebar && sidebar.classList.contains('open')) {
+            closeSidebar();
+        } else {
+            openSidebar();
+        }
+    });
+}
+
+if (backdrop) {
+    backdrop.addEventListener('click', closeSidebar);
+}
+
+document.querySelectorAll('.sidebar-nav a').forEach(link => {
+    link.addEventListener('click', () => {
+        if (window.innerWidth <= 860) {
+            closeSidebar();
+        }
+    });
+});
+
+// ── Instant AI Master Prompt Downloader (Client-side Fallback) ────────────
+window.downloadAiPromptFile = function(e) {
+    const codeEl = document.querySelector('#doc-content pre code') || document.querySelector('.terminal-mockup-body');
+    let promptContent = '';
+    if (codeEl) {
+        promptContent = codeEl.innerText || codeEl.textContent;
+    }
+    if (!promptContent) {
+        return; // allow default link download
+    }
+    if (e) e.preventDefault();
+    const blob = new Blob([promptContent], { type: 'text/markdown;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'veldora-ai-master-prompt.md';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    if (window.showToast) {
+        window.showToast('Downloaded veldora-ai-master-prompt.md');
+    }
+};
+
