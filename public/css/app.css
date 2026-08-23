@@ -212,11 +212,25 @@ img { max-width: 100%; }
 
 .header-brand .logo-icon {
     width: 28px; height: 28px;
-    background: var(--accent);
-    border-radius: 7px;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
-    box-shadow: 0 0 12px rgba(139,92,246,.4);
+}
+
+.header-docs-badge {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 7px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(139,92,246,.12);
+    border: 1px solid rgba(139,92,246,.25);
+    border-radius: 4px;
+    padding: 1px 6px;
+    line-height: 1.6;
+    vertical-align: middle;
 }
 
 .header-nav {
@@ -588,8 +602,6 @@ img { max-width: 100%; }
 .footer-logo-icon {
     width: 30px;
     height: 30px;
-    background: var(--accent);
-    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;

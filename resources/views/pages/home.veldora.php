@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('page_title', 'Veldora')
-@section('page_title_suffix', 'Modern PHP Framework')
-@section('meta_desc', 'Veldora is a modern PHP 8.2+ framework with expressive routing, Blade-inspired templates, guard-based auth, powerful CLI, and a 21-component UI system. Zero magic. Full control.')
+@section('page_title_suffix', 'PHP 8.2+ MVC Framework')
+@section('meta_desc', 'Veldora is a PHP 8.2+ framework with routing, Blade-style templates, session auth, ActiveRecord ORM, CLI scaffolding, job queues, SMTP mail, and a 21-component UI library.')
 
 @section('content')
 <main class="home-layout">
@@ -12,18 +12,17 @@
 
         <div class="hero-badge">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="13 2 13 9 20 9"/><polygon points="22 12 12 2 2 12 2 22 22 22"/></svg>
-            v1.0.0 — Modern PHP Framework · Zero Magic
+            v1.0.0 &mdash; PHP 8.2+ MVC Framework
         </div>
 
         <h1 class="hero-title">
-            The PHP Framework<br>
-            <span>You Actually Own</span>
+            Veldora PHP Framework
         </h1>
 
         <p class="hero-sub">
-            Modern PHP 8.2+. Expressive routing. Blade-inspired templates.
-            Guard-based auth. Event system, queues, mail — everything in one place.
-            Zero magic. Zero lock-in. Full control.
+            PHP 8.2+ MVC framework with expressive routing, Blade-style templates, session auth,
+            ActiveRecord ORM, job queues, SMTP mail, and a 21-component UI library.
+            CLI scaffolding gets a project running in seconds.
         </p>
 
         <div class="hero-actions">
@@ -108,8 +107,8 @@ $router->post(\'/logout\', [AuthController::class, \'logout\'])->middleware([\'a
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></polygon></svg>
                     Why Veldora?
                 </div>
-                <h2 class="why-title">A framework that stays out of your way</h2>
-                <p class="why-desc">Most PHP frameworks do too much for you — wrapping everything in magic that's hard to debug and impossible to customize. Veldora is different. Every layer is readable, every file is yours.</p>
+                <h2 class="why-title">A framework that keeps code readable</h2>
+                <p class="why-desc">Veldora gives you a structured MVC project where each file has a clear purpose. No hidden service containers, no auto-magic resolution that breaks silently — just straightforward PHP classes you can open and read.</p>
 
                 <ul class="why-list">
                     <li>
@@ -126,11 +125,11 @@ $router->post(\'/logout\', [AuthController::class, \'logout\'])->middleware([\'a
                     </li>
                     <li>
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                        <span><strong>Fast to learn.</strong> Familiar Laravel-like syntax. Read the source, understand everything.</span>
+                        <span><strong>Familiar syntax.</strong> Laravel-like conventions — readable by any PHP dev, no framework-specific knowledge needed.</span>
                     </li>
                     <li>
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                        <span><strong>PHP 8.2+ first.</strong> Strict types, constructor promotion, readonly properties throughout.</span>
+                        <span><strong>PHP 8.2+ throughout.</strong> Strict types, constructor promotion, enums, and readonly properties used consistently.</span>
                     </li>
                 </ul>
 
@@ -191,8 +190,8 @@ php veldora serve
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></polygon></svg>
             Everything you need
         </div>
-        <h2 class="section-title">A complete framework — nothing missing</h2>
-        <p class="section-sub">From routing to testing, Veldora ships every layer you need to build a production PHP application.</p>
+        <h2 class="section-title">Everything included in a single install</h2>
+        <p class="section-sub">Routing, ORM, auth, CLI, mail, queues, and UI components — all part of the framework with no extra packages needed.</p>
 
         <div class="features-grid">
 
@@ -279,8 +278,8 @@ php veldora serve
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></polygon></svg>
                     Fast Setup
                 </div>
-                <h2 class="cta-title">Start in 30 seconds</h2>
-                <p class="cta-sub">One Composer command. A full project structure. Auth, database migrations, and templates already wired up.</p>
+                <h2 class="cta-title">Set up a new project in under a minute</h2>
+                <p class="cta-sub">One Composer command creates a full project with auth, migrations, and templates already wired. Start building immediately.</p>
                 <div class="cta-steps">
                     <div class="cta-step">
                         <span class="cta-step-num">1</span>

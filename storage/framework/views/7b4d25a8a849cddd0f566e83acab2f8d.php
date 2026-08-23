@@ -35,10 +35,10 @@
         </button>
 
         <a href="/" class="header-brand" aria-label="Veldora Home">
-            <div class="logo-icon">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="white" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            <div class="logo-icon" style="background:none;padding:0;overflow:visible;">
+                <img src="/favicon.svg" width="22" height="22" alt="Veldora" style="display:block;" aria-hidden="true">
             </div>
-            <span>Veldora</span>
+            <span>Veldora<?php if (str_starts_with($currentPath, '/docs')): ?><span class="header-docs-badge">Docs</span><?php endif; ?></span>
         </a>
 
         <nav class="header-nav" id="main-nav" aria-label="Main navigation">
@@ -77,8 +77,8 @@
 <aside class="mobile-drawer" id="mobile-drawer" aria-label="Mobile Navigation">
     <div class="mobile-drawer-header">
         <a href="/" class="header-brand" style="margin:0;">
-            <div class="logo-icon">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="white" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            <div class="logo-icon" style="background:none;padding:0;overflow:visible;">
+                <img src="/favicon.svg" width="22" height="22" alt="Veldora" style="display:block;" aria-hidden="true">
             </div>
             <span>Veldora</span>
         </a>
@@ -132,12 +132,12 @@
         <!-- Brand Column -->
         <div class="footer-brand-col">
             <a href="/" class="footer-logo" aria-label="Veldora Home">
-                <div class="footer-logo-icon" aria-hidden="true">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                <div class="footer-logo-icon" aria-hidden="true" style="background:none;padding:0;overflow:visible;">
+                    <img src="/favicon.svg" width="22" height="22" alt="Veldora" style="display:block;">
                 </div>
                 <span>Veldora</span>
             </a>
-            <p class="footer-tagline">A modern PHP 8.2+ MVC framework you actually own. Zero magic, full control.</p>
+            <p class="footer-tagline">Open-source PHP 8.2+ MVC framework with routing, auth, ORM, CLI, mail, queues, and a 21-component UI system.</p>
             <div class="footer-badges">
                 <span class="footer-badge">PHP 8.2+</span>
                 <span class="footer-badge">MIT License</span>

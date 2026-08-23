@@ -13,9 +13,7 @@
         <!-- Mobile Drawer Header -->
         <div class="sidebar-mobile-header">
             <div class="sidebar-mobile-title">
-                <div class="logo-icon" style="width:24px;height:24px;background:var(--accent);border-radius:6px;display:inline-flex;align-items:center;justify-content:center;">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="white" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                </div>
+                <img src="/favicon.svg" width="22" height="22" alt="Veldora" aria-hidden="true" style="display:inline-block;vertical-align:middle;">
                 <span>Documentation</span>
             </div>
             <button type="button" class="sidebar-mobile-close" onclick="closeMobileNav()" aria-label="Close Documentation Sidebar">
