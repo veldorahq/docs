@@ -979,13 +979,17 @@ CODE,
                 'cli'     => 'php veldora add pagination',
                 'preview' => <<<'HTML'
 <nav class="vui-pagination" aria-label="Pagination">
-    <a class="vui-page-btn vui-page-disabled" aria-disabled="true">&#8592;</a>
+    <a class="vui-page-btn vui-page-disabled" aria-disabled="true" aria-label="Previous">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </a>
     <a class="vui-page-btn">1</a>
     <a class="vui-page-btn vui-page-active" aria-current="page">2</a>
     <a class="vui-page-btn">3</a>
     <span class="vui-page-ellipsis">&hellip;</span>
     <a class="vui-page-btn">10</a>
-    <a class="vui-page-btn">&#8594;</a>
+    <a class="vui-page-btn" aria-label="Next">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </a>
 </nav>
 HTML,
                 'code'    => <<<'CODE'
@@ -1298,20 +1302,35 @@ CODE,
         <input type="hidden" name="country" value="jp">
         <ul class="vui-combobox-list" id="demo-cb1-list" role="listbox" style="position:static;margin-top:8px;box-shadow:none;border-color:var(--vui-border);">
             <li class="vui-combobox-option" role="option" onclick="vuiCbSelect('demo-cb1','bd',this.textContent.trim())">
-                <span>🇧🇩 Bangladesh</span>
+                <span style="display:flex;align-items:center;gap:8px;">
+                    <span style="font-size:10.5px;font-family:var(--font-mono);background:var(--surface-3);padding:1px 6px;border-radius:4px;color:var(--text-muted);">BD</span>
+                    <span>Bangladesh</span>
+                </span>
             </li>
             <li class="vui-combobox-option vui-selected" role="option" onclick="vuiCbSelect('demo-cb1','jp',this.textContent.trim())">
-                <span>🇯🇵 Japan</span>
+                <span style="display:flex;align-items:center;gap:8px;">
+                    <span style="font-size:10.5px;font-family:var(--font-mono);background:var(--accent-dim);padding:1px 6px;border-radius:4px;color:var(--accent);font-weight:600;">JP</span>
+                    <span>Japan</span>
+                </span>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
             </li>
             <li class="vui-combobox-option" role="option" onclick="vuiCbSelect('demo-cb1','us',this.textContent.trim())">
-                <span>🇺🇸 United States</span>
+                <span style="display:flex;align-items:center;gap:8px;">
+                    <span style="font-size:10.5px;font-family:var(--font-mono);background:var(--surface-3);padding:1px 6px;border-radius:4px;color:var(--text-muted);">US</span>
+                    <span>United States</span>
+                </span>
             </li>
             <li class="vui-combobox-option" role="option" onclick="vuiCbSelect('demo-cb1','gb',this.textContent.trim())">
-                <span>🇬🇧 United Kingdom</span>
+                <span style="display:flex;align-items:center;gap:8px;">
+                    <span style="font-size:10.5px;font-family:var(--font-mono);background:var(--surface-3);padding:1px 6px;border-radius:4px;color:var(--text-muted);">GB</span>
+                    <span>United Kingdom</span>
+                </span>
             </li>
             <li class="vui-combobox-option" role="option" onclick="vuiCbSelect('demo-cb1','ca',this.textContent.trim())">
-                <span>🇨🇦 Canada</span>
+                <span style="display:flex;align-items:center;gap:8px;">
+                    <span style="font-size:10.5px;font-family:var(--font-mono);background:var(--surface-3);padding:1px 6px;border-radius:4px;color:var(--text-muted);">CA</span>
+                    <span>Canada</span>
+                </span>
             </li>
         </ul>
     </div>
@@ -1493,7 +1512,9 @@ CODE,
         <div class="vui-pagination">
             <button type="button" class="vui-page-btn vui-page-active">1</button>
             <button type="button" class="vui-page-btn" onclick="window.showToast('Showing page 2')">2</button>
-            <button type="button" class="vui-page-btn" onclick="window.showToast('Next page')">&rarr;</button>
+            <button type="button" class="vui-page-btn" onclick="window.showToast('Next page')" aria-label="Next">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
         </div>
     </div>
 </div>
