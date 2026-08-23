@@ -795,6 +795,7 @@ HTML,
 <x-breadcrumb :items="[
     ['label' => 'Home', 'href' => '/'],
     ['label' => 'Documentation', 'href' => '/docs'],
+{{ ... }}
     ['label' => 'UI Components']
 ]" />
 CODE,
@@ -864,31 +865,109 @@ CODE,
             [
                 'id'      => 'switch',
                 'name'    => 'Switch',
-                'desc'    => 'Toggle switch for boolean on/off states. Supports label, checked, disabled, and sm/md/lg sizes.',
+                'desc'    => 'Toggle switch for boolean states, features, and custom dark/light theme switching with animated icons.',
                 'cli'     => 'php veldora add switch',
                 'preview' => <<<'HTML'
-<div style="display:flex;flex-direction:column;gap:14px;">
-    <label class="vui-switch-wrapper">
-        <input type="checkbox" class="vui-switch-input" role="switch" aria-checked="false">
-        <span class="vui-switch-track vui-switch-md"><span class="vui-switch-thumb"></span></span>
-        <span class="vui-switch-label">Notifications</span>
-    </label>
-    <label class="vui-switch-wrapper">
-        <input type="checkbox" class="vui-switch-input" role="switch" aria-checked="true" checked>
-        <span class="vui-switch-track vui-switch-md"><span class="vui-switch-thumb"></span></span>
-        <span class="vui-switch-label">Dark Mode (on)</span>
-    </label>
-    <label class="vui-switch-wrapper vui-switch-disabled">
-        <input type="checkbox" class="vui-switch-input" role="switch" disabled>
-        <span class="vui-switch-track vui-switch-md"><span class="vui-switch-thumb"></span></span>
-        <span class="vui-switch-label">Disabled</span>
-    </label>
+<div style="display:flex;flex-direction:column;gap:18px;width:100%;max-width:440px;margin:0 auto;">
+    
+    <!-- Custom Live Dark / Light Theme Toggle Card -->
+    <div id="demo-theme-card" style="padding:18px 20px;background:var(--vui-surface-2);border:1px solid var(--vui-border);border-radius:12px;display:flex;align-items:center;justify-content:space-between;transition:all 0.3s ease;">
+        <div style="display:flex;align-items:center;gap:12px;">
+            <div id="demo-theme-badge" style="width:40px;height:40px;border-radius:10px;background:rgba(124,110,245,0.15);color:var(--accent);display:flex;align-items:center;justify-content:center;transition:all 0.3s ease;">
+                <svg id="demo-theme-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                <svg id="demo-theme-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" style="display:none;"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            </div>
+            <div>
+                <p id="demo-theme-label" style="margin:0 0 2px;font-size:13.5px;font-weight:600;color:var(--vui-text);">Dark Mode Active</p>
+                <p id="demo-theme-sub" style="margin:0;font-size:12px;color:var(--vui-text-muted);">Click to toggle canvas theme</p>
+            </div>
+        </div>
+
+        <!-- Custom Animated Sun/Moon Pill Switch -->
+        <button type="button" id="demo-theme-btn" onclick="vuiToggleDemoTheme()"
+                style="position:relative;width:60px;height:32px;border-radius:9999px;background:#18181b;border:1px solid #3f3f46;cursor:pointer;padding:3px;display:flex;align-items:center;transition:all 0.25s ease;"
+                aria-label="Toggle theme">
+            <span id="demo-theme-thumb" style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg, #7c6ef5, #6366f1);display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 2px 6px rgba(0,0,0,0.3);transform:translateX(28px);transition:transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background 0.25s ease;">
+                <svg id="demo-thumb-moon" width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                <svg id="demo-thumb-sun" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:none;"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M2 12h2"/><path d="M20 12h2"/></svg>
+            </span>
+        </button>
+    </div>
+
+    <!-- Standard Form Switches -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <label class="vui-switch-wrapper" style="background:var(--vui-surface);padding:10px 14px;border:1px solid var(--vui-border);border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:10px;">
+            <input type="checkbox" class="vui-switch-input" role="switch" checked>
+            <span class="vui-switch-track vui-switch-md"><span class="vui-switch-thumb"></span></span>
+            <span class="vui-switch-label" style="font-size:12.5px;">Email Alerts</span>
+        </label>
+        <label class="vui-switch-wrapper" style="background:var(--vui-surface);padding:10px 14px;border:1px solid var(--vui-border);border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:10px;">
+            <input type="checkbox" class="vui-switch-input" role="switch">
+            <span class="vui-switch-track vui-switch-md"><span class="vui-switch-thumb"></span></span>
+            <span class="vui-switch-label" style="font-size:12.5px;">Auto Sync</span>
+        </label>
+    </div>
 </div>
+<script>
+window.vuiDemoIsDark = true;
+window.vuiToggleDemoTheme = function() {
+    window.vuiDemoIsDark = !window.vuiDemoIsDark;
+    const isDark = window.vuiDemoIsDark;
+    const card = document.getElementById('demo-theme-card');
+    const thumb = document.getElementById('demo-theme-thumb');
+    const btn = document.getElementById('demo-theme-btn');
+    const badge = document.getElementById('demo-theme-badge');
+    const sunSvg = document.getElementById('demo-theme-sun');
+    const moonSvg = document.getElementById('demo-theme-moon');
+    const thumbSun = document.getElementById('demo-thumb-sun');
+    const thumbMoon = document.getElementById('demo-thumb-moon');
+    const label = document.getElementById('demo-theme-label');
+    const sub = document.getElementById('demo-theme-sub');
+
+    if (isDark) {
+        card.style.background = 'var(--vui-surface-2)';
+        card.style.borderColor = 'var(--vui-border)';
+        btn.style.background = '#18181b';
+        btn.style.borderColor = '#3f3f46';
+        thumb.style.transform = 'translateX(28px)';
+        thumb.style.background = 'linear-gradient(135deg, #7c6ef5, #6366f1)';
+        badge.style.background = 'rgba(124,110,245,0.15)';
+        badge.style.color = 'var(--accent)';
+        sunSvg.style.display = 'none';
+        moonSvg.style.display = 'block';
+        thumbSun.style.display = 'none';
+        thumbMoon.style.display = 'block';
+        label.textContent = 'Dark Mode Active';
+        label.style.color = 'var(--vui-text)';
+        sub.textContent = 'Click to switch to Light mode';
+        if (window.showToast) window.showToast('Theme switched to Dark Mode');
+    } else {
+        card.style.background = '#ffffff';
+        card.style.borderColor = '#e4e4e7';
+        btn.style.background = '#f4f4f5';
+        btn.style.borderColor = '#d4d4d8';
+        thumb.style.transform = 'translateX(0px)';
+        thumb.style.background = 'linear-gradient(135deg, #f59e0b, #fbbf24)';
+        badge.style.background = 'rgba(245,158,11,0.15)';
+        badge.style.color = '#f59e0b';
+        sunSvg.style.display = 'block';
+        moonSvg.style.display = 'none';
+        thumbSun.style.display = 'block';
+        thumbMoon.style.display = 'none';
+        label.textContent = 'Light Mode Active';
+        label.style.color = '#09090b';
+        sub.textContent = 'Click to switch to Dark mode';
+        if (window.showToast) window.showToast('Theme switched to Light Mode');
+    }
+};
+</script>
 HTML,
                 'code'    => <<<'CODE'
-<x-switch name="notifications" label="Notifications" />
-<x-switch name="dark_mode" label="Dark Mode" :checked="true" />
-<x-switch name="feature" label="Disabled" :disabled="true" />
+{{-- Standard boolean switch --}}
+<x-switch name="notifications" label="Notifications" :checked="true" />
+
+{{-- Theme toggle --}}
+<x-switch name="theme" label="Dark Mode" :checked="true" />
 CODE,
             ],
 
@@ -918,33 +997,25 @@ CODE,
             [
                 'id'      => 'skeleton',
                 'name'    => 'Skeleton',
-                'desc'    => 'Animated shimmer placeholder for loading states. Supports text lines, circle avatar, and rect block modes.',
+                'desc'    => 'Pulsing placeholder loading cards, avatars, and text bars for seamless async state UI.',
                 'cli'     => 'php veldora add skeleton',
                 'preview' => <<<'HTML'
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;width:100%;">
-    <div class="vui-skeleton-wrap" aria-busy="true" aria-label="Loading...">
-        <div class="vui-skeleton vui-skeleton-text" style="width:100%"></div>
-        <div class="vui-skeleton vui-skeleton-text" style="width:100%"></div>
-        <div class="vui-skeleton vui-skeleton-text" style="width:70%"></div>
-    </div>
-    <div class="vui-skeleton-wrap" style="display:flex;gap:12px;align-items:center;" aria-busy="true">
-        <div class="vui-skeleton vui-skeleton-circle" style="width:2.5rem;height:2.5rem;flex-shrink:0"></div>
-        <div style="flex:1">
-            <div class="vui-skeleton vui-skeleton-text" style="width:100%"></div>
-            <div class="vui-skeleton vui-skeleton-text" style="width:60%"></div>
+<div style="display:flex;flex-direction:column;gap:12px;width:100%;max-width:320px;">
+    <div style="display:flex;gap:12px;align-items:center;">
+        <div class="vui-skeleton vui-skeleton-avatar"></div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
+            <div class="vui-skeleton vui-skeleton-title" style="width:60%;"></div>
+            <div class="vui-skeleton vui-skeleton-text" style="width:90%;"></div>
         </div>
     </div>
+    <div class="vui-skeleton vui-skeleton-card" style="height:70px;"></div>
 </div>
 HTML,
                 'code'    => <<<'CODE'
-{{-- Text lines --}}
-<x-skeleton lines="3" />
-
-{{-- With avatar --}}
-<x-skeleton lines="2" :avatar="true" />
-
-{{-- Rect block --}}
-<x-skeleton type="rect" width="100%" height="120px" />
+<x-skeleton type="avatar" />
+<x-skeleton type="title" width="60%" />
+<x-skeleton type="text" />
+<x-skeleton type="card" height="120px" />
 CODE,
             ],
 
@@ -952,26 +1023,25 @@ CODE,
             [
                 'id'      => 'empty',
                 'name'    => 'Empty',
-                'desc'    => 'Zero-data state component with icon, title, description, and an optional action slot.',
+                'desc'    => 'Empty state illustration with icon, title, message, and call-to-action button for blank views.',
                 'cli'     => 'php veldora add empty',
                 'preview' => <<<'HTML'
-<div class="vui-empty" style="padding:2rem 0;">
+<div class="vui-empty" style="padding:28px 20px;">
     <div class="vui-empty-icon">
-        <svg width="64" height="64" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-            <circle cx="32" cy="32" r="30" stroke="currentColor" stroke-width="2" stroke-dasharray="6 4"/>
-            <path d="M22 32h20M32 22v20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+            <line x1="12" y1="22.08" x2="12" y2="12"/>
         </svg>
     </div>
-    <h3 class="vui-empty-title">No results found</h3>
-    <p class="vui-empty-desc">Try adjusting your search or filters.</p>
-    <div class="vui-empty-action">
-        <button class="vui-btn vui-btn-primary vui-btn-sm">Clear Filters</button>
-    </div>
+    <p class="vui-empty-title">No Projects Found</p>
+    <p class="vui-empty-desc">You haven't created any projects yet. Get started by creating your first one.</p>
+    <button type="button" class="vui-btn vui-btn-primary vui-btn-sm" onclick="window.showToast('New project modal')">+ Create Project</button>
 </div>
 HTML,
                 'code'    => <<<'CODE'
-<x-empty title="No results found" description="Try adjusting your search or filters.">
-    <x-button variant="primary" size="sm">Clear Filters</x-button>
+<x-empty title="No Projects Found" message="Get started by creating your first one.">
+    <x-button variant="primary" size="sm">+ Create Project</x-button>
 </x-empty>
 CODE,
             ],
@@ -980,21 +1050,15 @@ CODE,
             [
                 'id'      => 'divider',
                 'name'    => 'Divider',
-                'desc'    => 'Horizontal or vertical separator. Supports an optional centered text label (e.g. "OR").',
+                'desc'    => 'Horizontal or vertical separator with optional text label, badge, or icon in the center.',
                 'cli'     => 'php veldora add divider',
                 'preview' => <<<'HTML'
-<div style="display:flex;flex-direction:column;gap:20px;width:100%;">
-    <hr class="vui-divider">
-    <div class="vui-divider-labeled">
-        <span class="vui-divider-line"></span>
-        <span class="vui-divider-label">OR</span>
-        <span class="vui-divider-line"></span>
+<div style="width:100%;max-width:380px;display:flex;flex-direction:column;gap:16px;">
+    <div class="vui-divider"></div>
+    <div class="vui-divider vui-divider-labeled">
+        <span class="vui-divider-label">OR CONTINUE WITH</span>
     </div>
-    <div style="display:flex;align-items:center;height:40px;gap:16px;">
-        <span>Left</span>
-        <div class="vui-divider-vertical" style="height:100%;"></div>
-        <span>Right</span>
-    </div>
+    <div class="vui-divider"></div>
 </div>
 HTML,
                 'code'    => <<<'CODE'
@@ -1051,20 +1115,38 @@ CODE,
                 'desc'    => 'Floating info panel anchored to a trigger button. Supports top/bottom/left/right placement.',
                 'cli'     => 'php veldora add popover',
                 'preview' => <<<'HTML'
-<div style="display:flex;gap:16px;flex-wrap:wrap;padding:20px 0;">
-    <div class="vui-popover-wrap">
-        <button class="vui-btn vui-btn-secondary vui-btn-sm" type="button"
-                onclick="const p=document.getElementById('demo-pop1');p.hidden=!p.hidden">More Info</button>
-        <div id="demo-pop1" class="vui-popover vui-popover-bottom" hidden role="tooltip">
-            <div class="vui-popover-title">Did you know?</div>
-            <div class="vui-popover-body">Popovers can contain rich content including links and buttons.</div>
+<div style="width:100%;max-width:440px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:18px;">
+    <!-- Open Popover Card Demo -->
+    <div style="width:100%;background:var(--vui-surface-2);border:1px solid var(--vui-border);border-radius:12px;padding:16px 18px;box-shadow:0 12px 30px rgba(0,0,0,0.4);position:relative;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+                <span style="width:24px;height:24px;border-radius:6px;background:rgba(124,110,245,0.15);color:var(--accent);display:flex;align-items:center;justify-content:center;">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                </span>
+                <h4 style="margin:0;font-size:13.5px;font-weight:600;color:var(--vui-text);">Two-Factor Authentication</h4>
+            </div>
+            <span class="vui-badge vui-badge-warning" style="font-size:10px;padding:2px 6px;">Recommended</span>
         </div>
+        <p style="font-size:12.5px;color:var(--vui-text-muted);line-height:1.6;margin:0 0 12px;">
+            Protect your Veldora account with an extra security layer. A verification code will be sent on every sign-in.
+        </p>
+        <div style="display:flex;align-items:center;justify-content:flex-end;gap:8px;border-top:1px solid var(--vui-border);padding-top:10px;">
+            <button type="button" class="vui-btn vui-btn-ghost vui-btn-sm" onclick="window.showToast('Dismissed')">Dismiss</button>
+            <button type="button" class="vui-btn vui-btn-primary vui-btn-sm" onclick="window.showToast('Enabling 2FA...')">Enable Now</button>
+        </div>
+        <div style="position:absolute;bottom:-6px;left:40px;width:12px;height:12px;background:var(--vui-surface-2);border-right:1px solid var(--vui-border);border-bottom:1px solid var(--vui-border);transform:rotate(45deg);"></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;">
+        <button type="button" class="vui-btn vui-btn-secondary vui-btn-sm" onclick="window.showToast('Popover attached to anchor button')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            Security Notice (Trigger)
+        </button>
     </div>
 </div>
 HTML,
                 'code'    => <<<'CODE'
-<x-popover trigger="More Info" title="Did you know?" placement="bottom">
-    Popovers can contain rich content including links and buttons.
+<x-popover trigger="Security Notice" title="Two-Factor Authentication" placement="top">
+    Protect your Veldora account with an extra security layer.
 </x-popover>
 CODE,
             ],
@@ -1073,34 +1155,42 @@ CODE,
             [
                 'id'      => 'confirm',
                 'name'    => 'Confirm',
-                'desc'    => 'Accessible confirmation dialog for destructive actions. Includes cancel/confirm buttons with form POST support.',
+                'desc'    => 'Accessible confirmation dialog for destructive actions with warning indicator, action details, and cancel/confirm buttons.',
                 'cli'     => 'php veldora add confirm',
                 'preview' => <<<'HTML'
-<button class="vui-btn vui-btn-danger vui-btn-sm" onclick="vui.confirm('demo-confirm')">Delete Item</button>
-<div id="demo-confirm" class="vui-modal-backdrop" role="alertdialog" aria-modal="true" aria-hidden="true" aria-labelledby="demo-confirm-title">
-    <div class="vui-modal vui-confirm-dialog">
-        <div class="vui-modal-header"><h3 id="demo-confirm-title" class="vui-modal-title">Delete item?</h3></div>
-        <div class="vui-modal-body"><p>This action cannot be undone.</p></div>
-        <div class="vui-modal-footer">
-            <button type="button" class="vui-btn vui-btn-secondary" onclick="document.getElementById('demo-confirm').setAttribute('aria-hidden','true')">Cancel</button>
-            <button type="button" class="vui-btn vui-btn-danger">Delete</button>
+<div style="width:100%;max-width:440px;margin:0 auto;display:flex;flex-direction:column;gap:14px;">
+    <!-- Confirm Dialog Card Preview -->
+    <div style="background:var(--vui-surface);border:1px solid rgba(239,68,68,0.3);border-radius:12px;padding:20px;box-shadow:0 12px 30px rgba(0,0,0,0.5);display:flex;flex-direction:column;gap:14px;">
+        <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="width:40px;height:40px;border-radius:10px;background:rgba(239,68,68,0.12);color:#ef4444;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(239,68,68,0.25);">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <div style="flex:1;">
+                <h3 style="margin:0 0 4px;font-size:15px;font-weight:700;color:var(--vui-text);">Delete Production Database?</h3>
+                <p style="margin:0;font-size:13px;color:var(--vui-text-muted);line-height:1.5;">
+                    This will permanently delete the <strong>production-db-01</strong> instance and all 42 tables. This action cannot be undone.
+                </p>
+            </div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:10px;padding-top:12px;border-top:1px solid var(--vui-border);">
+            <button type="button" class="vui-btn vui-btn-secondary vui-btn-sm" onclick="window.showToast('Cancelled')">Cancel</button>
+            <button type="button" class="vui-btn vui-btn-danger vui-btn-sm" onclick="window.showToast('Database deleted successfully!')">Yes, Delete</button>
         </div>
     </div>
 </div>
-<script>window.vui=window.vui||{};vui.confirm=function(id){document.getElementById(id).setAttribute('aria-hidden','false');};</script>
 HTML,
                 'code'    => <<<'CODE'
 {{-- Trigger --}}
-<button onclick="vui.confirm('del-confirm')">Delete Item</button>
+<button onclick="vui.confirm('del-confirm')">Delete Database</button>
 
 {{-- Dialog --}}
 <x-confirm
     id="del-confirm"
-    title="Delete item?"
+    title="Delete Production Database?"
     message="This action cannot be undone."
-    action="/items/1"
+    action="/databases/1"
     method="DELETE"
-    confirm-label="Delete"
+    confirm-label="Yes, Delete"
     :danger="true"
 />
 CODE,
