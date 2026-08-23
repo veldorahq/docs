@@ -2997,7 +2997,45 @@ body.nav-open .mobile-drawer {
     background: #12131a;
 }
 
+/* ─── Sidebar Mobile Header ─────────────────────────────────────────────────── */
+.sidebar-mobile-header {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 8px;
+    background: var(--surface-2);
+}
+.sidebar-mobile-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+}
+.sidebar-mobile-close {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius);
+}
+.sidebar-mobile-close:hover {
+    color: var(--text);
+    background: var(--surface-3);
+}
+
 @media (max-width: 860px) {
+    .sidebar-mobile-header {
+        display: flex;
+    }
+
     .header-mobile-toggle {
         display: inline-flex !important;
     }
@@ -3015,7 +3053,7 @@ body.nav-open .mobile-drawer {
         left: 0 !important;
         bottom: 0 !important;
         height: 100vh !important;
-        padding-top: calc(var(--header-h) + 16px) !important;
+        padding-top: 0 !important;
         transform: translateX(-100%) !important;
         transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1) !important;
         z-index: 10000 !important;

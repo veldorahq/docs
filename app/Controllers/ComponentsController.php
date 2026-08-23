@@ -1628,38 +1628,42 @@ CODE,
                 'desc'    => 'Application navigation sidebar with logo, nav links, active state, icons, and collapsible sub-menus.',
                 'cli'     => 'php veldora add sidebar',
                 'preview' => <<<'HTML'
-<aside class="vui-sidebar" role="navigation" style="width:100%;max-width:240px;border-radius:12px;border:1px solid var(--vui-border);background:var(--vui-surface);overflow:hidden;">
-    <div class="vui-sidebar-header" style="display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid var(--vui-border);">
-        <div style="width:28px;height:28px;border-radius:6px;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px;">V</div>
-        <span class="vui-sidebar-logo" style="font-size:15px;font-weight:700;letter-spacing:-.02em;">Veldora App</span>
-    </div>
-    <nav style="padding:10px 8px;"><ul class="vui-sidebar-nav" style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:3px;">
-        <li class="vui-nav-item vui-nav-active">
-            <a href="javascript:void(0)" class="vui-nav-link" style="text-decoration:none !important;" onclick="window.showToast('Dashboard selected')">
-                <span class="vui-nav-icon">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-                </span>
-                <span class="vui-nav-label">Dashboard</span>
-            </a>
-        </li>
-        <li class="vui-nav-item">
-            <a href="javascript:void(0)" class="vui-nav-link" style="text-decoration:none !important;" onclick="window.showToast('Team selected')">
-                <span class="vui-nav-icon">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                </span>
-                <span class="vui-nav-label">Team Members</span>
-            </a>
-        </li>
-        <li class="vui-nav-item">
-            <a href="javascript:void(0)" class="vui-nav-link" style="text-decoration:none !important;" onclick="window.showToast('Settings selected')">
-                <span class="vui-nav-icon">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-                </span>
-                <span class="vui-nav-label">Settings</span>
-            </a>
-        </li>
-    </ul></nav>
-</aside>
+<div class="vui-sidebar-preview-card" style="width:100%;max-width:280px;margin:0 auto;background:var(--vui-surface);border:1px solid var(--vui-border);border-radius:12px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.35);">
+    <aside class="vui-sidebar" role="navigation" style="width:100%;border:none;min-height:auto;background:transparent;">
+        <div class="vui-sidebar-header" style="display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--vui-border);">
+            <div style="width:28px;height:28px;border-radius:6px;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px;flex-shrink:0;">V</div>
+            <span class="vui-sidebar-logo" style="font-size:15px;font-weight:700;letter-spacing:-.02em;color:var(--vui-text);">Veldora App</span>
+        </div>
+        <nav style="padding:10px 8px;">
+            <ul class="vui-sidebar-nav" style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:3px;">
+                <li class="vui-nav-item vui-nav-active">
+                    <a href="javascript:void(0)" class="vui-nav-link" onclick="window.showToast('Dashboard selected')">
+                        <span class="vui-nav-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                        </span>
+                        <span class="vui-nav-label">Dashboard</span>
+                    </a>
+                </li>
+                <li class="vui-nav-item">
+                    <a href="javascript:void(0)" class="vui-nav-link" onclick="window.showToast('Team selected')">
+                        <span class="vui-nav-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        </span>
+                        <span class="vui-nav-label">Team Members</span>
+                    </a>
+                </li>
+                <li class="vui-nav-item">
+                    <a href="javascript:void(0)" class="vui-nav-link" onclick="window.showToast('Settings selected')">
+                        <span class="vui-nav-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                        </span>
+                        <span class="vui-nav-label">Settings</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+</div>
 HTML,
                 'code'    => <<<'CODE'
 <?php

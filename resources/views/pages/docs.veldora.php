@@ -10,6 +10,19 @@
     <!-- ── Sidebar ──────────────────────────────────────────────────── -->
     <aside class="sidebar" id="docs-sidebar" aria-label="Documentation navigation">
 
+        <!-- Mobile Drawer Header -->
+        <div class="sidebar-mobile-header">
+            <div class="sidebar-mobile-title">
+                <div class="logo-icon" style="width:24px;height:24px;background:var(--accent);border-radius:6px;display:inline-flex;align-items:center;justify-content:center;">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="white" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                </div>
+                <span>Documentation</span>
+            </div>
+            <button type="button" class="sidebar-mobile-close" onclick="closeMobileNav()" aria-label="Close Documentation Sidebar">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+
         <!-- Search -->
         <div class="sidebar-search-wrap">
             <div class="sidebar-search-icon">
