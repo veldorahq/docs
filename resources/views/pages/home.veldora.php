@@ -275,6 +275,10 @@ php veldora serve
     <section class="cta-section" aria-label="Quick start">
         <div class="cta-inner">
             <div class="cta-content">
+                <div class="section-label">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></polygon></svg>
+                    Fast Setup
+                </div>
                 <h2 class="cta-title">Start in 30 seconds</h2>
                 <p class="cta-sub">One Composer command. A full project structure. Auth, database migrations, and templates already wired up.</p>
                 <div class="cta-steps">
@@ -291,6 +295,10 @@ php veldora serve
                         <span>Start building</span>
                     </div>
                 </div>
+                <a href="/docs/getting-started" class="btn btn-primary cta-btn" id="cta-read-docs">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    Full Documentation
+                </a>
             </div>
             <div class="cta-terminal" aria-label="Quick start command">
                 <div class="cta-terminal-bar">
@@ -318,10 +326,6 @@ php veldora make:auth
 # 4. Start the dev server
 php veldora serve</code></pre>
             </div>
-            <a href="/docs/getting-started" class="btn btn-primary cta-btn" id="cta-read-docs">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                Full Documentation
-            </a>
         </div>
     </section>
 
