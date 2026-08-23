@@ -91,6 +91,32 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // ── Extend Prism with Blade & Veldora Syntax Rules ─
+    if (typeof Prism !== 'undefined') {
+        if (Prism.languages.php) {
+            Prism.languages.insertBefore('php', 'comment', {
+                'blade-comment': {
+                    pattern: /\{\{--[\s\S]*?--\}\}/,
+                    alias: 'comment'
+                }
+            });
+            Prism.languages.insertBefore('php', 'variable', {
+                'blade-directive': {
+                    pattern: /@(?:extends|section|yield|include|if|elseif|else|endif|foreach|endforeach|for|endfor|while|endwhile|switch|case|break|default|endswitch|auth|endauth|guest|endguest|csrf|method)\b/i,
+                    alias: 'keyword'
+                }
+            });
+        }
+        if (Prism.languages.markup) {
+            Prism.languages.insertBefore('markup', 'comment', {
+                'blade-comment': {
+                    pattern: /\{\{--[\s\S]*?--\}\}/,
+                    alias: 'comment'
+                }
+            });
+        }
+    }
+
     // ── Highlight all code on page load ────────────────
     highlightCodeBlocks();
 });
@@ -267,7 +293,12 @@ window.switchCompTab = function(id, tab) {
         if (panelCode) {
             panelCode.classList.remove('hidden');
             if (window.Prism) {
-                Prism.highlightAllUnder(panelCode);
+                const codeEl = panelCode.querySelector('code');
+                if (codeEl) {
+                    Prism.highlightElement(codeEl);
+                } else {
+                    Prism.highlightAllUnder(panelCode);
+                }
             }
         }
         if (panelPrev) panelPrev.classList.add('hidden');

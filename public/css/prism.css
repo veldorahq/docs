@@ -33,6 +33,14 @@ pre.code-block {
 
 /* ─── Syntax Highlighting Tokens ────────────────────────────────────────────── */
 
+/* PHP Open/Close Tags (<?php, ?>, <?, <?=) */
+.token.delimiter,
+.token.delimiter.important,
+.token.important.delimiter {
+    color: #f43f5e !important;
+    font-weight: 700;
+}
+
 /* Comments (Italic Slate Gray) */
 .token.comment,
 .token.prolog,
@@ -42,7 +50,7 @@ pre.code-block {
     font-style: italic;
 }
 
-/* Punctuations (Subtle Gray-White) */
+/* Punctuations (Subtle Gray-White: ;, ,, [, ], (, ), {, }) */
 .token.punctuation {
     color: #94a3b8 !important;
 }
@@ -62,7 +70,7 @@ pre.code-block {
     color: #f43f5e !important;
 }
 
-/* Attribute Names (variant, name, size, type, class, href) (Sky Blue / Cyan) */
+/* Attribute Names (variant, name, size, type, class, href, :items) (Sky Blue / Cyan) */
 .token.attr-name,
 .token.selector,
 .token.builtin,
@@ -81,7 +89,7 @@ pre.code-block {
     color: #4ade80 !important;
 }
 
-/* Numbers, Booleans (true, false, 123) (Coral Orange) */
+/* Numbers, Booleans (true, false, null, 123) (Coral Orange) */
 .token.boolean,
 .token.number,
 .token.constant {
@@ -89,7 +97,7 @@ pre.code-block {
     font-weight: 500;
 }
 
-/* PHP Keywords, Blade Directives, Operators (return, function, if, echo, class, @extends) (Purple) */
+/* PHP Keywords, Blade Directives, Operators (return, function, if, echo, class, =>, =, @extends) (Purple) */
 .token.keyword,
 .token.atrule,
 .token.operator,
@@ -99,15 +107,16 @@ pre.code-block {
     font-weight: 600;
 }
 
-/* Functions & Classes (render, make, DB, Router) (Amber Gold) */
+/* Functions & Classes (render, make, DB, Router, view) (Amber Gold) */
 .token.function,
 .token.class-name {
     color: #facc15 !important;
 }
 
-/* Variables ($request, $user, $slot, $attributes) (Azure Blue) */
+/* PHP Variables ($request, $user, $slot, $navItems, $attributes) (Azure Blue) */
 .token.variable {
     color: #60a5fa !important;
+    font-weight: 500;
 }
 
 /* Regex & Important */
