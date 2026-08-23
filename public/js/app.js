@@ -494,28 +494,50 @@ document.addEventListener('click', (e) => {
     }
 });
 
-// ── Instant AI Master Prompt Downloader (Client-side Fallback) ────────────
-window.downloadAiPromptFile = function(e) {
-    const codeEl = document.querySelector('#doc-content pre code') || document.querySelector('.terminal-mockup-body');
-    let promptContent = '';
-    if (codeEl) {
-        promptContent = codeEl.innerText || codeEl.textContent;
+// ── Copy Full Chapter / Page Markdown (readme.io style) ────────────────────
+window.copyPageDocs = function(btn) {
+    const rawTextarea = document.getElementById('raw-doc-markdown');
+    let markdown = '';
+
+    if (rawTextarea && rawTextarea.value) {
+        markdown = rawTextarea.value;
+    } else {
+        const contentEl = document.getElementById('doc-content');
+        if (contentEl) {
+            markdown = contentEl.innerText || contentEl.textContent;
+        }
     }
-    if (!promptContent) {
+
+    if (!markdown) {
+        if (window.showToast) window.showToast('No content to copy', 'error');
         return;
     }
-    if (e) e.preventDefault();
-    const blob = new Blob([promptContent], { type: 'text/markdown;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'veldora-ai-master-prompt.md';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    if (window.showToast) {
-        window.showToast('Downloaded veldora-ai-master-prompt.md');
-    }
+
+    navigator.clipboard.writeText(markdown).then(() => {
+        const originalHTML = btn.innerHTML;
+        btn.classList.add('copied');
+        btn.innerHTML = `
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:#22c55e;"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Copied!</span>
+        `;
+
+        if (window.showToast) {
+            window.showToast('Page markdown copied to clipboard!', 'success');
+        }
+
+        setTimeout(() => {
+            btn.innerHTML = originalHTML;
+            btn.classList.remove('copied');
+        }, 2200);
+    }).catch(() => {
+        if (rawTextarea) {
+            rawTextarea.style.display = 'block';
+            rawTextarea.select();
+            document.execCommand('copy');
+            rawTextarea.style.display = 'none';
+            if (window.showToast) window.showToast('Page markdown copied to clipboard!', 'success');
+        }
+    });
 };
+
 

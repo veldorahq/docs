@@ -338,6 +338,107 @@ img { max-width: 100%; }
 }
 .content-inner { max-width: 800px; }
 
+/* ─── Breadcrumb ─────────────────────────────────────────────────────────────── */
+.doc-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12.5px;
+    color: var(--text-dim);
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+.doc-breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color .15s; }
+.doc-breadcrumb a:hover { color: var(--accent); text-decoration: none; }
+.doc-breadcrumb span { color: var(--text); font-weight: 500; }
+.doc-breadcrumb svg { opacity: .5; }
+
+/* ─── Doc Header & Copy Page Button (readme.io style) ────────────────────────── */
+.doc-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    max-width: 800px;
+}
+
+.doc-header h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: -.035em;
+    color: var(--text);
+    margin: 0;
+    line-height: 1.2;
+    flex: 1;
+    min-width: 200px;
+}
+
+.doc-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    margin-top: 4px;
+}
+
+.btn-copy-page {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: all .15s ease;
+    user-select: none;
+    line-height: 1;
+}
+
+.btn-copy-page:hover {
+    color: var(--text);
+    background: var(--surface-3);
+    border-color: var(--border-light);
+    transform: translateY(-1px);
+}
+
+.btn-copy-page:active {
+    transform: translateY(0);
+}
+
+.btn-copy-page.copied {
+    color: var(--success);
+    border-color: var(--success);
+    background: rgba(34, 197, 94, 0.1);
+}
+
+.btn-copy-page svg {
+    flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+    .doc-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    .doc-header h1 {
+        font-size: 1.7rem;
+    }
+    .btn-copy-page {
+        font-size: 11.5px;
+        padding: 5px 10px;
+    }
+}
+
 /* ─── Prose (Docs Content) ────────────────────────────────────────────────────── */
 .prose { max-width: 800px; }
 

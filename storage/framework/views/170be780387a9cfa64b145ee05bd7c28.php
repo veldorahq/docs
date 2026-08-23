@@ -47,7 +47,7 @@
 
         <!-- Sidebar footer -->
         <div class="sidebar-footer">
-            <a href="https://github.com/veldorahq/veldora-core" target="_blank" rel="noopener noreferrer" class="sidebar-footer-link">
+            <a href="https://github.com/veldorahq/veldora" target="_blank" rel="noopener noreferrer" class="sidebar-footer-link">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
                 GitHub Repo
             </a>
@@ -77,7 +77,19 @@
         <!-- Section heading -->
         <header class="doc-header">
             <h1 id="doc-title"><?= htmlspecialchars($section['title'], ENT_QUOTES, 'UTF-8') ?></h1>
+            <div class="doc-header-actions">
+                <button type="button" class="btn-copy-page" id="btn-copy-page-docs" onclick="copyPageDocs(this)" title="Copy page as Markdown" aria-label="Copy page as Markdown">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                    <span>Copy Page</span>
+                </button>
+            </div>
         </header>
+
+        <!-- Hidden raw markdown container for copying -->
+        <textarea id="raw-doc-markdown" style="display:none;" aria-hidden="true"><?= htmlspecialchars($section['content'] ?? '', ENT_QUOTES, 'UTF-8') ?></textarea>
 
         <!-- Markdown content -->
         <article class="prose" id="doc-content">
