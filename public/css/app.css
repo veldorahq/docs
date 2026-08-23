@@ -2255,9 +2255,10 @@ th.vui-sort-active { color: var(--accent, #7c6ef5); }
 .sidebar-backdrop {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(4px);
-    z-index: 190;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 240;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.25s ease;
@@ -2273,17 +2274,53 @@ th.vui-sort-active { color: var(--accent, #7c6ef5); }
         display: inline-flex;
     }
 
+    /* Header nav becomes a dropdown on mobile */
     .header-nav {
         display: none;
+        position: absolute;
+        top: var(--header-h);
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        background: #0c0c0f;
+        border-bottom: 1px solid var(--border);
+        padding: 8px 0 16px;
+        z-index: 250;
+        box-shadow: 0 16px 32px rgba(0,0,0,0.7);
     }
 
+    .header-nav.open {
+        display: flex !important;
+    }
+
+    .header-nav a {
+        border-radius: 0;
+        padding: 12px 20px;
+        font-size: 14.5px;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .header-nav a:last-child {
+        border-bottom: none;
+    }
+
+    /* Docs sidebar becomes a fixed drawer on mobile */
     .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        height: 100vh;
+        padding-top: calc(var(--header-h) + 16px);
         transform: translateX(-100%);
-        transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        z-index: 200;
+        transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 250;
         width: min(320px, 85vw);
         background: #09090b;
-        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.8);
+        border-right: 1px solid var(--border);
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.9);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
     .sidebar.open {

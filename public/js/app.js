@@ -442,45 +442,66 @@ window.vuiDtSearch = function(wrapId, query) {
     }
 };
 
-// ── Mobile Sidebar Drawer Toggle ──────────────────────────────────────────
-const toggleBtn = document.getElementById('sidebar-toggle-btn');
-const sidebar = document.getElementById('docs-sidebar');
-const backdrop = document.getElementById('sidebar-backdrop');
+// ── Universal Mobile Navigation & Sidebar Drawer Toggle ──────────────────
+function initMobileMenu() {
+    const toggleBtn = document.getElementById('sidebar-toggle-btn');
+    const docsSidebar = document.getElementById('docs-sidebar');
+    const headerNav = document.getElementById('main-nav');
+    const backdrop = document.getElementById('sidebar-backdrop');
 
-function openSidebar() {
-    if (sidebar) sidebar.classList.add('open');
-    if (backdrop) backdrop.classList.add('active');
-    document.body.classList.add('sidebar-open');
-}
+    function closeAllMenus() {
+        if (docsSidebar) docsSidebar.classList.remove('open');
+        if (headerNav) headerNav.classList.remove('open');
+        if (backdrop) backdrop.classList.remove('active');
+        document.body.classList.remove('sidebar-open');
+    }
 
-function closeSidebar() {
-    if (sidebar) sidebar.classList.remove('open');
-    if (backdrop) backdrop.classList.remove('active');
-    document.body.classList.remove('sidebar-open');
-}
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
 
-if (toggleBtn) {
-    toggleBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if (sidebar && sidebar.classList.contains('open')) {
-            closeSidebar();
-        } else {
-            openSidebar();
-        }
+            if (docsSidebar) {
+                // On Docs page: Toggle Docs 22 Chapters Sidebar Drawer
+                const isOpen = docsSidebar.classList.contains('open');
+                if (isOpen) {
+                    closeAllMenus();
+                } else {
+                    docsSidebar.classList.add('open');
+                    if (backdrop) backdrop.classList.add('active');
+                    document.body.classList.add('sidebar-open');
+                }
+            } else if (headerNav) {
+                // On non-Docs page: Toggle Header Links Menu Dropdown
+                const isOpen = headerNav.classList.contains('open');
+                if (isOpen) {
+                    closeAllMenus();
+                } else {
+                    headerNav.classList.add('open');
+                    if (backdrop) backdrop.classList.add('active');
+                }
+            }
+        });
+    }
+
+    if (backdrop) {
+        backdrop.addEventListener('click', closeAllMenus);
+    }
+
+    document.querySelectorAll('.sidebar-nav a, .header-nav a').forEach(link => {
+        link.addEventListener('click', () => {
+            if (window.innerWidth <= 860) {
+                closeAllMenus();
+            }
+        });
     });
 }
 
-if (backdrop) {
-    backdrop.addEventListener('click', closeSidebar);
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMobileMenu);
+} else {
+    initMobileMenu();
 }
-
-document.querySelectorAll('.sidebar-nav a').forEach(link => {
-    link.addEventListener('click', () => {
-        if (window.innerWidth <= 860) {
-            closeSidebar();
-        }
-    });
-});
 
 // ── Instant AI Master Prompt Downloader (Client-side Fallback) ────────────
 window.downloadAiPromptFile = function(e) {
@@ -490,7 +511,7 @@ window.downloadAiPromptFile = function(e) {
         promptContent = codeEl.innerText || codeEl.textContent;
     }
     if (!promptContent) {
-        return; // allow default link download
+        return;
     }
     if (e) e.preventDefault();
     const blob = new Blob([promptContent], { type: 'text/markdown;charset=utf-8' });
