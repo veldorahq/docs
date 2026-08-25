@@ -141,7 +141,7 @@
             <div class="footer-badges">
                 <span class="footer-badge">PHP 8.2+</span>
                 <span class="footer-badge">MIT License</span>
-                <span class="footer-badge">v1.0.0</span>
+                <span class="footer-badge">v0.5.0</span>
             </div>
         </div>
 
