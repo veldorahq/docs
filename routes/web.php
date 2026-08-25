@@ -19,3 +19,6 @@ $router->get('/extension', [App\Controllers\ExtensionController::class, 'index']
 
 // Component showcase
 $router->get('/components', [App\Controllers\ComponentsController::class, 'index']);
+
+// Changelog
+$router->get('/changelog', [App\Controllers\ChangelogController::class, 'index']);

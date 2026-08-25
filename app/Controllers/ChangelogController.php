@@ -1,0 +1,197 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Controllers;
+
+use Veldora\Framework\Http\Request;
+use Veldora\Framework\Http\Response;
+use Veldora\Framework\View\Engine;
+
+class ChangelogController
+{
+    public function __construct(protected Engine $view) {}
+
+    public function index(Request $request): Response
+    {
+        $changelogs = $this->buildChangelogs();
+
+        // Inline markdown renderer: escape HTML first, then apply backtick→<code> and **bold**
+        $renderInlineMarkdown = static function (string $text): string {
+            $safe = htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
+            // `code` → <code>
+            $safe = (string) preg_replace('/`([^`]+)`/', '<code class="cl-code">$1</code>', $safe);
+            // **bold**
+            $safe = (string) preg_replace('/\*\*(.+?)\*\*/', '<strong>$1</strong>', $safe);
+            return $safe;
+        };
+
+        $html = $this->view->render('pages.changelog', [
+            'changelogs'           => $changelogs,
+            'renderInlineMarkdown' => $renderInlineMarkdown,
+        ]);
+
+        return new Response($html, 200, ['Content-Type' => 'text/html; charset=UTF-8']);
+    }
+
+    private function buildChangelogs(): array
+    {
+        return [
+            // ── veldora/framework ────────────────────────────────────────────────
+            [
+                'repo'    => 'veldora/framework',
+                'label'   => 'Core',
+                'github'  => 'https://github.com/veldorahq/veldora-core',
+                'color'   => 'accent',
+                'icon'    => 'core',
+                'releases' => [
+                    [
+                        'version' => '0.5.0',
+                        'date'    => '2026-08-25',
+                        'tag'     => 'latest',
+                        'added'   => [
+                            'DB Facade — `statement()`, `select()`, `selectOne()`, `insert()`, `update()`, `delete()`, `transaction()`',
+                            'SoftDeletes Trait — `deleted_at` auto-management, `withTrashed()`, `onlyTrashed()`, `restore()`, `forceDelete()`',
+                            'Model Lifecycle Events — `creating`, `created`, `updating`, `updated`, `deleting`, `deleted` hooks',
+                            'Named Route URLs — `route(\'name\', [\'id\' => 1])` global helper with parameter substitution',
+                            'ThrottleRequests Middleware — Token-bucket rate limiter, `429 Too Many Requests` response',
+                            'CheckForMaintenanceMode Middleware — `storage/framework/.down` status + bypass `?secret=`',
+                            'Complete Auth Scaffold — `php veldora make:auth` generates Login, Register, ForgotPassword, ResetPassword, Profile, EmailVerify views',
+                            'PasswordBroker — HMAC token-based password reset with expiry validation',
+                            'Console Polyfill — Zero-dependency Symfony\\Console shim (`src/Console/Polyfill.php`)',
+                            'Anonymous Migration Classes — prevents duplicate class-name collisions on re-run',
+                            '`executeDirect()` on MigrateCommand, RollbackCommand, FreshCommand, ListComponentsCommand, AddComponentCommand',
+                            'View Compiler: `@method(\'PUT\')` / `@method(\'DELETE\')` directive to hidden `<input>` field',
+                            '`Request::create()` factory method and `query()` getter',
+                            '`Response::setHeader()` / `getHeader()` utilities',
+                            '`Engine::renderFile()` and `renderString()` standalone methods',
+                        ],
+                        'fixed'   => [
+                            '`Blueprint::boolean()` default value compiled as `0`/`1` instead of empty `DEFAULT ,` SQL',
+                            '`QueryBuilder::get()` and `first()` auto-hydrate rows into Model instances when `modelClass` is set',
+                            '`Model::find()` and `all()` handle pre-hydrated instances correctly',
+                            '`ThrottleRequests` and `CheckForMaintenanceMode` `\\Closure $next` type hints',
+                        ],
+                    ],
+                    [
+                        'version' => '0.4.0',
+                        'date'    => '2026-07-15',
+                        'tag'     => null,
+                        'added'   => [
+                            'Session auth guards — `Auth::attempt()`, `Auth::logout()`, `auth()` helper',
+                            'Middleware pipeline with `web`, `auth`, `guest`, `throttle` groups',
+                            '`make:controller`, `make:model`, `make:migration`, `make:middleware`, `make:mail` commands',
+                            'Queue system — `dispatch()`, workers, failed jobs table',
+                            'Mail system — `mailer()->to()->send()` and Mailable classes',
+                            'Cache system — file/array drivers and `cache()->remember()`',
+                            'HTTP Client — `Http::get()`, `Http::post()`, `withToken()`',
+                            'Event / Listener system',
+                            'Storage system — `storage(\'disk\')->put/get/delete/url`',
+                        ],
+                        'fixed'   => [],
+                    ],
+                    [
+                        'version' => '0.3.0',
+                        'date'    => '2026-07-13',
+                        'tag'     => null,
+                        'added'   => [
+                            'Initial public release',
+                            'MVC architecture — Router, Service Container, View Compiler',
+                            'Database QueryBuilder, Migrator, Schema Blueprint',
+                            '`php veldora serve`, `php veldora migrate`, `php veldora make:*` commands',
+                        ],
+                        'fixed'   => [],
+                    ],
+                ],
+            ],
+
+            // ── veldora/ui ───────────────────────────────────────────────────────
+            [
+                'repo'    => 'veldora/ui',
+                'label'   => 'UI',
+                'github'  => 'https://github.com/veldorahq/veldora-ui',
+                'color'   => 'green',
+                'icon'    => 'ui',
+                'releases' => [
+                    [
+                        'version' => '0.5.0',
+                        'date'    => '2026-08-25',
+                        'tag'     => 'latest',
+                        'added'   => [
+                            '`footer` — Responsive site footer with branding, nav links, and legal text',
+                            '`rating` — Interactive star rating with half-star precision and read-only mode',
+                            '`switch` — Toggle switch with label and checked state binding',
+                            '`pagination` — Pagination bar with prev/next links',
+                            '`skeleton` — Animated placeholder skeleton for loading states',
+                            '`empty` — Empty state with illustration, title, description, and action slot',
+                            '`divider` — Horizontal or vertical separator with optional label',
+                            '`drawer` — Slide-in panel (left/right/top/bottom) with overlay',
+                            '`popover` — Floating content panel anchored to a trigger',
+                            '`confirm` — Confirm dialog with confirm/cancel for destructive operations',
+                            '`datepicker` — Native date input with Veldora styling',
+                            '`fileupload` — Drag-and-drop file upload zone',
+                            '`combobox` — Searchable select with autocomplete dropdown',
+                            '`inputgroup` — Input with prefix/suffix addons',
+                            '`stat` — Metric stat card with value, label, icon, and trend indicator',
+                            '`datatable` — Interactive table with search, sort, and pagination',
+                            '`timeline` — Vertical event list with icon, title, and timestamp',
+                            '`stepper` — Multi-step wizard indicator',
+                            '`sidebar` — Navigation sidebar with logo and collapsible sub-menus',
+                            '`container` — Responsive max-width wrapper',
+                            'Total: **41+ components** available via `php veldora ui:list`',
+                        ],
+                        'fixed'   => [
+                            '`php veldora ui:list` and `php veldora add <name>` now use `executeDirect()` — zero-dependency environments supported',
+                        ],
+                    ],
+                    [
+                        'version' => '0.4.0',
+                        'date'    => '2026-07-15',
+                        'tag'     => null,
+                        'added'   => [
+                            'Initial 21 components: button, input, textarea, select, checkbox, radio, badge, alert, card, modal, spinner, avatar, dropdown, navbar, toast, tabs, accordion, progress, tooltip, breadcrumb, table',
+                            '`veldora-ui.css` base stylesheet with `--vui-*` CSS custom properties',
+                            'ComponentRegistry class with template definitions',
+                        ],
+                        'fixed'   => [],
+                    ],
+                ],
+            ],
+
+            // ── create-veldora-app ───────────────────────────────────────────────
+            [
+                'repo'    => 'create-veldora-app',
+                'label'   => 'CLI',
+                'github'  => 'https://github.com/veldorahq/create-veldora-app',
+                'color'   => 'purple',
+                'icon'    => 'cli',
+                'releases' => [
+                    [
+                        'version' => '0.5.0',
+                        'date'    => '2026-08-25',
+                        'tag'     => 'latest',
+                        'added'   => [
+                            'Template ships zero Symfony/Console dependency — CLI works out-of-the-box with built-in Polyfill shim',
+                            '`bootstrap/autoload.php` auto-loads `Polyfill.php` when Symfony/Console is absent',
+                            'All `php veldora` switch-cases call `executeDirect()` directly',
+                            'Anonymous migration classes in template (prevents duplicate class-name collisions)',
+                            '`php veldora make:auth` generates full auth layer with **100% native `.veldora.php` views** — zero raw PHP, zero CDN CSS',
+                        ],
+                        'fixed'   => [],
+                    ],
+                    [
+                        'version' => '0.4.0',
+                        'date'    => '2026-07-15',
+                        'tag'     => null,
+                        'added'   => [
+                            'Interactive npx scaffolder with project name prompt',
+                            'Composer dependency install, APP_KEY generation, and storage setup',
+                            'Template with routes, layout, home view, sample controller/model/migration',
+                        ],
+                        'fixed'   => [],
+                    ],
+                ],
+            ],
+        ];
+    }
+}
