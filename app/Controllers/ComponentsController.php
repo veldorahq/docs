@@ -828,19 +828,19 @@ CODE,
         <tbody>
             <tr>
                 <td style="font-weight:600;color:var(--vui-text);">veldora/framework</td>
-                <td><span class="vui-badge vui-badge-secondary vui-badge-sm">v0.4.0</span></td>
+                <td><span class="vui-badge vui-badge-secondary vui-badge-sm">v0.5.0</span></td>
                 <td><span class="vui-badge vui-badge-success vui-badge-sm">Stable</span></td>
                 <td style="text-align:right;"><button type="button" class="vui-btn vui-btn-ghost vui-btn-sm" onclick="window.showToast('Updating framework...')">Update</button></td>
             </tr>
             <tr>
                 <td style="font-weight:600;color:var(--vui-text);">veldora/ui</td>
-                <td><span class="vui-badge vui-badge-secondary vui-badge-sm">v0.4.0</span></td>
+                <td><span class="vui-badge vui-badge-secondary vui-badge-sm">v0.5.0</span></td>
                 <td><span class="vui-badge vui-badge-success vui-badge-sm">Stable</span></td>
                 <td style="text-align:right;"><button type="button" class="vui-btn vui-btn-ghost vui-btn-sm" onclick="window.showToast('Viewing components...')">View</button></td>
             </tr>
             <tr>
                 <td style="font-weight:600;color:var(--vui-text);">veldora-vscode</td>
-                <td><span class="vui-badge vui-badge-secondary vui-badge-sm">v0.4.0</span></td>
+                <td><span class="vui-badge vui-badge-secondary vui-badge-sm">v0.5.0</span></td>
                 <td><span class="vui-badge vui-badge-info vui-badge-sm">Active</span></td>
                 <td style="text-align:right;"><button type="button" class="vui-btn vui-btn-ghost vui-btn-sm" onclick="window.showToast('Extension downloaded')">Install</button></td>
             </tr>

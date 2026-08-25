@@ -105,7 +105,7 @@ switch ($command) {
                 $host = substr($arg, 7);
             }
         }
-        echo "\n\033[35m\033[1m  ▲ Veldora Development Server\033[0m \033[90mv0.4.0\033[0m\n\n";
+        echo "\n\033[35m\033[1m  ▲ Veldora Development Server\033[0m \033[90mv0.5.0\033[0m\n\n";
         echo "  \033[90mServer running on:\033[0m   \033[36m\033[1mhttp://{$host}:{$port}\033[0m\n";
         echo "  \033[90mEnvironment:\033[0m         \033[32mlocal\033[0m\n";
         echo "  \033[90mPress \033[33m\033[1mCtrl+C\033[0m\033[90m to stop the server.\033[0m\n\n";
@@ -444,7 +444,7 @@ switch ($command) {
     case '--help':
     case '-h':
     default:
-        echo "\n\033[35m\033[1m  ▲ Veldora CLI\033[0m \033[90mv0.4.0\033[0m\n";
+        echo "\n\033[35m\033[1m  ▲ Veldora CLI\033[0m \033[90mv0.5.0\033[0m\n";
         echo "\033[90m  The modern PHP framework you actually own. 40+ Built-in Commands.\033[0m\n\n";
         echo "  \033[1mUsage:\033[0m\n";
         echo "    $ \033[36mphp veldora\033[0m \033[97m<command> [options]\033[0m\n\n";
