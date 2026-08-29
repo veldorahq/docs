@@ -390,7 +390,7 @@ window.switchCompTab = function(id, tab) {
 // ────────────────────────────────────────────────────────────────────────────
 window.copyCompCode = function(id, btn) {
     const box = document.getElementById('box-' + id) || document.getElementById(id);
-    const code = box ? box.querySelector('.comp-code-panel code, code') : null;
+    const code = box ? box.querySelector('[data-comp-code], .comp-code code, .comp-code-panel code, code') : null;
 
     if (!code) {
         window.showToast('No code to copy', 'error');
