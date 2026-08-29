@@ -81,11 +81,11 @@ $router->post(\'/logout\', [AuthController::class, \'logout\'])->middleware([\'a
     <section class="stats-section" aria-label="Framework stats">
         <div class="stats-inner">
             <div class="stat-item">
-                <div class="stat-number">21</div>
+                <div class="stat-number">41+</div>
                 <div class="stat-label">UI Components</div>
             </div>
             <div class="stat-item">
-                <div class="stat-number">30+</div>
+                <div class="stat-number">41+</div>
                 <div class="stat-label">CLI Commands</div>
             </div>
             <div class="stat-item">
@@ -239,8 +239,8 @@ php veldora serve
                 <div class="feature-icon">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
                 </div>
-                <div class="feature-title">21 UI Components</div>
-                <p class="feature-desc">Button, Tabs, Modal, Accordion, Toast and 16 more. Add them with <code>php veldora add button modal</code>.</p>
+                <div class="feature-title">41+ UI Components</div>
+                <p class="feature-desc">Button, Tabs, Modal, Datatable, Sidebar, Rating and 35 more. Add them with <code>php veldora add button modal</code>.</p>
             </article>
 
             <article class="feature-card">
@@ -279,7 +279,7 @@ php veldora serve
                     Fast Setup
                 </div>
                 <h2 class="cta-title">Set up a new project in under a minute</h2>
-                <p class="cta-sub">One Composer command creates a full project with auth, migrations, and templates already wired. Start building immediately.</p>
+                <p class="cta-sub">Create a full project with auth, migrations, and templates already wired using Composer or npx. Start building immediately.</p>
                 <div class="cta-steps">
                     <div class="cta-step">
                         <span class="cta-step-num">1</span>
@@ -312,17 +312,18 @@ php veldora serve
                         Copy
                     </button>
                 </div>
-                <pre class="code-block language-bash"><code class="language-bash"># 1. Create a new Veldora project
+                <pre class="code-block language-bash"><code class="language-bash"># Option 1: Using Composer
 composer create-project veldora/veldora my-app
 cd my-app
 
-# 2. Configure your database in .env, then migrate
-php veldora migrate
+# Option 2: Using npx
+# npx create-veldora-app my-app
 
-# 3. Scaffold a full auth system (login/register/dashboard)
+# Run migrations & scaffold auth
+php veldora migrate
 php veldora make:auth
 
-# 4. Start the dev server
+# Start the dev server
 php veldora serve</code></pre>
             </div>
         </div>
