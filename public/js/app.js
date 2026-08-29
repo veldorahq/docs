@@ -188,27 +188,44 @@ window.showToast = function(message, type = 'default') {
 };
 
 // ────────────────────────────────────────────────────────────────────────────
-// Copy Code from any wrapper (Hero, CTA Terminal, Docs, Showcase)
+// Copy Code from any wrapper (Hero, CTA Terminal, Docs, Showcase, Pre)
 // ────────────────────────────────────────────────────────────────────────────
 window.copyCode = function(btn) {
     // Look for code container in priority order
-    const container = btn.closest('.hero-code, .cta-terminal, .code-block-wrapper, .comp-code, .component-section, section');
-    let code = container ? container.querySelector('pre code, code') : null;
+    const container = btn.closest('.ide-code-wrapper, .terminal-mockup, .hero-code, .cta-terminal, .code-block-wrapper, .comp-code, .component-section, pre, section');
+    let codeEl = null;
 
-    if (!code) {
-        // Look at sibling or nearby pre
-        const toolbar = btn.closest('.hero-code-toolbar, .cta-terminal-bar, .code-block-header') || btn.parentElement;
-        if (toolbar && toolbar.nextElementSibling) {
-            code = toolbar.nextElementSibling.querySelector('code') || toolbar.nextElementSibling;
+    if (container) {
+        if (container.tagName.toLowerCase() === 'pre') {
+            codeEl = container.querySelector('code') || container;
+        } else {
+            codeEl = container.querySelector('pre code, .ide-code-body code, .terminal-mockup-body code, code, pre');
         }
     }
 
-    if (!code) {
-        window.showToast('No code found to copy', 'error');
+    if (!codeEl) {
+        // Look at sibling or nearby pre
+        const toolbar = btn.closest('.hero-code-toolbar, .cta-terminal-bar, .code-block-header, .ide-code-header, .terminal-mockup-header') || btn.parentElement;
+        if (toolbar && toolbar.nextElementSibling) {
+            codeEl = toolbar.nextElementSibling.querySelector('code') || toolbar.nextElementSibling;
+        }
+    }
+
+    if (!codeEl) {
+        if (window.showToast) window.showToast('No code found to copy', 'error');
         return;
     }
 
-    const textToCopy = code.innerText.trim();
+    // Extract clean code text without the copy button text
+    let textToCopy = '';
+    if (codeEl.cloneNode) {
+        const clone = codeEl.cloneNode(true);
+        // Remove any buttons or line numbers that might be inside
+        clone.querySelectorAll('.code-copy-btn, .line-numbers, .copy-icon').forEach(el => el.remove());
+        textToCopy = clone.textContent.trim();
+    } else {
+        textToCopy = (codeEl.innerText || codeEl.textContent || '').trim();
+    }
 
     function setSuccessState() {
         btn.classList.add('copied');
@@ -219,7 +236,9 @@ window.copyCode = function(btn) {
             </svg>
             <span style="color:#22c55e;font-weight:600;">Copied!</span>`;
 
-        window.showToast('Copied to clipboard!');
+        if (window.showToast) {
+            window.showToast('Code copied to clipboard!', 'success');
+        }
 
         setTimeout(() => {
             btn.classList.remove('copied');
@@ -235,6 +254,57 @@ window.copyCode = function(btn) {
         fallbackCopy(textToCopy, setSuccessState);
     }
 };
+
+// ────────────────────────────────────────────────────────────────────────────
+// Auto-attach hover copy buttons to all code blocks and embeds
+// ────────────────────────────────────────────────────────────────────────────
+function initUniversalCopyButtons() {
+    const codeContainers = document.querySelectorAll('pre, .ide-code-wrapper, .terminal-mockup, .code-block-wrapper, .comp-code, .vui-code-preview');
+    codeContainers.forEach(container => {
+        // Skip if already contains a copy button
+        if (container.querySelector('.code-copy-btn') || container.classList.contains('no-copy-btn')) {
+            return;
+        }
+
+        // If it's a pre inside an ide-code-wrapper or terminal-mockup, skip (it has header button)
+        if (container.tagName.toLowerCase() === 'pre' && container.closest('.ide-code-wrapper, .terminal-mockup, .code-block-wrapper')) {
+            return;
+        }
+
+        // Ensure position relative for absolute button placement
+        const pos = window.getComputedStyle(container).position;
+        if (pos === 'static' || !pos) {
+            container.style.position = 'relative';
+        }
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'code-copy-btn';
+        btn.setAttribute('aria-label', 'Copy code to clipboard');
+        btn.innerHTML = `
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+            <span>Copy</span>
+        `;
+
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            window.copyCode(btn);
+        });
+
+        container.appendChild(btn);
+    });
+}
+
+// Auto-run on DOM ready and dynamic page transitions
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initUniversalCopyButtons);
+} else {
+    initUniversalCopyButtons();
+}
 
 function fallbackCopy(text, onSuccess) {
     const textarea = document.createElement('textarea');

@@ -509,14 +509,15 @@ img { max-width: 100%; }
 
 .prose pre, pre.code-block {
     position: relative;
-    background: #0c0c0e;
+    background: #09090b;
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    padding: 20px 20px 20px 24px;
+    padding: 20px 24px;
     overflow-x: auto;
     margin: 1.2rem 0;
     font-size: 13px;
     line-height: 1.65;
+    font-family: var(--font-mono);
 }
 
 .prose pre code, pre.code-block code {
@@ -524,25 +525,187 @@ img { max-width: 100%; }
     border: none;
     padding: 0;
     font-size: inherit;
+    font-family: inherit;
 }
 
-/* copy btn */
+/* ─── Universal Code Copy Button with Smooth Hover Reveal ─── */
 .code-copy-btn {
     position: absolute;
-    top: 10px; right: 10px;
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    color: var(--text-dim);
-    border-radius: var(--radius);
-    padding: 4px 10px;
+    top: 10px;
+    right: 12px;
+    background: rgba(22, 24, 38, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--text-muted, #94a3b8);
+    border-radius: 6px;
+    padding: 5px 10px;
     font-size: 11px;
-    font-family: var(--font);
+    font-family: var(--font, sans-serif);
+    font-weight: 500;
     cursor: pointer;
-    display: flex; align-items: center; gap: 5px;
-    transition: background .15s, color .15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    z-index: 5;
+    opacity: 0;
+    transform: translateY(-2px);
+    pointer-events: none;
+    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                background 0.15s ease,
+                color 0.15s ease,
+                border-color 0.15s ease,
+                box-shadow 0.15s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
-.code-copy-btn:hover { background: var(--surface-3); color: var(--text); }
-.code-copy-btn.copied { color: var(--success); border-color: var(--success); }
+
+/* Reveal copy button on hover */
+pre:hover > .code-copy-btn,
+.ide-code-wrapper:hover .code-copy-btn,
+.terminal-mockup:hover .code-copy-btn,
+.code-block-wrapper:hover .code-copy-btn,
+.hero-code:hover .code-copy-btn,
+.cta-terminal:hover .code-copy-btn,
+.comp-code:hover .code-copy-btn {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* Header toolbar buttons (where position is relative or inside header) */
+.ide-code-header .code-copy-btn,
+.terminal-mockup-header .code-copy-btn,
+.hero-code-toolbar .code-copy-btn,
+.cta-terminal-bar .code-copy-btn {
+    position: static;
+    opacity: 0.8;
+    transform: none;
+    pointer-events: auto;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.ide-code-wrapper:hover .ide-code-header .code-copy-btn,
+.terminal-mockup:hover .terminal-mockup-header .code-copy-btn,
+.hero-code:hover .hero-code-toolbar .code-copy-btn,
+.cta-terminal:hover .cta-terminal-bar .code-copy-btn {
+    opacity: 1;
+}
+
+.code-copy-btn:hover {
+    background: var(--surface-3, #222538);
+    color: #ffffff;
+    border-color: rgba(124, 110, 245, 0.5);
+    box-shadow: 0 0 12px rgba(124, 110, 245, 0.2);
+}
+
+.code-copy-btn.copied {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    pointer-events: auto !important;
+    background: rgba(34, 197, 94, 0.15) !important;
+    border-color: rgba(34, 197, 94, 0.4) !important;
+    color: #22c55e !important;
+}
+
+/* ─── IDE Code Window Mockup ─── */
+.ide-code-wrapper {
+    position: relative;
+    background: #09090b;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg, 10px);
+    margin: 1.4rem 0;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.ide-code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 14px;
+    background: #111116;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ide-code-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--font-mono, monospace);
+    font-size: 11.5px;
+    color: var(--text, #e2e8f0);
+    font-weight: 500;
+}
+
+.ide-code-tab svg {
+    color: var(--accent, #7c6ef5);
+}
+
+.ide-code-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ide-code-lang {
+    font-size: 10.5px;
+    font-family: var(--font-mono, monospace);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--text-dim, #64748b);
+    text-transform: uppercase;
+}
+
+.ide-code-body {
+    margin: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 18px 22px !important;
+    background: transparent !important;
+}
+
+/* ─── Terminal Mockup Window ─── */
+.terminal-mockup {
+    position: relative;
+    background: #060608;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg, 10px);
+    margin: 1.4rem 0;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.terminal-mockup-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 14px;
+    background: #0f1015;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.terminal-dots {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.terminal-mockup-title {
+    font-size: 11px;
+    font-family: var(--font-mono, monospace);
+    color: var(--text-dim, #94a3b8);
+    font-weight: 500;
+}
+
+.terminal-mockup-body {
+    margin: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 18px 22px !important;
+    background: transparent !important;
+    color: #38bdf8 !important;
+}
 
 /* ─── Docs Nav Prev/Next ──────────────────────────────────────────────────────── */
 .docs-nav { display: flex; justify-content: space-between; gap: 16px; margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--border); }
