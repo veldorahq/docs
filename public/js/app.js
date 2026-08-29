@@ -337,8 +337,8 @@ window.switchCompTab = function(id, tab) {
 
     const tabPrev = box.querySelector('.tab-btn-preview');
     const tabCode = box.querySelector('.tab-btn-code');
-    const panelPrev = box.querySelector('.comp-preview-panel');
-    const panelCode = box.querySelector('.comp-code-panel');
+    const panelPrev = box.querySelector('.comp-preview-panel, .comp-preview, [id^="panel-prev-"]');
+    const panelCode = box.querySelector('.comp-code-panel, .comp-code, [id^="panel-code-"]');
 
     if (tab === 'preview') {
         if (tabPrev) {
@@ -349,8 +349,14 @@ window.switchCompTab = function(id, tab) {
             tabCode.classList.remove('active');
             tabCode.setAttribute('aria-selected', 'false');
         }
-        if (panelPrev) panelPrev.classList.remove('hidden');
-        if (panelCode) panelCode.classList.add('hidden');
+        if (panelPrev) {
+            panelPrev.classList.remove('hidden');
+            panelPrev.style.display = '';
+        }
+        if (panelCode) {
+            panelCode.classList.add('hidden');
+            panelCode.style.display = 'none';
+        }
     } else {
         if (tabCode) {
             tabCode.classList.add('active');
@@ -362,6 +368,7 @@ window.switchCompTab = function(id, tab) {
         }
         if (panelCode) {
             panelCode.classList.remove('hidden');
+            panelCode.style.display = '';
             if (window.Prism) {
                 const codeEl = panelCode.querySelector('code');
                 if (codeEl) {
@@ -371,7 +378,10 @@ window.switchCompTab = function(id, tab) {
                 }
             }
         }
-        if (panelPrev) panelPrev.classList.add('hidden');
+        if (panelPrev) {
+            panelPrev.classList.add('hidden');
+            panelPrev.style.display = 'none';
+        }
     }
 };
 
