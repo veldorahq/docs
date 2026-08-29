@@ -55,12 +55,8 @@ pre.code-block {
     color: #94a3b8 !important;
 }
 
-/* HTML / Blade Tags (<x-button>, <x-slot>, <nav>, <div>) (Vibrant Pink/Rose) */
-.token.tag,
-.token.tag .token.punctuation,
-.token.property,
-.token.symbol,
-.token.deleted {
+/* HTML / Blade Tags (<x-button>, <x-slot>, <nav>, <div>) (Vibrant Rose/Violet) */
+.token.tag {
     color: #f43f5e !important;
     font-weight: 500;
 }
@@ -72,6 +68,7 @@ pre.code-block {
 
 /* Attribute Names (variant, name, size, type, class, href, :items) (Sky Blue / Cyan) */
 .token.attr-name,
+.token.tag .token.attr-name,
 .token.selector,
 .token.builtin,
 .token.char,
@@ -82,10 +79,12 @@ pre.code-block {
 
 /* Attribute Values, Strings ('...', "...") (Emerald Green) */
 .token.attr-value,
+.token.tag .token.attr-value,
 .token.string {
     color: #4ade80 !important;
 }
-.token.attr-value .token.punctuation {
+.token.attr-value .token.punctuation,
+.token.tag .token.attr-value .token.punctuation {
     color: #4ade80 !important;
 }
 
@@ -137,7 +136,19 @@ pre.code-block {
 /* ─── Scrollbar for Code Blocks ────────────────────────────────────────────── */
 pre.code-block::-webkit-scrollbar,
 .comp-code pre::-webkit-scrollbar,
+.comp-code-pre::-webkit-scrollbar,
 pre[class*="language-"]::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+pre.code-block::-webkit-scrollbar-thumb,
+.comp-code pre::-webkit-scrollbar-thumb,
+.comp-code-pre::-webkit-scrollbar-thumb,
+pre[class*="language-"]::-webkit-scrollbar-thumb {
+    background: #27272a;
+    border-radius: 3px;
+}
+
     height: 6px;
     width: 6px;
 }

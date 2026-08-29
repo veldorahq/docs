@@ -4098,29 +4098,34 @@ body.nav-open .mobile-drawer {
    ════════════════════════════════════════════════════════════════════════════ */
 
 .comp-detail-layout {
-    display: grid;
-    grid-template-columns: 240px 1fr;
+    display: flex;
     min-height: 100vh;
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 0 24px;
+    max-width: 100%;
+    position: relative;
+    padding: 0;
     gap: 0;
 }
 
 /* ── Sidebar ── */
 .comp-detail-sidebar {
-    position: sticky;
-    top: 0;
-    height: 100vh;
+    position: fixed;
+    top: var(--header-h, 58px);
+    left: 0;
+    width: var(--nav-w, 260px);
+    height: calc(100vh - var(--header-h, 58px));
     overflow-y: auto;
+    overflow-x: hidden;
     border-right: 1px solid var(--border);
-    padding: 24px 0 64px;
+    background: var(--surface);
+    padding: 20px 14px 64px 20px;
     scrollbar-width: thin;
-    scrollbar-color: var(--border) transparent;
+    scrollbar-color: var(--border-light) transparent;
+    z-index: 90;
+    flex-shrink: 0;
 }
 
 .comp-sidebar-inner {
-    padding-right: 8px;
+    padding-right: 4px;
 }
 
 .comp-sidebar-header {
@@ -4186,8 +4191,11 @@ body.nav-open .mobile-drawer {
 
 /* ── Main Content ── */
 .comp-detail-main {
-    padding: 36px 0 80px 40px;
-    max-width: 860px;
+    margin-left: var(--nav-w, 260px);
+    flex: 1;
+    min-width: 0;
+    padding: 36px 48px 100px;
+    max-width: 1040px;
 }
 
 /* Header */

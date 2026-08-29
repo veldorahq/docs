@@ -1,4 +1,4 @@
-﻿@extends('layouts.app')
+@extends('layouts.app')
 
 @section('page_title', $component['name'] . ' Component')
 @section('page_title_suffix', 'Veldora UI')
@@ -99,7 +99,7 @@
                         <?= $variation['preview'] ?>
                     </div>
                     <div id="panel-code-<?= $vid ?>" class="comp-code" role="tabpanel" style="display:none">
-                        <pre class="comp-code-pre no-copy-btn"><code data-comp-code="<?= $vid ?>"><?= htmlspecialchars($variation['code'], ENT_QUOTES, 'UTF-8') ?></code></pre>
+                        <pre class="comp-code-pre language-markup no-copy-btn"><code class="language-markup" data-comp-code="<?= $vid ?>"><?= htmlspecialchars($variation['code'], ENT_QUOTES, 'UTF-8') ?></code></pre>
                     </div>
                 </div>
             </section>
@@ -134,3 +134,14 @@
     </main>
 </div>
 @endsection
+
+@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.Prism) {
+            Prism.highlightAll();
+        }
+    });
+</script>
+@endsection
+
