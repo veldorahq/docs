@@ -620,4 +620,78 @@ window.copyPageDocs = function(btn) {
     });
 };
 
+// ── Global Veldora Toast System ─────────────────────────────────────────────
+window.showToast = function(message, type = 'info', title = null, duration = 3500) {
+    // Normalise type
+    type = (type || 'info').toLowerCase();
+    if (type === 'error') type = 'danger';
 
+    // Get or create portal
+    let portal = document.getElementById('vui-toast-portal');
+    if (!portal) {
+        portal = document.createElement('div');
+        portal.id = 'vui-toast-portal';
+        portal.className = 'vui-toast-portal';
+        document.body.appendChild(portal);
+    }
+
+    // Default titles and icons by type
+    const configs = {
+        success: {
+            title: title || 'Success',
+            icon: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+            cls: 'vui-toast-success'
+        },
+        danger: {
+            title: title || 'Error',
+            icon: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+            cls: 'vui-toast-danger'
+        },
+        warning: {
+            title: title || 'Warning',
+            icon: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+            cls: 'vui-toast-warning'
+        },
+        info: {
+            title: title || 'Notice',
+            icon: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+            cls: 'vui-toast-info'
+        },
+        purple: {
+            title: title || 'Veldora',
+            icon: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+            cls: 'vui-toast-purple'
+        }
+    };
+
+    const conf = configs[type] || configs.info;
+
+    // Build toast element
+    const toast = document.createElement('div');
+    toast.className = `vui-toast ${conf.cls}`;
+    toast.setAttribute('role', 'alert');
+
+    toast.innerHTML = `
+        <div class="vui-toast-icon-wrap">${conf.icon}</div>
+        <div class="vui-toast-body">
+            <span class="vui-toast-title">${conf.title}</span>
+            <span class="vui-toast-msg">${message}</span>
+        </div>
+        <button type="button" class="vui-toast-close" aria-label="Close notification" onclick="this.closest('.vui-toast').dismiss()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <div class="vui-toast-progress" style="animation-duration: ${duration}ms;"></div>
+    `;
+
+    toast.dismiss = function() {
+        if (toast.classList.contains('vui-toast--dismiss')) return;
+        toast.classList.add('vui-toast--dismiss');
+        setTimeout(() => toast.remove(), 320);
+    };
+
+    portal.appendChild(toast);
+
+    if (duration > 0) {
+        setTimeout(() => toast.dismiss(), duration);
+    }
+};

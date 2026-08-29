@@ -14,9 +14,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/app.css">
-    <link rel="stylesheet" href="/css/veldora-ui.css">
-    <link rel="stylesheet" href="/css/prism.css">
+    <link rel="stylesheet" href="/css/app.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="/css/veldora-ui.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="/css/prism.css?v=<?= time() ?>">
 </head>
 <body>
 
@@ -253,7 +253,7 @@
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-ini.min.js"></script>
-<script src="/js/app.js"></script>
+<script src="/js/app.js?v=<?= time() ?>"></script>
 @yield('scripts')
 </body>
 </html>

@@ -46,9 +46,34 @@ class ChangelogController
                 'icon'    => 'core',
                 'releases' => [
                     [
+                        'version' => '0.5.2',
+                        'date'    => '2026-08-30',
+                        'tag'     => 'latest',
+                        'added'   => [
+                            'Composer Packagist VCS release validation synchronization — version tags unified across all packages',
+                            'Enhanced `executeDirect()` handlers for zero-dependency CLI execution',
+                            'Application version constant bumped to `0.5.2`',
+                        ],
+                        'fixed'   => [
+                            'VCS driver tag version mismatch resolution in composer metadata',
+                        ],
+                    ],
+                    [
+                        'version' => '0.5.1',
+                        'date'    => '2026-08-28',
+                        'tag'     => null,
+                        'added'   => [
+                            'Enhanced routing pipeline with strict pattern constraint matching',
+                            'Optimized template rendering engine cache layer',
+                        ],
+                        'fixed'   => [
+                            'Nested view partial parameter inheritance resolution',
+                        ],
+                    ],
+                    [
                         'version' => '0.5.0',
                         'date'    => '2026-08-25',
-                        'tag'     => 'latest',
+                        'tag'     => null,
                         'added'   => [
                             'DB Facade — `statement()`, `select()`, `selectOne()`, `insert()`, `update()`, `delete()`, `transaction()`',
                             'SoftDeletes Trait — `deleted_at` auto-management, `withTrashed()`, `onlyTrashed()`, `restore()`, `forceDelete()`',
@@ -114,9 +139,39 @@ class ChangelogController
                 'icon'    => 'ui',
                 'releases' => [
                     [
+                        'version' => '0.5.2',
+                        'date'    => '2026-08-30',
+                        'tag'     => 'latest',
+                        'added'   => [
+                            '**Skeuomorphic 3D Aesthetics**: Physically realistic beveled and embossed metallic variants for `Radio`, `Checkbox`, `Switch`, and `Button` (`.vui-radio-skeuo`, `.vui-checkbox-skeuo`, `.vui-switch-skeuo`, `.vui-btn-skeuo`)',
+                            '**Flat Minimalist 2D Aesthetics**: High-contrast geometric solid variants with zero shadow blur for `Radio`, `Checkbox`, `Switch`, and `Button` (`.vui-radio-flat`, `.vui-checkbox-flat`, `.vui-switch-flat`, `.vui-btn-flat`)',
+                            '**Neumorphic Soft UI Aesthetics**: Extruded dual-shadow soft plate with tactile sunken depression for `Radio`, `Checkbox`, `Switch`, and `Button` (`.vui-radio-neumorphic`, `.vui-checkbox-neumorphic`, `.vui-switch-neumorphic`, `.vui-btn-neumorphic`)',
+                            '**Glassmorphism Button**: Frosted translucent acrylic button with backdrop-blur (`.vui-btn-glass`)',
+                            '**Modern SaaS Application Sidebar**: Workspace Switcher, Quick Search (⌘K), categorized sections, active state highlight, badge pills, and User Profile footer',
+                            '**Interactive Toast Engine**: Ambient notification system with `window.showToast(message, type, duration)` API and copy action feedback',
+                            '**ComponentRegistry Multi-Aesthetic Support**: Template generators updated for `<x-button>`, `<x-checkbox>`, `<x-switch>`, and `<x-radio>` with `variant="skeuomorphic"`, `variant="flat"`, `variant="neumorphic"`, and `variant="glass"`',
+                        ],
+                        'fixed'   => [
+                            'Fixed horizontal inline-flex layout for custom radio & checkbox controls so the disc/box icon and title text always sit cleanly on the same line',
+                            'Packagist composer.json version alignment with git release tags',
+                        ],
+                    ],
+                    [
+                        'version' => '0.5.1',
+                        'date'    => '2026-08-28',
+                        'tag'     => null,
+                        'added'   => [
+                            'Enhanced CSS custom property tokens for dark mode palette',
+                            'Accessibility ARIA attributes for custom interactive controls',
+                        ],
+                        'fixed'   => [
+                            'Component registry CLI installer directory path resolution',
+                        ],
+                    ],
+                    [
                         'version' => '0.5.0',
                         'date'    => '2026-08-25',
-                        'tag'     => 'latest',
+                        'tag'     => null,
                         'added'   => [
                             '`footer` — Responsive site footer with branding, nav links, and legal text',
                             '`rating` — Interactive star rating with half-star precision and read-only mode',
@@ -167,9 +222,28 @@ class ChangelogController
                 'icon'    => 'cli',
                 'releases' => [
                     [
+                        'version' => '0.5.2',
+                        'date'    => '2026-08-30',
+                        'tag'     => 'latest',
+                        'added'   => [
+                            'Updated scaffold templates with Veldora v0.5.2 core and UI components',
+                            'Pre-configured Skeuomorphic, Flat, and Neumorphic design assets in starter apps',
+                        ],
+                        'fixed'   => [],
+                    ],
+                    [
+                        'version' => '0.5.1',
+                        'date'    => '2026-08-28',
+                        'tag'     => null,
+                        'added'   => [
+                            'Improved interactive terminal prompts and color-coded output',
+                        ],
+                        'fixed'   => [],
+                    ],
+                    [
                         'version' => '0.5.0',
                         'date'    => '2026-08-25',
-                        'tag'     => 'latest',
+                        'tag'     => null,
                         'added'   => [
                             'Template ships zero Symfony/Console dependency — CLI works out-of-the-box with built-in Polyfill shim',
                             '`bootstrap/autoload.php` auto-loads `Polyfill.php` when Symfony/Console is absent',
