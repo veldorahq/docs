@@ -15,12 +15,45 @@
         </div>
         <h1 class="section-title">Component Showcase</h1>
         <p class="section-sub">
-            39 production-ready UI components built for Veldora. Live preview is shown by default — click <strong style="color:var(--accent)">Code</strong> to view template syntax, and <strong style="color:var(--accent)">Copy</strong> to copy it directly.
+            41+ production-ready UI components built for Veldora. Click on any component to view all design styles, multi-variations, and interactive live previews.
         </p>
     </header>
 
-    <!-- ── Jump Navigation ─────────────────────────────────────────────────── -->
-    <nav class="comp-quick-nav" aria-label="Component Quick Jump">
+    <!-- ── Category Directory Box ─────────────────────────────────────────── -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:36px;box-shadow:0 4px 20px rgba(0,0,0,0.15)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px">
+            <span style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted)">Components Directory</span>
+            <span style="font-size:12px;color:var(--accent);font-weight:600">Select a component to view all design variations →</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:20px">
+            <?php foreach ($categories as $catKey => $cat): ?>
+                <div>
+                    <div style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--text);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.04em">
+                        <span style="color:var(--accent)"><?= $cat['icon'] ?></span>
+                        <?= htmlspecialchars($cat['label']) ?>
+                    </div>
+                    <div style="display:flex;flex-wrap:wrap;gap:6px">
+                        <?php foreach ($cat['items'] as $slug): ?>
+                            <?php
+                                $compItem = null;
+                                foreach ($components as $c) {
+                                    if ($c['id'] === $slug) { $compItem = $c; break; }
+                                }
+                            ?>
+                            <a href="/components/<?= htmlspecialchars($slug) ?>"
+                               class="comp-cat-chip"
+                               title="View all <?= htmlspecialchars($compItem['name'] ?? ucfirst($slug)) ?> styles">
+                                <?= htmlspecialchars($compItem['name'] ?? ucfirst($slug)) ?>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+
+    <!-- ── Quick Jump Navigation ──────────────────────────────────────────── -->
+    <nav class="comp-quick-nav" aria-label="Component Quick Jump" style="margin-bottom:32px">
         <span class="comp-quick-nav-label">Quick Jump:</span>
         <div class="comp-quick-nav-links">
             <?php foreach ($components as $comp): ?>
@@ -41,6 +74,13 @@
                     <div class="component-section-name">
                         <h2 id="title-<?= $uid ?>"><?= htmlspecialchars($comp['name']) ?></h2>
                         <span class="comp-badge">&lt;x-<?= htmlspecialchars($comp['id']) ?>&gt;</span>
+                        <a href="/components/<?= htmlspecialchars($comp['id']) ?>"
+                           class="btn btn-ghost btn-sm"
+                           style="display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--accent);border-color:rgba(124,110,245,0.25)"
+                           title="Explore all design styles for <?= htmlspecialchars($comp['name']) ?>">
+                            <span>All Styles & Variations</span>
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                        </a>
                         <button type="button" class="comp-cli-badge" onclick="copyCliBadge(this, '<?= htmlspecialchars($comp['cli'], ENT_QUOTES, 'UTF-8') ?>')" title="Click to copy command" aria-label="Copy CLI command <?= htmlspecialchars($comp['cli']) ?>">
                             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>

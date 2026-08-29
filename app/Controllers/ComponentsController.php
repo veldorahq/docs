@@ -19,14 +19,1055 @@ class ComponentsController
         $nav    = $parser->getNav();
 
         $components = $this->getComponentsData();
+        $categories = $this->getCategories();
 
         $html = $this->view->render('pages.components', [
             'nav'        => $nav,
             'components' => $components,
+            'categories' => $categories,
         ]);
 
         return new Response($html, 200, ['Content-Type' => 'text/html; charset=UTF-8']);
     }
+
+    public function show(string $component): Response
+    {
+        $parser = new DocsParser();
+        $nav    = $parser->getNav();
+
+        $detail = $this->getComponentDetail($component);
+
+        if (!$detail) {
+            return new Response('Not Found', 404);
+        }
+
+        $allComponents = $this->getComponentsData();
+        $categories    = $this->getCategories();
+
+        $html = $this->view->render('pages.component-detail', [
+            'nav'           => $nav,
+            'component'     => $detail,
+            'allComponents' => $allComponents,
+            'categories'    => $categories,
+            'currentSlug'   => $component,
+        ]);
+
+        return new Response($html, 200, ['Content-Type' => 'text/html; charset=UTF-8']);
+    }
+
+    /**
+     * Returns categories with their member component slugs.
+     * @return array<string, array{label: string, icon: string, items: string[]}>
+     */
+    private function getCategories(): array
+    {
+        return [
+            'forms' => [
+                'label' => 'Forms & Inputs',
+                'icon'  => '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>',
+                'items' => ['input', 'textarea', 'select', 'checkbox', 'radio', 'inputgroup', 'fileupload', 'datepicker', 'combobox'],
+            ],
+            'actions' => [
+                'label' => 'Actions & Controls',
+                'icon'  => '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>',
+                'items' => ['button', 'dropdown', 'switch', 'datatable'],
+            ],
+            'feedback' => [
+                'label' => 'Feedback & Status',
+                'icon'  => '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+                'items' => ['alert', 'badge', 'toast', 'spinner', 'progress', 'skeleton', 'empty', 'confirm', 'rating'],
+            ],
+            'display' => [
+                'label' => 'Data Display',
+                'icon'  => '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>',
+                'items' => ['card', 'table', 'stat', 'timeline', 'accordion', 'avatar', 'tooltip', 'tabs'],
+            ],
+            'navigation' => [
+                'label' => 'Navigation',
+                'icon'  => '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>',
+                'items' => ['navbar', 'breadcrumb', 'pagination', 'stepper', 'sidebar'],
+            ],
+            'layout' => [
+                'label' => 'Layout & Overlay',
+                'icon'  => '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>',
+                'items' => ['modal', 'drawer', 'popover', 'divider', 'container', 'footer'],
+            ],
+        ];
+    }
+
+    /**
+     * Returns the multi-variation detail for a single component.
+     * @return array{id:string,name:string,desc:string,cli:string,category:string,variations:array}|null
+     */
+    private function getComponentDetail(string $slug): ?array
+    {
+        $map = $this->getComponentDetailMap();
+        if (isset($map[$slug])) {
+            return $map[$slug];
+        }
+
+        // Fallback to getComponentsData()
+        $all = $this->getComponentsData();
+        foreach ($all as $c) {
+            if ($c['id'] === $slug) {
+                // Find category
+                $catKey = 'display';
+                foreach ($this->getCategories() as $k => $cat) {
+                    if (in_array($slug, $cat['items'], true)) {
+                        $catKey = $k;
+                        break;
+                    }
+                }
+
+                return [
+                    'id'         => $c['id'],
+                    'name'       => $c['name'],
+                    'desc'       => $c['desc'],
+                    'cli'        => $c['cli'],
+                    'category'   => $catKey,
+                    'variations' => [
+                        [
+                            'title'   => 'Default Style',
+                            'desc'    => 'Standard live preview and template usage for &lt;x-' . htmlspecialchars($c['id']) . '&gt;.',
+                            'preview' => $c['preview'],
+                            'code'    => $c['code'],
+                        ],
+                    ],
+                ];
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Full multi-variation data keyed by component slug.
+     * @return array<string, array>
+     */
+    private function getComponentDetailMap(): array
+    {
+        return [
+
+            // ────────────────────────────────────────────────────────────────
+            // BUTTON
+            // ────────────────────────────────────────────────────────────────
+            'button' => [
+                'id'       => 'button',
+                'name'     => 'Button',
+                'desc'     => 'Versatile clickable button with multiple style variants, sizes, loading states, icon support, and button groups.',
+                'cli'      => 'php veldora add button',
+                'category' => 'actions',
+                'variations' => [
+                    [
+                        'title'   => 'Solid Variants',
+                        'desc'    => 'The default filled button style. Use <code>variant</code> to choose the semantic colour.',
+                        'preview' => '<div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:8px 0">
+                            <button type="button" class="vui-btn vui-btn-primary vui-btn-md">Primary</button>
+                            <button type="button" class="vui-btn vui-btn-secondary vui-btn-md">Secondary</button>
+                            <button type="button" class="vui-btn vui-btn-success vui-btn-md">Success</button>
+                            <button type="button" class="vui-btn vui-btn-danger vui-btn-md">Danger</button>
+                            <button type="button" class="vui-btn vui-btn-warning vui-btn-md">Warning</button>
+                        </div>',
+                        'code'    => '<x-button variant="primary">Primary</x-button>
+<x-button variant="secondary">Secondary</x-button>
+<x-button variant="success">Success</x-button>
+<x-button variant="danger">Danger</x-button>
+<x-button variant="warning">Warning</x-button>',
+                    ],
+                    [
+                        'title'   => 'Outline Variants',
+                        'desc'    => 'Transparent background with a coloured border. Great for secondary actions.',
+                        'preview' => '<div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:8px 0">
+                            <button type="button" class="vui-btn vui-btn-outline-primary vui-btn-md">Primary</button>
+                            <button type="button" class="vui-btn vui-btn-outline-secondary vui-btn-md">Secondary</button>
+                            <button type="button" class="vui-btn vui-btn-outline-danger vui-btn-md">Danger</button>
+                            <button type="button" class="vui-btn vui-btn-ghost vui-btn-md">Ghost</button>
+                        </div>',
+                        'code'    => '<x-button variant="outline-primary">Primary</x-button>
+<x-button variant="outline-secondary">Secondary</x-button>
+<x-button variant="outline-danger">Danger</x-button>
+<x-button variant="ghost">Ghost</x-button>',
+                    ],
+                    [
+                        'title'   => 'Sizes',
+                        'desc'    => 'Five size tokens: <code>xs</code>, <code>sm</code>, <code>md</code> (default), <code>lg</code>, <code>xl</code>.',
+                        'preview' => '<div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:8px 0">
+                            <button type="button" class="vui-btn vui-btn-primary" style="font-size:11px;padding:3px 10px;border-radius:5px;">XS</button>
+                            <button type="button" class="vui-btn vui-btn-primary vui-btn-sm">Small</button>
+                            <button type="button" class="vui-btn vui-btn-primary vui-btn-md">Medium</button>
+                            <button type="button" class="vui-btn vui-btn-primary vui-btn-lg">Large</button>
+                            <button type="button" class="vui-btn vui-btn-primary" style="font-size:16px;padding:12px 28px;border-radius:10px;">XL</button>
+                        </div>',
+                        'code'    => '<x-button size="xs">XS</x-button>
+<x-button size="sm">Small</x-button>
+<x-button size="md">Medium</x-button>
+<x-button size="lg">Large</x-button>
+<x-button size="xl">XL</x-button>',
+                    ],
+                    [
+                        'title'   => 'With Icons',
+                        'desc'    => 'Slot in any SVG icon before or after the label text.',
+                        'preview' => '<div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:8px 0">
+                            <button type="button" class="vui-btn vui-btn-primary vui-btn-md" style="display:inline-flex;align-items:center;gap:7px">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                Download
+                            </button>
+                            <button type="button" class="vui-btn vui-btn-secondary vui-btn-md" style="display:inline-flex;align-items:center;gap:7px">
+                                Settings
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+                            </button>
+                            <button type="button" class="vui-btn vui-btn-ghost vui-btn-md" style="display:inline-flex;align-items:center;gap:7px">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                Add Item
+                            </button>
+                        </div>',
+                        'code'    => '<x-button variant="primary" icon-left="download">Download</x-button>
+<x-button variant="secondary" icon-right="settings">Settings</x-button>
+<x-button variant="ghost" icon-left="plus">Add Item</x-button>',
+                    ],
+                    [
+                        'title'   => 'Loading State',
+                        'desc'    => 'Show a spinner inside the button when an async action is in progress.',
+                        'preview' => '<div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:8px 0">
+                            <button type="button" class="vui-btn vui-btn-primary vui-btn-md" style="display:inline-flex;align-items:center;gap:8px" disabled>
+                                <span class="vui-spinner vui-spinner-sm" role="status" aria-label="Loading" style="width:14px;height:14px;border-width:2px"></span>
+                                Saving...
+                            </button>
+                            <button type="button" class="vui-btn vui-btn-secondary vui-btn-md" style="display:inline-flex;align-items:center;gap:8px" disabled>
+                                <span class="vui-spinner vui-spinner-sm" role="status" aria-label="Loading" style="width:14px;height:14px;border-width:2px;--spinner-color:currentColor"></span>
+                                Processing
+                            </button>
+                        </div>',
+                        'code'    => '<x-button variant="primary" :loading="true">Saving...</x-button>
+<x-button variant="secondary" :loading="true">Processing</x-button>',
+                    ],
+                    [
+                        'title'   => 'Disabled State',
+                        'desc'    => 'Prevents interaction and renders at reduced opacity.',
+                        'preview' => '<div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:8px 0">
+                            <button type="button" class="vui-btn vui-btn-primary vui-btn-md" disabled aria-disabled="true" style="opacity:0.5;cursor:not-allowed">Disabled Primary</button>
+                            <button type="button" class="vui-btn vui-btn-secondary vui-btn-md" disabled aria-disabled="true" style="opacity:0.5;cursor:not-allowed">Disabled Secondary</button>
+                        </div>',
+                        'code'    => '<x-button variant="primary" :disabled="true">Disabled Primary</x-button>
+<x-button variant="secondary" :disabled="true">Disabled Secondary</x-button>',
+                    ],
+                ],
+            ],
+
+            // ────────────────────────────────────────────────────────────────
+            // INPUT
+            // ────────────────────────────────────────────────────────────────
+            'input' => [
+                'id'       => 'input',
+                'name'     => 'Input',
+                'desc'     => 'Text input field with label, helper text, icons, validation states, password toggle, and grouped addons.',
+                'cli'      => 'php veldora add input',
+                'category' => 'forms',
+                'variations' => [
+                    [
+                        'title'   => 'Basic Input',
+                        'desc'    => 'Standard text input with label and helper text.',
+                        'preview' => '<div style="max-width:360px;display:flex;flex-direction:column;gap:16px">
+                            <div class="vui-field">
+                                <label class="vui-label" for="d-in-1">Full Name <span class="vui-required" aria-hidden="true">*</span></label>
+                                <input id="d-in-1" type="text" placeholder="Jane Doe" class="vui-input" required>
+                                <p class="vui-field-helper">Enter your official full name</p>
+                            </div>
+                            <div class="vui-field">
+                                <label class="vui-label" for="d-in-2">Email</label>
+                                <input id="d-in-2" type="email" placeholder="you@example.com" class="vui-input">
+                            </div>
+                        </div>',
+                        'code'    => '<x-input name="name" label="Full Name" placeholder="Jane Doe" :required="true" helper="Enter your official full name" />
+<x-input name="email" label="Email" type="email" placeholder="you@example.com" />',
+                    ],
+                    [
+                        'title'   => 'Error & Validation State',
+                        'desc'    => 'Show validation feedback with the <code>error</code> prop.',
+                        'preview' => '<div style="max-width:360px;display:flex;flex-direction:column;gap:16px">
+                            <div class="vui-field">
+                                <label class="vui-label" for="d-in-err">Email Address</label>
+                                <input id="d-in-err" type="email" value="invalid-email" class="vui-input vui-input-error" aria-invalid="true">
+                                <p class="vui-field-error" role="alert">Please enter a valid email address.</p>
+                            </div>
+                            <div class="vui-field">
+                                <label class="vui-label" for="d-in-ok">Username</label>
+                                <input id="d-in-ok" type="text" value="veldora_dev" class="vui-input vui-input-success">
+                                <p class="vui-field-helper" style="color:var(--success)">Username is available ✓</p>
+                            </div>
+                        </div>',
+                        'code'    => '<x-input name="email" label="Email Address" type="email" value="invalid-email" error="Please enter a valid email address." />
+<x-input name="username" label="Username" value="veldora_dev" helper="Username is available ✓" />',
+                    ],
+                    [
+                        'title'   => 'With Prefix & Suffix Icons',
+                        'desc'    => 'Decorative or functional icons inside the input boundary.',
+                        'preview' => '<div style="max-width:360px;display:flex;flex-direction:column;gap:16px">
+                            <div class="vui-field">
+                                <label class="vui-label" for="d-search">Search</label>
+                                <div style="position:relative">
+                                    <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-dim)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+                                    <input id="d-search" type="search" placeholder="Search components…" class="vui-input" style="padding-left:36px">
+                                </div>
+                            </div>
+                            <div class="vui-field">
+                                <label class="vui-label" for="d-url">Website</label>
+                                <div style="display:flex;align-items:center;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;overflow:hidden">
+                                    <span style="padding:0 12px;color:var(--text-dim);font-size:13px;border-right:1px solid var(--border);white-space:nowrap">https://</span>
+                                    <input id="d-url" type="text" placeholder="yoursite.com" style="background:transparent;border:none;outline:none;padding:10px 12px;color:var(--text);font-size:13.5px;width:100%">
+                                </div>
+                            </div>
+                        </div>',
+                        'code'    => '<x-input name="search" label="Search" icon-left="search" placeholder="Search components…" />
+<x-input name="url" label="Website" prefix="https://" placeholder="yoursite.com" />',
+                    ],
+                    [
+                        'title'   => 'Password with Toggle',
+                        'desc'    => 'Password input with an eye icon to reveal or mask the value.',
+                        'preview' => '<div style="max-width:360px">
+                            <div class="vui-field">
+                                <label class="vui-label" for="d-pw">Password</label>
+                                <div style="position:relative">
+                                    <input id="d-pw" type="password" value="s3cr3tP@ssw0rd" class="vui-input" style="padding-right:44px">
+                                    <button type="button" onclick="var i=document.getElementById(\'d-pw\');i.type=i.type===\'password\'?\'text\':\'password\'" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-dim);display:flex;align-items:center" aria-label="Toggle password">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>',
+                        'code'    => '<x-input name="password" label="Password" type="password" :toggle-visible="true" />',
+                    ],
+                    [
+                        'title'   => 'Disabled State',
+                        'desc'    => 'Non-interactive input for read-only display.',
+                        'preview' => '<div style="max-width:360px;display:flex;flex-direction:column;gap:14px">
+                            <div class="vui-field">
+                                <label class="vui-label" for="d-dis">Account ID</label>
+                                <input id="d-dis" type="text" value="ACC-88291" class="vui-input" disabled style="opacity:0.5;cursor:not-allowed">
+                            </div>
+                        </div>',
+                        'code'    => '<x-input name="account_id" label="Account ID" value="ACC-88291" :disabled="true" />',
+                    ],
+                ],
+            ],
+
+            // ────────────────────────────────────────────────────────────────
+            // SPINNER
+            // ────────────────────────────────────────────────────────────────
+            'spinner' => [
+                'id'       => 'spinner',
+                'name'     => 'Spinner',
+                'desc'     => '12 animated loading indicators — pure CSS, zero dependencies. All converted to native Veldora with no Tailwind or external packages.',
+                'cli'      => 'php veldora add spinner',
+                'category' => 'feedback',
+                'variations' => [
+                    [
+                        'title'   => 'Classic Spinner',
+                        'desc'    => 'A single circular arc that rotates continuously. The most familiar loading indicator.',
+                        'preview' => '<div style="display:flex;align-items:center;gap:28px;padding:16px 0;flex-wrap:wrap">
+                            <div style="text-align:center">
+                                <span class="vui-spinner vui-spinner-sm" role="status" aria-label="Loading"><span class="vui-spinner-ring"></span></span>
+                                <p style="margin-top:10px;font-size:11px;color:var(--text-dim)">sm</p>
+                            </div>
+                            <div style="text-align:center">
+                                <span class="vui-spinner vui-spinner-md" role="status" aria-label="Loading"><span class="vui-spinner-ring"></span></span>
+                                <p style="margin-top:10px;font-size:11px;color:var(--text-dim)">md</p>
+                            </div>
+                            <div style="text-align:center">
+                                <span class="vui-spinner vui-spinner-lg" role="status" aria-label="Loading"><span class="vui-spinner-ring"></span></span>
+                                <p style="margin-top:10px;font-size:11px;color:var(--text-dim)">lg</p>
+                            </div>
+                        </div>',
+                        'code'    => '<x-spinner size="sm" />
+<x-spinner size="md" />
+<x-spinner size="lg" />',
+                    ],
+                    [
+                        'title'   => 'Dual Ring',
+                        'desc'    => 'Two concentric arcs that counter-rotate, creating a hypnotic orbit effect.',
+                        'preview' => '<div style="display:flex;align-items:center;gap:28px;padding:16px 0;flex-wrap:wrap">
+                            <div style="text-align:center">
+                                <span class="vui-spinner-dual vui-spinner-sm" role="status" aria-label="Loading"><span></span><span></span></span>
+                                <p style="margin-top:10px;font-size:11px;color:var(--text-dim)">sm</p>
+                            </div>
+                            <div style="text-align:center">
+                                <span class="vui-spinner-dual vui-spinner-md" role="status" aria-label="Loading"><span></span><span></span></span>
+                                <p style="margin-top:10px;font-size:11px;color:var(--text-dim)">md</p>
+                            </div>
+                            <div style="text-align:center">
+                                <span class="vui-spinner-dual vui-spinner-lg" role="status" aria-label="Loading"><span></span><span></span></span>
+                                <p style="margin-top:10px;font-size:11px;color:var(--text-dim)">lg</p>
+                            </div>
+                        </div>',
+                        'code'    => '<x-spinner variant="dual-ring" size="sm" />
+<x-spinner variant="dual-ring" size="md" />
+<x-spinner variant="dual-ring" size="lg" />',
+                    ],
+                    [
+                        'title'   => 'Bounce Dots',
+                        'desc'    => 'Three dots that bounce in a staggered sequence — ideal for chat / typing indicators.',
+                        'preview' => '<div style="display:flex;align-items:center;gap:32px;padding:16px 0;flex-wrap:wrap">
+                            <div style="text-align:center">
+                                <span class="vui-spinner-bounce" role="status" aria-label="Loading" style="--dot-size:6px"><span></span><span></span><span></span></span>
+                                <p style="margin-top:14px;font-size:11px;color:var(--text-dim)">sm</p>
+                            </div>
+                            <div style="text-align:center">
+                                <span class="vui-spinner-bounce" role="status" aria-label="Loading" style="--dot-size:9px"><span></span><span></span><span></span></span>
+                                <p style="margin-top:14px;font-size:11px;color:var(--text-dim)">md</p>
+                            </div>
+                            <div style="text-align:center">
+                                <span class="vui-spinner-bounce" role="status" aria-label="Loading" style="--dot-size:13px"><span></span><span></span><span></span></span>
+                                <p style="margin-top:14px;font-size:11px;color:var(--text-dim)">lg</p>
+                            </div>
+                        </div>',
+                        'code'    => '<x-spinner variant="bounce-dots" size="sm" />
+<x-spinner variant="bounce-dots" size="md" />
+<x-spinner variant="bounce-dots" size="lg" />',
+                    ],
+                    [
+                        'title'   => 'Pulse',
+                        'desc'    => 'A solid circle that rhythmically scales up and down with a soft glow. Perfect for status indicators.',
+                        'preview' => '<div style="display:flex;align-items:center;gap:32px;padding:16px 0;flex-wrap:wrap">
+                            <div style="text-align:center">
+                                <span class="vui-spinner-pulse" role="status" aria-label="Loading" style="--pulse-size:10px"><span></span></span>
+                                <p style="margin-top:14px;font-size:11px;color:var(--text-dim)">sm</p>
+                            </div>
+                            <div style="text-align:center">
+                                <span class="vui-spinner-pulse" role="status" aria-label="Loading" style="--pulse-size:18px"><span></span></span>
+                                <p style="margin-top:14px;font-size:11px;color:var(--text-dim)">md</p>
+                            </div>
+                            <div style="text-align:center">
+                                <span class="vui-spinner-pulse" role="status" aria-label="Loading" style="--pulse-size:26px"><span></span></span>
+                                <p style="margin-top:14px;font-size:11px;color:var(--text-dim)">lg</p>
+                            </div>
+                        </div>',
+                        'code'    => '<x-spinner variant="pulse" size="sm" />
+<x-spinner variant="pulse" size="md" />
+<x-spinner variant="pulse" size="lg" />',
+                    ],
+                    [
+                        'title'   => 'Ring Pulse (Radar)',
+                        'desc'    => 'A solid core dot surrounded by an expanding ring wave — like a radar or sonar ping.',
+                        'preview' => '<div style="display:flex;align-items:center;gap:36px;padding:16px 0;flex-wrap:wrap">
+                            <div style="text-align:center">
+                                <span class="vui-spinner-ring-pulse" role="status" aria-label="Loading" style="--rp-size:14px"><span></span></span>
+                                <p style="margin-top:18px;font-size:11px;color:var(--text-dim)">sm</p>
+                            </div>
+                            <div style="text-align:center">
+                                <span class="vui-spinner-ring-pulse" role="status" aria-label="Loading" style="--rp-size:22px"><span></span></span>
+                                <p style="margin-top:20px;font-size:11px;color:var(--text-dim)">md</p>
+                            </div>
+                            <div style="text-align:center">
+                                <span class="vui-spinner-ring-pulse" role="status" aria-label="Loading" style="--rp-size:32px"><span></span></span>
+                                <p style="margin-top:24px;font-size:11px;color:var(--text-dim)">lg</p>
+                            </div>
+                        </div>',
+                        'code'    => '<x-spinner variant="ring-pulse" size="sm" />
+<x-spinner variant="ring-pulse" size="md" />
+<x-spinner variant="ring-pulse" size="lg" />',
+                    ],
+                    [
+                        'title'   => 'Wave Bars (Equalizer)',
+                        'desc'    => 'Five vertical bars oscillating like an audio equalizer. Great for media or AI generation states.',
+                        'preview' => '<div style="display:flex;align-items:center;gap:32px;padding:16px 0;flex-wrap:wrap">
+                            <div style="text-align:center">
+                                <span class="vui-spinner-wave" role="status" aria-label="Loading" style="--bar-h:16px;--bar-w:3px;gap:3px"><span></span><span></span><span></span><span></span><span></span></span>
+                                <p style="margin-top:10px;font-size:11px;color:var(--text-dim)">sm</p>
+                            </div>
+                            <div style="text-align:center">
+                                <span class="vui-spinner-wave" role="status" aria-label="Loading" style="--bar-h:28px;--bar-w:4px;gap:4px"><span></span><span></span><span></span><span></span><span></span></span>
+                                <p style="margin-top:10px;font-size:11px;color:var(--text-dim)">md</p>
+                            </div>
+                            <div style="text-align:center">
+                                <span class="vui-spinner-wave" role="status" aria-label="Loading" style="--bar-h:40px;--bar-w:5px;gap:5px"><span></span><span></span><span></span><span></span><span></span></span>
+                                <p style="margin-top:10px;font-size:11px;color:var(--text-dim)">lg</p>
+                            </div>
+                        </div>',
+                        'code'    => '<x-spinner variant="wave-bars" size="sm" />
+<x-spinner variant="wave-bars" size="md" />
+<x-spinner variant="wave-bars" size="lg" />',
+                    ],
+                    [
+                        'title'   => 'Dot Grid',
+                        'desc'    => 'A 3×3 matrix of micro-dots pulsating in a wave across the grid.',
+                        'preview' => '<div style="display:flex;align-items:center;gap:32px;padding:16px 0;flex-wrap:wrap">
+                            <div style="text-align:center">
+                                <span class="vui-spinner-dot-grid" role="status" aria-label="Loading" style="--dg-dot:5px;--dg-gap:4px"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+                                <p style="margin-top:10px;font-size:11px;color:var(--text-dim)">sm</p>
+                            </div>
+                            <div style="text-align:center">
+                                <span class="vui-spinner-dot-grid" role="status" aria-label="Loading" style="--dg-dot:8px;--dg-gap:6px"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+                                <p style="margin-top:10px;font-size:11px;color:var(--text-dim)">md</p>
+                            </div>
+                            <div style="text-align:center">
+                                <span class="vui-spinner-dot-grid" role="status" aria-label="Loading" style="--dg-dot:11px;--dg-gap:8px"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+                                <p style="margin-top:10px;font-size:11px;color:var(--text-dim)">lg</p>
+                            </div>
+                        </div>',
+                        'code'    => '<x-spinner variant="dot-grid" size="sm" />
+<x-spinner variant="dot-grid" size="md" />
+<x-spinner variant="dot-grid" size="lg" />',
+                    ],
+                    [
+                        'title'   => 'Spinning Bars (Radial)',
+                        'desc'    => '8 radial lines that fade out in sequence like a clock hand sweep.',
+                        'preview' => '<div style="display:flex;align-items:center;gap:32px;padding:16px 0;flex-wrap:wrap">
+                            <div style="text-align:center">
+                                <span class="vui-spinner-bars" role="status" aria-label="Loading" style="--sb-size:20px"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+                                <p style="margin-top:10px;font-size:11px;color:var(--text-dim)">sm</p>
+                            </div>
+                            <div style="text-align:center">
+                                <span class="vui-spinner-bars" role="status" aria-label="Loading" style="--sb-size:32px"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+                                <p style="margin-top:10px;font-size:11px;color:var(--text-dim)">md</p>
+                            </div>
+                            <div style="text-align:center">
+                                <span class="vui-spinner-bars" role="status" aria-label="Loading" style="--sb-size:46px"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+                                <p style="margin-top:10px;font-size:11px;color:var(--text-dim)">lg</p>
+                            </div>
+                        </div>',
+                        'code'    => '<x-spinner variant="spinning-bars" size="sm" />
+<x-spinner variant="spinning-bars" size="md" />
+<x-spinner variant="spinning-bars" size="lg" />',
+                    ],
+                    [
+                        'title'   => 'Orbit',
+                        'desc'    => 'A small satellite dot that orbits a central sphere in 3D perspective.',
+                        'preview' => '<div style="display:flex;align-items:center;gap:32px;padding:16px 0;flex-wrap:wrap">
+                            <div style="text-align:center">
+                                <span class="vui-spinner-orbit" role="status" aria-label="Loading" style="--orb-size:20px"><span class="orb-core"></span><span class="orb-satellite"></span></span>
+                                <p style="margin-top:10px;font-size:11px;color:var(--text-dim)">sm</p>
+                            </div>
+                            <div style="text-align:center">
+                                <span class="vui-spinner-orbit" role="status" aria-label="Loading" style="--orb-size:32px"><span class="orb-core"></span><span class="orb-satellite"></span></span>
+                                <p style="margin-top:10px;font-size:11px;color:var(--text-dim)">md</p>
+                            </div>
+                            <div style="text-align:center">
+                                <span class="vui-spinner-orbit" role="status" aria-label="Loading" style="--orb-size:46px"><span class="orb-core"></span><span class="orb-satellite"></span></span>
+                                <p style="margin-top:10px;font-size:11px;color:var(--text-dim)">lg</p>
+                            </div>
+                        </div>',
+                        'code'    => '<x-spinner variant="orbit" size="sm" />
+<x-spinner variant="orbit" size="md" />
+<x-spinner variant="orbit" size="lg" />',
+                    ],
+                ],
+            ],
+
+            // ────────────────────────────────────────────────────────────────
+            // BADGE
+            // ────────────────────────────────────────────────────────────────
+            'badge' => [
+                'id'       => 'badge',
+                'name'     => 'Badge',
+                'desc'     => 'Small status label for highlighting counts, labels, and states.',
+                'cli'      => 'php veldora add badge',
+                'category' => 'feedback',
+                'variations' => [
+                    [
+                        'title'   => 'Solid Colour',
+                        'desc'    => 'Fully filled badge in semantic colours.',
+                        'preview' => '<div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:8px 0">
+                            <span class="vui-badge vui-badge-primary">Primary</span>
+                            <span class="vui-badge vui-badge-success">Success</span>
+                            <span class="vui-badge vui-badge-danger">Danger</span>
+                            <span class="vui-badge vui-badge-warning">Warning</span>
+                            <span class="vui-badge vui-badge-secondary">Secondary</span>
+                        </div>',
+                        'code'    => '<x-badge color="primary">Primary</x-badge>
+<x-badge color="success">Success</x-badge>
+<x-badge color="danger">Danger</x-badge>',
+                    ],
+                    [
+                        'title'   => 'Soft / Tint Style',
+                        'desc'    => 'Light background tint with matching text — less visually heavy.',
+                        'preview' => '<div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:8px 0">
+                            <span class="vui-badge" style="background:rgba(124,110,245,0.15);color:#a89cf7;border:1px solid rgba(124,110,245,0.25)">Primary</span>
+                            <span class="vui-badge" style="background:rgba(34,197,94,0.12);color:#4ade80;border:1px solid rgba(34,197,94,0.25)">Success</span>
+                            <span class="vui-badge" style="background:rgba(239,68,68,0.12);color:#f87171;border:1px solid rgba(239,68,68,0.25)">Danger</span>
+                            <span class="vui-badge" style="background:rgba(245,158,11,0.12);color:#fbbf24;border:1px solid rgba(245,158,11,0.25)">Warning</span>
+                        </div>',
+                        'code'    => '<x-badge color="primary" variant="soft">Primary</x-badge>
+<x-badge color="success" variant="soft">Success</x-badge>
+<x-badge color="danger" variant="soft">Danger</x-badge>',
+                    ],
+                    [
+                        'title'   => 'Outline Style',
+                        'desc'    => 'Transparent background with only a border.',
+                        'preview' => '<div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:8px 0">
+                            <span class="vui-badge" style="background:transparent;color:#a89cf7;border:1.5px solid #a89cf7">Primary</span>
+                            <span class="vui-badge" style="background:transparent;color:#4ade80;border:1.5px solid #4ade80">Success</span>
+                            <span class="vui-badge" style="background:transparent;color:#f87171;border:1.5px solid #f87171">Danger</span>
+                        </div>',
+                        'code'    => '<x-badge color="primary" variant="outline">Primary</x-badge>
+<x-badge color="success" variant="outline">Success</x-badge>',
+                    ],
+                    [
+                        'title'   => 'Status Dot',
+                        'desc'    => 'A coloured dot indicator for presence or live status.',
+                        'preview' => '<div style="display:flex;flex-wrap:wrap;gap:16px;align-items:center;padding:8px 0">
+                            <span style="display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--text)"><span style="width:8px;height:8px;border-radius:50%;background:#22c55e;display:inline-block"></span>Online</span>
+                            <span style="display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--text)"><span style="width:8px;height:8px;border-radius:50%;background:#f59e0b;display:inline-block"></span>Away</span>
+                            <span style="display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--text)"><span style="width:8px;height:8px;border-radius:50%;background:#ef4444;display:inline-block"></span>Offline</span>
+                        </div>',
+                        'code'    => '<x-badge variant="dot" color="success">Online</x-badge>
+<x-badge variant="dot" color="warning">Away</x-badge>
+<x-badge variant="dot" color="danger">Offline</x-badge>',
+                    ],
+                ],
+            ],
+
+            // ────────────────────────────────────────────────────────────────
+            // ALERT
+            // ────────────────────────────────────────────────────────────────
+            'alert' => [
+                'id'       => 'alert',
+                'name'     => 'Alert',
+                'desc'     => 'Contextual feedback message with optional icon, title, and dismissal.',
+                'cli'      => 'php veldora add alert',
+                'category' => 'feedback',
+                'variations' => [
+                    [
+                        'title'   => 'Semantic Types',
+                        'desc'    => 'Four semantic variants for success, info, warning, and danger states.',
+                        'preview' => '<div style="display:flex;flex-direction:column;gap:10px">
+                            <div class="vui-alert vui-alert-success">✓ Operation completed successfully.</div>
+                            <div class="vui-alert vui-alert-info">ℹ Your session will expire in 10 minutes.</div>
+                            <div class="vui-alert vui-alert-warning">⚠ Please review the items before saving.</div>
+                            <div class="vui-alert vui-alert-danger">✕ Something went wrong. Please try again.</div>
+                        </div>',
+                        'code'    => '<x-alert type="success">Operation completed successfully.</x-alert>
+<x-alert type="info">Your session will expire in 10 minutes.</x-alert>
+<x-alert type="warning">Please review the items before saving.</x-alert>
+<x-alert type="danger">Something went wrong. Please try again.</x-alert>',
+                    ],
+                    [
+                        'title'   => 'With Title',
+                        'desc'    => 'Add a bold heading above the message body.',
+                        'preview' => '<div class="vui-alert vui-alert-info"><strong style="display:block;margin-bottom:4px">Heads up!</strong>This action is irreversible. Make sure to export your data first.</div>',
+                        'code'    => '<x-alert type="info" title="Heads up!">This action is irreversible. Make sure to export your data first.</x-alert>',
+                    ],
+                ],
+            ],
+
+            // ────────────────────────────────────────────────────────────────
+            // CARD
+            // ────────────────────────────────────────────────────────────────
+            'card' => [
+                'id'       => 'card',
+                'name'     => 'Card',
+                'desc'     => 'Flexible container for content grouping with optional header, footer, and image support.',
+                'cli'      => 'php veldora add card',
+                'category' => 'display',
+                'variations' => [
+                    [
+                        'title'   => 'Basic Card',
+                        'desc'    => 'Simple bordered container with title and body content.',
+                        'preview' => '<div class="vui-card" style="max-width:300px">
+                            <div class="vui-card-header"><h3 class="vui-card-title">Veldora Framework</h3><p class="vui-card-subtitle">v0.5.1 · PHP 8.2+</p></div>
+                            <div class="vui-card-body"><p style="color:var(--text-dim);font-size:13.5px;margin:0">A modern PHP framework you actually own. Zero vendor lock-in, expressive routing, and 41+ UI components.</p></div>
+                            <div class="vui-card-footer" style="display:flex;gap:8px"><button class="vui-btn vui-btn-primary vui-btn-sm">Get Started</button><button class="vui-btn vui-btn-ghost vui-btn-sm">Docs</button></div>
+                        </div>',
+                        'code'    => '<x-card title="Veldora Framework" subtitle="v0.5.1 · PHP 8.2+">
+    <x-slot name="body">
+        A modern PHP framework you actually own.
+    </x-slot>
+    <x-slot name="footer">
+        <x-button size="sm">Get Started</x-button>
+        <x-button variant="ghost" size="sm">Docs</x-button>
+    </x-slot>
+</x-card>',
+                    ],
+                    [
+                        'title'   => 'Stat Card',
+                        'desc'    => 'Compact metric card for dashboards.',
+                        'preview' => '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;max-width:500px">
+                            <div class="vui-card" style="padding:16px 20px">
+                                <p style="color:var(--text-dim);font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;margin:0 0 6px">Total Users</p>
+                                <p style="font-size:26px;font-weight:700;color:var(--text);margin:0">12,489</p>
+                                <p style="font-size:12px;color:#22c55e;margin:4px 0 0">↑ 8.2% this month</p>
+                            </div>
+                            <div class="vui-card" style="padding:16px 20px">
+                                <p style="color:var(--text-dim);font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;margin:0 0 6px">Revenue</p>
+                                <p style="font-size:26px;font-weight:700;color:var(--text);margin:0">$4,821</p>
+                                <p style="font-size:12px;color:#f59e0b;margin:4px 0 0">↓ 1.4% this month</p>
+                            </div>
+                        </div>',
+                        'code'    => '<x-stat label="Total Users" value="12,489" change="+8.2%" trend="up" />
+<x-stat label="Revenue" value="$4,821" change="-1.4%" trend="down" />',
+                    ],
+                ],
+            ],
+
+            // ────────────────────────────────────────────────────────────────
+            // MODAL
+            // ────────────────────────────────────────────────────────────────
+            'modal' => [
+                'id'       => 'modal',
+                'name'     => 'Modal',
+                'desc'     => 'Accessible dialog overlay. Supports standard, confirmation, and form-based modals.',
+                'cli'      => 'php veldora add modal',
+                'category' => 'layout',
+                'variations' => [
+                    [
+                        'title'   => 'Standard Dialog',
+                        'desc'    => 'The default modal. Click the trigger to open; close by clicking the backdrop, X button, or pressing Escape.',
+                        'preview' => '<div>
+                            <button class="vui-btn vui-btn-primary vui-btn-md" onclick="document.getElementById(\'demo-modal-1\').setAttribute(\'aria-hidden\',\'false\')">Open Modal</button>
+                            <div id="demo-modal-1" class="vui-modal-overlay" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="dmi1-title" onclick="if(event.target===this)this.setAttribute(\'aria-hidden\',\'true\')">
+                                <div class="vui-modal-container vui-modal-md">
+                                    <div class="vui-modal-header">
+                                        <h2 id="dmi1-title" class="vui-modal-title">Confirm Action</h2>
+                                        <button type="button" class="vui-modal-close" onclick="document.getElementById(\'demo-modal-1\').setAttribute(\'aria-hidden\',\'true\')" aria-label="Close" style="display:inline-flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+                                    </div>
+                                    <div class="vui-modal-body"><p style="color:var(--text-dim);font-size:14px">Are you sure you want to delete this item? This action cannot be undone.</p></div>
+                                    <div class="vui-modal-footer" style="display:flex;gap:8px;justify-content:flex-end">
+                                        <button class="vui-btn vui-btn-ghost vui-btn-md" onclick="document.getElementById(\'demo-modal-1\').setAttribute(\'aria-hidden\',\'true\')">Cancel</button>
+                                        <button class="vui-btn vui-btn-danger vui-btn-md">Delete</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>',
+                        'code'    => '<x-button onclick="openModal(\'confirm-modal\')">Open Modal</x-button>
+
+<x-modal id="confirm-modal" title="Confirm Action">
+    <x-slot name="body">
+        Are you sure you want to delete this item?
+    </x-slot>
+    <x-slot name="footer">
+        <x-button variant="ghost" onclick="closeModal(\'confirm-modal\')">Cancel</x-button>
+        <x-button variant="danger">Delete</x-button>
+    </x-slot>
+</x-modal>',
+                    ],
+                ],
+            ],
+
+            // ────────────────────────────────────────────────────────────────
+            // TABS
+            // ────────────────────────────────────────────────────────────────
+            'tabs' => [
+                'id'       => 'tabs',
+                'name'     => 'Tabs',
+                'desc'     => 'Tabbed content switcher with multiple style variants including underline, pill, and segmented.',
+                'cli'      => 'php veldora add tabs',
+                'category' => 'display',
+                'variations' => [
+                    [
+                        'title'   => 'Underline Style',
+                        'desc'    => 'Classic border-bottom indicator — clean and minimal.',
+                        'preview' => '<div>
+                            <div class="vui-tabs">
+                                <button class="vui-tab active" onclick="switchVuiTab(this,\'ut\',\'t1\')">Overview</button>
+                                <button class="vui-tab" onclick="switchVuiTab(this,\'ut\',\'t2\')">Features</button>
+                                <button class="vui-tab" onclick="switchVuiTab(this,\'ut\',\'t3\')">Settings</button>
+                            </div>
+                            <div style="padding:16px 0;color:var(--text-dim);font-size:13.5px">
+                                <div id="ut-t1">Overview panel content — general description and summary.</div>
+                                <div id="ut-t2" style="display:none">Features panel — list of capabilities and benefits.</div>
+                                <div id="ut-t3" style="display:none">Settings panel — configuration options.</div>
+                            </div>
+                        </div>',
+                        'code'    => '<x-tabs>
+    <x-tab label="Overview">Overview panel content.</x-tab>
+    <x-tab label="Features">Features panel content.</x-tab>
+    <x-tab label="Settings">Settings panel content.</x-tab>
+</x-tabs>',
+                    ],
+                    [
+                        'title'   => 'Pill Style',
+                        'desc'    => 'Rounded pill tabs — softer, more modern appearance.',
+                        'preview' => '<div>
+                            <div style="display:flex;gap:4px;background:var(--surface-2);padding:4px;border-radius:10px;width:fit-content">
+                                <button onclick="switchVuiTab(this,\'pt\',\'p1\')" style="padding:7px 16px;border-radius:7px;border:none;cursor:pointer;font-size:13px;background:var(--accent);color:#fff;font-weight:600">Profile</button>
+                                <button onclick="switchVuiTab(this,\'pt\',\'p2\')" style="padding:7px 16px;border-radius:7px;border:none;cursor:pointer;font-size:13px;background:transparent;color:var(--text-dim)">Billing</button>
+                                <button onclick="switchVuiTab(this,\'pt\',\'p3\')" style="padding:7px 16px;border-radius:7px;border:none;cursor:pointer;font-size:13px;background:transparent;color:var(--text-dim)">Security</button>
+                            </div>
+                            <div style="padding:16px 0;color:var(--text-dim);font-size:13.5px">
+                                <div id="pt-p1">Profile settings and personal information.</div>
+                                <div id="pt-p2" style="display:none">Billing history and payment methods.</div>
+                                <div id="pt-p3" style="display:none">Password and two-factor authentication.</div>
+                            </div>
+                        </div>',
+                        'code'    => '<x-tabs variant="pill">
+    <x-tab label="Profile">Profile settings.</x-tab>
+    <x-tab label="Billing">Billing history.</x-tab>
+    <x-tab label="Security">Security settings.</x-tab>
+</x-tabs>',
+                    ],
+                ],
+            ],
+
+            // ────────────────────────────────────────────────────────────────
+            // TOAST
+            // ────────────────────────────────────────────────────────────────
+            'toast' => [
+                'id'       => 'toast',
+                'name'     => 'Toast',
+                'desc'     => 'Lightweight notification snackbar with auto-dismiss, semantic variants, and smooth slide-in animation.',
+                'cli'      => 'php veldora add toast',
+                'category' => 'feedback',
+                'variations' => [
+                    [
+                        'title'   => 'Semantic Variants',
+                        'desc'    => 'Trigger any toast variant from JavaScript using <code>showToast(message, type)</code>.',
+                        'preview' => '<div style="display:flex;flex-wrap:wrap;gap:10px;padding:8px 0">
+                            <button class="vui-btn vui-btn-primary vui-btn-sm" onclick="showToast(\'Changes saved successfully!\',\'success\')">Success Toast</button>
+                            <button class="vui-btn vui-btn-secondary vui-btn-sm" onclick="showToast(\'Your session will expire soon.\',\'info\')">Info Toast</button>
+                            <button class="vui-btn vui-btn-warning vui-btn-sm" onclick="showToast(\'This action cannot be undone.\',\'warning\')">Warning Toast</button>
+                            <button class="vui-btn vui-btn-danger vui-btn-sm" onclick="showToast(\'Failed to save changes.\',\'error\')">Error Toast</button>
+                        </div>',
+                        'code'    => '{{-- Trigger from JavaScript --}}
+<script>
+    showToast("Changes saved!", "success");
+    showToast("Session expiring soon.", "info");
+    showToast("This cannot be undone.", "warning");
+    showToast("Failed to save.", "error");
+</script>
+
+{{-- Or from PHP --}}
+<x-toast id="my-toast" type="success">Changes saved!</x-toast>',
+                    ],
+                ],
+            ],
+
+            // ────────────────────────────────────────────────────────────────
+            // ACCORDION
+            // ────────────────────────────────────────────────────────────────
+            'accordion' => [
+                'id'       => 'accordion',
+                'name'     => 'Accordion',
+                'desc'     => 'Collapsible content sections for FAQs, settings, and progressive disclosure.',
+                'cli'      => 'php veldora add accordion',
+                'category' => 'display',
+                'variations' => [
+                    [
+                        'title'   => 'Default Accordion',
+                        'desc'    => 'One section open at a time. Click a header to expand.',
+                        'preview' => '<div class="vui-accordion" style="max-width:480px">
+                            <div class="vui-accordion-item">
+                                <button class="vui-accordion-trigger" onclick="this.parentElement.classList.toggle(\'open\')" aria-expanded="false">What is Veldora?<span class="vui-accordion-icon"></span></button>
+                                <div class="vui-accordion-content"><p style="color:var(--text-dim);font-size:13.5px;margin:0">Veldora is a modern PHP framework that you fully own — no SaaS lock-in, no cloud dependencies. Just clean MVC architecture.</p></div>
+                            </div>
+                            <div class="vui-accordion-item">
+                                <button class="vui-accordion-trigger" onclick="this.parentElement.classList.toggle(\'open\')" aria-expanded="false">How do I install it?<span class="vui-accordion-icon"></span></button>
+                                <div class="vui-accordion-content"><p style="color:var(--text-dim);font-size:13.5px;margin:0">Run <code>composer create-project veldora/veldora my-app</code> or <code>npx create-veldora-app my-app</code>.</p></div>
+                            </div>
+                            <div class="vui-accordion-item">
+                                <button class="vui-accordion-trigger" onclick="this.parentElement.classList.toggle(\'open\')" aria-expanded="false">Is it production ready?<span class="vui-accordion-icon"></span></button>
+                                <div class="vui-accordion-content"><p style="color:var(--text-dim);font-size:13.5px;margin:0">Yes. Veldora is built for production PHP 8.2+ environments with full SQLite, MySQL, and PostgreSQL support.</p></div>
+                            </div>
+                        </div>',
+                        'code'    => '<x-accordion>
+    <x-accordion-item title="What is Veldora?">
+        A modern PHP framework you fully own.
+    </x-accordion-item>
+    <x-accordion-item title="How do I install it?">
+        composer create-project veldora/veldora my-app
+    </x-accordion-item>
+    <x-accordion-item title="Is it production ready?">
+        Yes, built for PHP 8.2+ with full DB support.
+    </x-accordion-item>
+</x-accordion>',
+                    ],
+                ],
+            ],
+
+            // ────────────────────────────────────────────────────────────────
+            // AVATAR
+            // ────────────────────────────────────────────────────────────────
+            'avatar' => [
+                'id'       => 'avatar',
+                'name'     => 'Avatar',
+                'desc'     => 'User avatar component with image support, initials fallback, status indicators, and avatar groups.',
+                'cli'      => 'php veldora add avatar',
+                'category' => 'display',
+                'variations' => [
+                    [
+                        'title'   => 'Sizes',
+                        'desc'    => 'From XS to XL avatar sizes.',
+                        'preview' => '<div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;padding:8px 0">
+                            <span class="vui-avatar" style="width:24px;height:24px;font-size:10px;background:var(--accent)">JD</span>
+                            <span class="vui-avatar" style="width:32px;height:32px;font-size:12px;background:#7c6ef5">AB</span>
+                            <span class="vui-avatar vui-avatar-md" style="background:#0ea5e9">VL</span>
+                            <span class="vui-avatar" style="width:48px;height:48px;font-size:16px;background:#f59e0b">MK</span>
+                            <span class="vui-avatar" style="width:60px;height:60px;font-size:20px;background:#22c55e">SN</span>
+                        </div>',
+                        'code'    => '<x-avatar name="Jane Doe" size="xs" />
+<x-avatar name="Alex B" size="sm" />
+<x-avatar name="Veldora" size="md" />
+<x-avatar name="M K" size="lg" />
+<x-avatar name="S N" size="xl" />',
+                    ],
+                    [
+                        'title'   => 'With Status Indicator',
+                        'desc'    => 'Show online/away/offline status with a dot badge.',
+                        'preview' => '<div style="display:flex;flex-wrap:wrap;gap:18px;align-items:center;padding:8px 0">
+                            <span style="position:relative;display:inline-block"><span class="vui-avatar vui-avatar-md" style="background:#7c6ef5">JD</span><span style="position:absolute;bottom:2px;right:2px;width:10px;height:10px;border-radius:50%;background:#22c55e;border:2px solid var(--bg)"></span></span>
+                            <span style="position:relative;display:inline-block"><span class="vui-avatar vui-avatar-md" style="background:#0ea5e9">AB</span><span style="position:absolute;bottom:2px;right:2px;width:10px;height:10px;border-radius:50%;background:#f59e0b;border:2px solid var(--bg)"></span></span>
+                            <span style="position:relative;display:inline-block"><span class="vui-avatar vui-avatar-md" style="background:#64748b">MK</span><span style="position:absolute;bottom:2px;right:2px;width:10px;height:10px;border-radius:50%;background:#64748b;border:2px solid var(--bg)"></span></span>
+                        </div>',
+                        'code'    => '<x-avatar name="Jane Doe" status="online" />
+<x-avatar name="Alex B" status="away" />
+<x-avatar name="M K" status="offline" />',
+                    ],
+                ],
+            ],
+
+            // ────────────────────────────────────────────────────────────────
+            // PROGRESS
+            // ────────────────────────────────────────────────────────────────
+            'progress' => [
+                'id'       => 'progress',
+                'name'     => 'Progress',
+                'desc'     => 'Linear progress bar with percentage, colours, stripes, and animated variants.',
+                'cli'      => 'php veldora add progress',
+                'category' => 'feedback',
+                'variations' => [
+                    [
+                        'title'   => 'Basic Progress',
+                        'desc'    => 'Simple linear progress with labelled percentage.',
+                        'preview' => '<div style="display:flex;flex-direction:column;gap:14px;max-width:420px">
+                            <div>
+                                <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:12px;color:var(--text-dim)"><span>Profile Completion</span><span>72%</span></div>
+                                <div class="vui-progress"><div class="vui-progress-bar" style="width:72%;background:var(--accent)"></div></div>
+                            </div>
+                            <div>
+                                <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:12px;color:var(--text-dim)"><span>Upload Progress</span><span>45%</span></div>
+                                <div class="vui-progress"><div class="vui-progress-bar" style="width:45%;background:#22c55e"></div></div>
+                            </div>
+                            <div>
+                                <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:12px;color:var(--text-dim)"><span>Storage Used</span><span>88%</span></div>
+                                <div class="vui-progress"><div class="vui-progress-bar" style="width:88%;background:#ef4444"></div></div>
+                            </div>
+                        </div>',
+                        'code'    => '<x-progress label="Profile Completion" :value="72" />
+<x-progress label="Upload Progress" :value="45" color="success" />
+<x-progress label="Storage Used" :value="88" color="danger" />',
+                    ],
+                ],
+            ],
+
+            // ────────────────────────────────────────────────────────────────
+            // DROPDOWN
+            // ────────────────────────────────────────────────────────────────
+            'dropdown' => [
+                'id'       => 'dropdown',
+                'name'     => 'Dropdown',
+                'desc'     => 'Menu overlay anchored to a trigger element with keyboard navigation support.',
+                'cli'      => 'php veldora add dropdown',
+                'category' => 'actions',
+                'variations' => [
+                    [
+                        'title'   => 'Basic Dropdown',
+                        'desc'    => 'Click the trigger button to open a positioned menu.',
+                        'preview' => '<div style="position:relative;display:inline-block" id="dd-demo">
+                            <button class="vui-btn vui-btn-secondary vui-btn-md" onclick="var d=document.getElementById(\'ddm\');d.style.display=d.style.display===\'block\'?\'none\':\'block\'" style="display:inline-flex;align-items:center;gap:7px">
+                                Options
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                            </button>
+                            <div id="ddm" style="display:none;position:absolute;top:calc(100% + 6px);left:0;z-index:50;min-width:160px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:6px;box-shadow:0 10px 30px rgba(0,0,0,0.3)">
+                                <a href="#" style="display:block;padding:8px 12px;border-radius:7px;color:var(--text);font-size:13.5px;text-decoration:none" onmouseover="this.style.background=\'var(--surface-2)\'" onmouseout="this.style.background=\'transparent\'">Edit Profile</a>
+                                <a href="#" style="display:block;padding:8px 12px;border-radius:7px;color:var(--text);font-size:13.5px;text-decoration:none" onmouseover="this.style.background=\'var(--surface-2)\'" onmouseout="this.style.background=\'transparent\'">Settings</a>
+                                <hr style="border:none;border-top:1px solid var(--border);margin:4px 0">
+                                <a href="#" style="display:block;padding:8px 12px;border-radius:7px;color:#ef4444;font-size:13.5px;text-decoration:none" onmouseover="this.style.background=\'rgba(239,68,68,0.1)\'" onmouseout="this.style.background=\'transparent\'">Sign Out</a>
+                            </div>
+                        </div>',
+                        'code'    => '<x-dropdown label="Options">
+    <x-dropdown-item href="/profile">Edit Profile</x-dropdown-item>
+    <x-dropdown-item href="/settings">Settings</x-dropdown-item>
+    <x-dropdown-divider />
+    <x-dropdown-item href="/logout" class="text-danger">Sign Out</x-dropdown-item>
+</x-dropdown>',
+                    ],
+                ],
+            ],
+
+            // ────────────────────────────────────────────────────────────────
+            // SWITCH
+            // ────────────────────────────────────────────────────────────────
+            'switch' => [
+                'id'       => 'switch',
+                'name'     => 'Switch',
+                'desc'     => 'Toggle switch for boolean on/off settings with label and disabled state.',
+                'cli'      => 'php veldora add switch',
+                'category' => 'actions',
+                'variations' => [
+                    [
+                        'title'   => 'Toggle Switches',
+                        'desc'    => 'Binary on/off controls for settings and preferences.',
+                        'preview' => '<div style="display:flex;flex-direction:column;gap:14px;max-width:320px">
+                            <label class="vui-switch-wrap" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer">
+                                <span style="color:var(--text);font-size:13.5px">Email Notifications</span>
+                                <span class="vui-switch"><input type="checkbox" checked><span class="vui-switch-slider"></span></span>
+                            </label>
+                            <label class="vui-switch-wrap" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer">
+                                <span style="color:var(--text);font-size:13.5px">Dark Mode</span>
+                                <span class="vui-switch"><input type="checkbox"><span class="vui-switch-slider"></span></span>
+                            </label>
+                            <label class="vui-switch-wrap" style="display:flex;align-items:center;justify-content:space-between;cursor:not-allowed;opacity:0.5">
+                                <span style="color:var(--text);font-size:13.5px">Two-Factor Auth (Disabled)</span>
+                                <span class="vui-switch"><input type="checkbox" disabled><span class="vui-switch-slider"></span></span>
+                            </label>
+                        </div>',
+                        'code'    => '<x-switch name="email_notifications" label="Email Notifications" :checked="true" />
+<x-switch name="dark_mode" label="Dark Mode" />
+<x-switch name="two_factor" label="Two-Factor Auth" :disabled="true" />',
+                    ],
+                ],
+            ],
+
+            // ────────────────────────────────────────────────────────────────
+            // SKELETON
+            // ────────────────────────────────────────────────────────────────
+            'skeleton' => [
+                'id'       => 'skeleton',
+                'name'     => 'Skeleton',
+                'desc'     => 'Animated placeholder content blocks for loading states.',
+                'cli'      => 'php veldora add skeleton',
+                'category' => 'feedback',
+                'variations' => [
+                    [
+                        'title'   => 'Content Skeleton',
+                        'desc'    => 'Mimics the shape of real content while data is loading.',
+                        'preview' => '<div style="max-width:360px;display:flex;flex-direction:column;gap:10px;padding:8px 0">
+                            <div class="vui-skeleton" style="height:16px;width:45%;border-radius:6px"></div>
+                            <div class="vui-skeleton" style="height:12px;width:90%;border-radius:6px"></div>
+                            <div class="vui-skeleton" style="height:12px;width:75%;border-radius:6px"></div>
+                            <div class="vui-skeleton" style="height:12px;width:82%;border-radius:6px"></div>
+                            <div style="display:flex;gap:10px;margin-top:6px">
+                                <div class="vui-skeleton" style="height:32px;width:90px;border-radius:8px"></div>
+                                <div class="vui-skeleton" style="height:32px;width:70px;border-radius:8px"></div>
+                            </div>
+                        </div>',
+                        'code'    => '<x-skeleton lines="3" width="90%" />
+<div style="display:flex;gap:8px;margin-top:8px">
+    <x-skeleton width="90px" height="32px" />
+    <x-skeleton width="70px" height="32px" />
+</div>',
+                    ],
+                    [
+                        'title'   => 'Card Skeleton',
+                        'desc'    => 'Full card-shaped loading placeholder.',
+                        'preview' => '<div class="vui-card" style="max-width:280px;padding:16px;display:flex;flex-direction:column;gap:10px">
+                            <div style="display:flex;align-items:center;gap:12px">
+                                <div class="vui-skeleton" style="width:40px;height:40px;border-radius:50%;flex-shrink:0"></div>
+                                <div style="flex:1;display:flex;flex-direction:column;gap:6px">
+                                    <div class="vui-skeleton" style="height:13px;width:60%;border-radius:5px"></div>
+                                    <div class="vui-skeleton" style="height:11px;width:40%;border-radius:5px"></div>
+                                </div>
+                            </div>
+                            <div class="vui-skeleton" style="height:80px;border-radius:8px"></div>
+                            <div class="vui-skeleton" style="height:12px;width:80%;border-radius:5px"></div>
+                            <div class="vui-skeleton" style="height:12px;width:65%;border-radius:5px"></div>
+                        </div>',
+                        'code'    => '<x-skeleton variant="card" />',
+                    ],
+                ],
+            ],
+
+        ]; // end map
+    }
+
 
     /**
      * @return array<int, array{id: string, name: string, desc: string, cli: string, preview: string, code: string}>
@@ -1779,6 +2820,51 @@ HTML,
 <x-container size="full" :center="false">
     <p>Edge-to-edge layout</p>
 </x-container>
+CODE,
+            ],
+            [
+                'id'      => 'footer',
+                'name'    => 'Footer',
+                'desc'    => 'Responsive site footer with branding, nav links, and legal notice.',
+                'cli'     => 'php veldora add footer',
+                'preview' => <<<'HTML'
+<div style="background:var(--vui-surface,#18181b);border:1px solid var(--vui-border,#27272a);border-radius:10px;padding:24px 20px;color:var(--vui-muted,#a1a1aa);">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;margin-bottom:16px;">
+        <div>
+            <h3 style="margin:0 0 4px;font-size:16px;font-weight:700;color:var(--accent,#7c6ef5);">Veldora UI</h3>
+            <p style="margin:0;font-size:12.5px;color:var(--text-dim);">The PHP framework you actually own.</p>
+        </div>
+        <div style="display:flex;gap:14px;font-size:13px;">
+            <a href="#" style="color:var(--text-dim);text-decoration:none;">Docs</a>
+            <a href="#" style="color:var(--text-dim);text-decoration:none;">Components</a>
+            <a href="#" style="color:var(--text-dim);text-decoration:none;">GitHub</a>
+        </div>
+    </div>
+    <div style="border-top:1px solid var(--vui-border,#27272a);padding-top:12px;text-align:center;font-size:12px;color:var(--text-dim);">
+        &copy; 2026 Veldora. All rights reserved.
+    </div>
+</div>
+HTML,
+                'code'    => <<<'CODE'
+<x-footer brand="My App" tagline="Built with Veldora" />
+CODE,
+            ],
+            [
+                'id'      => 'rating',
+                'name'    => 'Rating',
+                'desc'    => 'Interactive star rating component with half-star and read-only support.',
+                'cli'     => 'php veldora add rating',
+                'preview' => <<<'HTML'
+<div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+    <div style="display:flex;gap:4px;color:#f59e0b;font-size:20px;">
+        <span>★</span><span>★</span><span>★</span><span>★</span><span style="color:var(--border);">★</span>
+    </div>
+    <span style="font-size:13.5px;color:var(--text-dim);">(4.0 out of 5 stars)</span>
+</div>
+HTML,
+                'code'    => <<<'CODE'
+<x-rating :value="4" :max="5" />
+<x-rating :value="4.5" :readonly="true" />
 CODE,
             ],
         ];

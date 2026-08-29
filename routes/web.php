@@ -17,8 +17,9 @@ $router->get('/download/veldora-ai-prompt.md', [App\Controllers\DocsController::
 // VS Code Extension page
 $router->get('/extension', [App\Controllers\ExtensionController::class, 'index']);
 
-// Component showcase
+// Component showcase — grid overview + individual detail pages
 $router->get('/components', [App\Controllers\ComponentsController::class, 'index']);
+$router->get('/components/{component}', [App\Controllers\ComponentsController::class, 'show']);
 
 // Changelog
 $router->get('/changelog', [App\Controllers\ChangelogController::class, 'index']);
