@@ -11,7 +11,7 @@
     <section class="ext-hero">
         <div class="ext-badge">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-            Official VS Code Extension · v0.5.3
+            Official VS Code Extension · v0.5.6
         </div>
 
         <h1 class="ext-title">
