@@ -5,20 +5,28 @@
     "type": "project",
     "license": "MIT",
     "require": {
-        "php": "^8.2",
-        "veldora/framework": "*@dev",
+        "php": "^8.2 || ^8.3",
+        "veldora/framework": "^0.5.6",
+        "veldora/ui": "^0.5.6",
         "erusev/parsedown": "^1.7"
     },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../veldora-core",
-            "options": { "symlink": true }
-        }
-    ],
     "autoload": {
         "psr-4": {
             "App\\": "app/"
         }
-    }
+    },
+    "scripts": {
+        "post-create-project-cmd": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
+            "@php veldora key:generate"
+        ],
+        "serve": "php veldora serve"
+    },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "optimize-autoloader": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
 }
