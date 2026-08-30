@@ -3370,18 +3370,12 @@ body.nav-open .mobile-drawer {
 
 .ext-features-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
     margin-top: 44px;
 }
 
-@media (max-width: 980px) {
-    .ext-features-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 580px) {
+@media (max-width: 768px) {
     .ext-features-grid {
         grid-template-columns: 1fr;
     }
@@ -3391,62 +3385,76 @@ body.nav-open .mobile-drawer {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-xl);
-    padding: 24px 20px;
-    transition: all 0.2s ease;
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .ext-feature-card:hover {
     border-color: var(--accent);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(124, 58, 237, 0.12);
 }
 
 .ext-feature-icon {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     background: var(--accent-dim);
     border: 1px solid var(--accent-glow);
-    border-radius: var(--radius);
+    border-radius: var(--radius-lg);
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--accent);
-    margin-bottom: 16px;
+    margin-bottom: 18px;
 }
 
 .ext-feature-card h3 {
-    font-size: 15.5px;
+    font-size: 17px;
     font-weight: 700;
     color: var(--text);
     margin-bottom: 8px;
 }
 
 .ext-feature-card p {
-    font-size: 13.5px;
+    font-size: 14px;
     color: var(--text-muted);
     line-height: 1.65;
-    margin: 0 0 16px 0;
+    margin: 0 0 20px 0;
+    flex-grow: 1;
 }
 
 .ext-card-tags {
     display: flex;
+    flex-direction: row;
     align-items: center;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 8px;
     margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .ext-tag {
     display: inline-flex;
     align-items: center;
     font-family: var(--font-mono);
-    font-size: 11.5px;
+    font-size: 12px;
+    font-weight: 500;
     color: #c4b5fd;
-    background: rgba(139, 92, 246, 0.1);
-    border: 1px solid rgba(139, 92, 246, 0.25);
-    border-radius: 6px;
-    padding: 3px 8px;
+    background: rgba(139, 92, 246, 0.12);
+    border: 1px solid rgba(139, 92, 246, 0.28);
+    border-radius: 8px;
+    padding: 4px 10px;
     white-space: nowrap;
+    transition: all 0.15s ease;
+}
+
+.ext-tag:hover {
+    background: rgba(139, 92, 246, 0.22);
+    border-color: rgba(139, 92, 246, 0.45);
+    color: #ede9fe;
 }
 
 .ext-snippets-section {

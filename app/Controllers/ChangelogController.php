@@ -46,13 +46,46 @@ class ChangelogController
                 'icon'    => 'core',
                 'releases' => [
                     [
-                        'version' => '0.5.2',
+                        'version' => '0.5.6',
                         'date'    => '2026-08-30',
                         'tag'     => 'latest',
                         'added'   => [
+                            'Single-source-of-truth runtime versioning via `Application::VERSION` across all CLI banners, exception handlers, and layout views',
+                            'Automated PHPUnit test suites and PHPStan static analysis workflow in GitHub Actions',
+                            'Automated application boot and health check diagnostics across PHP 8.2 and PHP 8.3',
+                        ],
+                        'fixed'   => [
+                            'Eliminated hardcoded version strings across all exception handlers and runtime headers',
+                        ],
+                    ],
+                    [
+                        'version' => '0.5.5',
+                        'date'    => '2026-08-30',
+                        'tag'     => null,
+                        'added'   => [
+                            'Shipped full 41+ command CLI binary with `serve`, `doctor`, `about`, `key:generate`, `migrate`, `db:seed`, and `add` support',
+                            'Clean pre-seeded starter SQLite database distribution',
+                        ],
+                        'fixed'   => [
+                            'Synchronized CLI binary with framework core distribution',
+                        ],
+                    ],
+                    [
+                        'version' => '0.5.4',
+                        'date'    => '2026-08-30',
+                        'tag'     => null,
+                        'added'   => [
+                            'Export ignore rules in `.gitattributes` for optimized lightweight production archive downloads',
+                        ],
+                        'fixed'   => [],
+                    ],
+                    [
+                        'version' => '0.5.2',
+                        'date'    => '2026-08-30',
+                        'tag'     => null,
+                        'added'   => [
                             'Composer Packagist VCS release validation synchronization — version tags unified across all packages',
                             'Enhanced `executeDirect()` handlers for zero-dependency CLI execution',
-                            'Application version constant bumped to `0.5.2`',
                         ],
                         'fixed'   => [
                             'VCS driver tag version mismatch resolution in composer metadata',
@@ -139,9 +172,28 @@ class ChangelogController
                 'icon'    => 'ui',
                 'releases' => [
                     [
-                        'version' => '0.5.2',
+                        'version' => '0.5.6',
                         'date'    => '2026-08-30',
                         'tag'     => 'latest',
+                        'added'   => [
+                            'Synchronized component registry metadata with framework core v0.5.6 release',
+                            'Enhanced CSS custom property tokens and component layout polish',
+                        ],
+                        'fixed'   => [],
+                    ],
+                    [
+                        'version' => '0.5.5',
+                        'date'    => '2026-08-30',
+                        'tag'     => null,
+                        'added'   => [
+                            'Optimized distribution archives and component export rules',
+                        ],
+                        'fixed'   => [],
+                    ],
+                    [
+                        'version' => '0.5.2',
+                        'date'    => '2026-08-30',
+                        'tag'     => null,
                         'added'   => [
                             '**Skeuomorphic 3D Aesthetics**: Physically realistic beveled and embossed metallic variants for `Radio`, `Checkbox`, `Switch`, and `Button` (`.vui-radio-skeuo`, `.vui-checkbox-skeuo`, `.vui-switch-skeuo`, `.vui-btn-skeuo`)',
                             '**Flat Minimalist 2D Aesthetics**: High-contrast geometric solid variants with zero shadow blur for `Radio`, `Checkbox`, `Switch`, and `Button` (`.vui-radio-flat`, `.vui-checkbox-flat`, `.vui-switch-flat`, `.vui-btn-flat`)',
@@ -222,9 +274,29 @@ class ChangelogController
                 'icon'    => 'cli',
                 'releases' => [
                     [
-                        'version' => '0.5.2',
+                        'version' => '0.5.6',
                         'date'    => '2026-08-30',
                         'tag'     => 'latest',
+                        'added'   => [
+                            'Dynamic package version resolution from `package.json` at runtime',
+                            'Package lockfile generation and resilient release workflow',
+                            'Updated starter app template with unified `v0.5.6` core and UI components',
+                        ],
+                        'fixed'   => [],
+                    ],
+                    [
+                        'version' => '0.5.5',
+                        'date'    => '2026-08-30',
+                        'tag'     => null,
+                        'added'   => [
+                            'Ships complete 41+ command CLI binary and clean starter SQLite database in every newly scaffolded project',
+                        ],
+                        'fixed'   => [],
+                    ],
+                    [
+                        'version' => '0.5.2',
+                        'date'    => '2026-08-30',
+                        'tag'     => null,
                         'added'   => [
                             'Updated scaffold templates with Veldora v0.5.2 core and UI components',
                             'Pre-configured Skeuomorphic, Flat, and Neumorphic design assets in starter apps',
@@ -261,6 +333,59 @@ class ChangelogController
                             'Interactive npx scaffolder with project name prompt',
                             'Composer dependency install, APP_KEY generation, and storage setup',
                             'Template with routes, layout, home view, sample controller/model/migration',
+                        ],
+                        'fixed'   => [],
+                    ],
+                ],
+            ],
+
+            // ── veldora-vscode ───────────────────────────────────────────────────
+            [
+                'repo'    => 'veldora-vscode',
+                'label'   => 'Extension',
+                'github'  => 'https://github.com/veldorahq/veldora-vscode',
+                'color'   => 'cyan',
+                'icon'    => 'vscode',
+                'releases' => [
+                    [
+                        'version' => '0.5.6',
+                        'date'    => '2026-08-30',
+                        'tag'     => 'latest',
+                        'added'   => [
+                            '**Multi-Aesthetic Design System Snippets**: Dedicated IntelliSense snippets for Skeuomorphic 3D (`vc-*-skeuo`), Neumorphic (`vc-*-neumorphic`), Glassmorphic (`vc-*-glass`), and Flat Minimalist (`vc-*-flat`) variants across buttons, radios, checkboxes, and switches',
+                            '**Modern Template Directives Snippets**: Added `v-props`, `v-slot`, `v-push`, `v-stack`, `v-once`, and `v-error` snippets',
+                            'Synchronized version with Veldora Core and UI registry',
+                        ],
+                        'fixed'   => [],
+                    ],
+                    [
+                        'version' => '0.5.5',
+                        'date'    => '2026-08-30',
+                        'tag'     => null,
+                        'added'   => [
+                            'Custom purple Veldora brand folder icons for `veldora-core`, `veldora-ui`, `veldora-vscode`, `create-veldora-app`, `docs-site`, and `playground`',
+                            'Enhanced folder icon coverage for `storage/`, `framework/`, `sessions/`, `bootstrap/`, and `cache/`',
+                        ],
+                        'fixed'   => [],
+                    ],
+                    [
+                        'version' => '0.5.3',
+                        'date'    => '2026-08-29',
+                        'tag'     => null,
+                        'added'   => [
+                            'Built-in 900+ Material Design file & folder icon theme with custom Veldora branding',
+                            'Custom icons for `.veldora.php` templates, `veldora` binary, `.env` files, and route definition files',
+                        ],
+                        'fixed'   => [],
+                    ],
+                    [
+                        'version' => '0.5.0',
+                        'date'    => '2026-08-25',
+                        'tag'     => null,
+                        'added'   => [
+                            'Initial TextMate grammar syntax highlighting for `.veldora.php` and `.veldora` files',
+                            '32 core template directive & UI component snippets',
+                            'Auto-closing tags, bracket matching, and code folding configuration',
                         ],
                         'fixed'   => [],
                     ],
