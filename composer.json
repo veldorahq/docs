@@ -6,8 +6,8 @@
     "license": "MIT",
     "require": {
         "php": "^8.2 || ^8.3",
-        "veldora/framework": "^0.5.6",
-        "veldora/ui": "^0.5.6",
+        "veldora/framework": "^0.5.7",
+        "veldora/ui": "^0.5.7",
         "erusev/parsedown": "^1.7"
     },
     "autoload": {
