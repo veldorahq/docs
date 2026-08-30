@@ -858,32 +858,98 @@ class StoreUserRequest extends FormRequest
 
 ---
 
-## 10. CLI Console & Make Commands
+## 10. CLI Console & 48 Built-in Commands
 
-The `php veldora` CLI binary provides generators and maintenance utilities.
+Veldora includes a powerful, zero-dependency CLI runner (`php veldora`) featuring **48 built-in commands**. Powered by `executeDirect()`, every command executes instantly in both zero-dependency environments and standard Symfony Console environments.
+
+```bash
+php veldora <command> [options]
+```
+
+### Application & Diagnostics
 
 | Command | Description |
 |---|---|
-| `php veldora serve` | Start local development server |
-| `php veldora make:controller <Name>` | Scaffold a new HTTP Controller |
-| `php veldora make:model <Name>` | Scaffold an ActiveRecord Model |
-| `php veldora make:migration <name>` | Create a new database migration |
-| `php veldora make:middleware <Name>` | Create a custom middleware |
-| `php veldora make:request <Name>` | Create a validated FormRequest class |
-| `php veldora make:resource <Name>` | Create an API JSON Resource transformer |
-| `php veldora make:job <Name>` | Scaffold a background queue job |
-| `php veldora make:event <Name>` | Scaffold a dispatchable event |
-| `php veldora make:listener <Name>` | Scaffold an event listener |
-| `php veldora make:mail <Name>` | Scaffold a Mailable email class |
-| `php veldora make:seeder <Name>` | Create a database seeder |
-| `php veldora make:factory <Name>` | Create a model factory for testing |
-| `php veldora make:auth` | Generate full login, register, dashboard auth system |
+| `php veldora serve` | Start local development server with real-time logs (`--port=8000`, `--host=127.0.0.1`) |
+| `php veldora about` | Display framework environment, database driver, PHP version, and cache status |
+| `php veldora doctor` | Run system health diagnostics, check PHP extensions, and verify directory permissions |
+| `php veldora key:generate` | Generate a cryptographically secure 32-character `APP_KEY` in `.env` |
+| `php veldora storage:link` | Create symbolic link from `public/storage` to `storage/app/public` |
+| `php veldora down` | Put the application into maintenance mode (optional: `--secret=your-token` for bypass) |
+| `php veldora up` | Bring the application out of maintenance mode |
+| `php veldora env` | Display current application environment name |
+| `php veldora env:encrypt` | Encrypt `.env` file using AES-256 with `APP_KEY` for safe version control |
+| `php veldora env:decrypt` | Decrypt `.env.encrypted` file using `APP_KEY` on production servers |
+
+### Code Generators (`make:*`)
+
+| Command | Description |
+|---|---|
+| `php veldora make:controller <Name>` | Scaffold a new HTTP Controller class in `app/Controllers/` |
+| `php veldora make:model <Name> [-m]` | Scaffold an ActiveRecord Model class (`-m` automatically creates migration) |
+| `php veldora make:migration <name>` | Create an anonymous class database migration in `database/migrations/` |
+| `php veldora make:middleware <Name>` | Scaffold an HTTP Middleware class in `app/Http/Middleware/` |
+| `php veldora make:request <Name>` | Create a validated Form Request class in `app/Http/Requests/` |
+| `php veldora make:resource <Name>` | Create an API JSON Resource transformer in `app/Http/Resources/` |
+| `php veldora make:factory <Name>` | Create a Model Factory in `database/factories/` (`--model=User`) |
+| `php veldora make:seeder <Name>` | Create a Database Seeder in `database/seeders/` |
+| `php veldora make:command <Name>` | Create a custom Veldora Console Command class |
+| `php veldora make:job <Name>` | Scaffold a background Queue Job class in `app/Jobs/` |
+| `php veldora make:event <Name>` | Scaffold a dispatchable Event class in `app/Events/` |
+| `php veldora make:listener <Name>` | Scaffold an Event Listener in `app/Listeners/` |
+| `php veldora make:mail <Name>` | Scaffold a Mailable email class in `app/Mail/` with HTML view template |
+| `php veldora make:component <name>` | Create a new UI component template in `resources/views/components/` |
+| `php veldora make:auth` | Scaffold full authentication (Login, Register, Forgot/Reset Password, Profile, Views, Routes) |
+
+### Database Management
+
+| Command | Description |
+|---|---|
 | `php veldora migrate` | Run pending database migrations |
-| `php veldora migrate:rollback` | Rollback last migration batch |
-| `php veldora migrate:fresh` | Drop all tables and re-run all migrations |
-| `php veldora queue:work` | Start background queue worker |
-| `php veldora ui:list` | List all 21 available UI components |
-| `php veldora add <components...>` | Copy UI components into views/components/ |
+| `php veldora migrate:rollback` | Rollback the last migration batch (`--step=N` to rollback N steps) |
+| `php veldora migrate:fresh` | Drop all tables and re-run all migrations from scratch (`--seed` to auto-seed) |
+| `php veldora migrate:status` | Show the status and batch table for all migrations |
+| `php veldora db:seed` | Run database seeders from `database/seeders/` (`--class=UserSeeder`) |
+| `php veldora db:wipe` | Drop all tables, views, and types in the database |
+| `php veldora db:show` | Display database schema overview, table list, and row counts |
+
+### Routing & URL Generation
+
+| Command | Description |
+|---|---|
+| `php veldora route:list` | Display a formatted table of all registered routes, HTTP methods, actions, and middleware |
+| `php veldora route:cache` | Compile and cache registered routes into `storage/framework/routes.cache.php` |
+| `php veldora route:clear` | Remove the route cache file for local development |
+
+### Optimization & Caching
+
+| Command | Description |
+|---|---|
+| `php veldora optimize` | Cache framework configuration, routes, and views for production |
+| `php veldora optimize:clear` | Clear all cached bootstrap files and templates |
+| `php veldora config:cache` | Compile all config files into a single cached file for fast boot |
+| `php veldora config:clear` | Remove configuration cache |
+| `php veldora config:show <key>` | Display configuration values for a specific key |
+| `php veldora view:cache` | Compile all `.veldora.php` templates into PHP cache files |
+| `php veldora view:clear` | Flush all compiled view templates from `storage/framework/views/` |
+| `php veldora cache:clear` | Flush application and session cache |
+
+### Queue Processing
+
+| Command | Description |
+|---|---|
+| `php veldora queue:work` | Start processing jobs on the queue daemon (`--queue=default`, `--sleep=3`, `--tries=3`) |
+| `php veldora queue:failed` | Display a list of all failed queue jobs with exception traces |
+| `php veldora queue:retry <id|all>` | Retry a specific failed job by ID or retry all failed jobs |
+| `php veldora queue:clear` | Delete all pending jobs from the specified queue |
+
+### UI Component Management
+
+| Command | Description |
+|---|---|
+| `php veldora ui:list` | List all 41+ available UI components and their installation status |
+| `php veldora add <components...>` | Install UI components into `resources/views/components/` (e.g. `php veldora add button card modal`) |
+
 
 ---
 

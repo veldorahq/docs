@@ -16,7 +16,9 @@ class DocsParser
 
     public function __construct()
     {
-        $this->docsPath = dirname(__DIR__, 2) . '/../docs.md';
+        $localDocs = dirname(__DIR__, 2) . '/docs.md';
+        $parentDocs = dirname(__DIR__, 2) . '/../docs.md';
+        $this->docsPath = file_exists($localDocs) ? $localDocs : $parentDocs;
     }
 
     public function getRawContent(): string

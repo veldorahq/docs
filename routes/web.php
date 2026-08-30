@@ -23,3 +23,12 @@ $router->get('/components/{component}', [App\Controllers\ComponentsController::c
 
 // Changelog
 $router->get('/changelog', [App\Controllers\ChangelogController::class, 'index']);
+
+// FAQ page
+$router->get('/faq', [App\Controllers\FaqController::class, 'index']);
+
+// Static Informational Pages
+$router->get('/about', [App\Controllers\PageController::class, 'about']);
+$router->get('/privacy', [App\Controllers\PageController::class, 'privacy']);
+$router->get('/terms', [App\Controllers\PageController::class, 'terms']);
+$router->get('/license', [App\Controllers\PageController::class, 'license']);

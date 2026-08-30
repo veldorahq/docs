@@ -46,9 +46,26 @@ class ChangelogController
                 'icon'    => 'core',
                 'releases' => [
                     [
-                        'version' => '0.5.6',
+                        'version' => '0.5.7',
                         'date'    => '2026-08-30',
                         'tag'     => 'latest',
+                        'added'   => [
+                            '**48 Built-in CLI Commands**: Complete standalone and Symfony Console dual-mode runner with all 48 commands properly wired',
+                            '**`executeDirect()` on all commands**: `MakeControllerCommand`, `MakeModelCommand`, `MakeMigrationCommand`, `MakeSeederCommand`, `MakeMiddlewareCommand`, `MakeRequestCommand`, `MakeResourceCommand`, `MakeFactoryCommand`, `DownCommand`, `UpCommand` callable with zero dependencies',
+                            '**Maintenance Mode (`down` / `up`)**: `php veldora down --secret=token` and `php veldora up` fully registered in CLI runner',
+                            '**Queue Management**: `queue:work`, `queue:failed`, `queue:retry`, `queue:clear` commands added to standalone CLI runner',
+                        ],
+                        'fixed'   => [
+                            '`make:migration` generates anonymous `return new class extends Migration {}` format for reliable schema loading',
+                            '`make:model -m` correctly creates companion migration in standalone mode without requiring Symfony Application',
+                            '`make:auth` callable directly via `executeDirect()` with zero-dependency execution',
+                            'Friendly check when `composer install` has not been run',
+                        ],
+                    ],
+                    [
+                        'version' => '0.5.6',
+                        'date'    => '2026-08-30',
+                        'tag'     => null,
                         'added'   => [
                             'Single-source-of-truth runtime versioning via `Application::VERSION` across all CLI banners, exception handlers, and layout views',
                             'Automated PHPUnit test suites and PHPStan static analysis workflow in GitHub Actions',
@@ -172,9 +189,19 @@ class ChangelogController
                 'icon'    => 'ui',
                 'releases' => [
                     [
-                        'version' => '0.5.6',
+                        'version' => '0.5.7',
                         'date'    => '2026-08-30',
                         'tag'     => 'latest',
+                        'added'   => [
+                            'Synchronized component registry metadata with framework core v0.5.7 release',
+                            '41+ UI components verified and tested across all style variants (Skeuomorphic, Neumorphic, Flat, Glassmorphic)',
+                        ],
+                        'fixed'   => [],
+                    ],
+                    [
+                        'version' => '0.5.6',
+                        'date'    => '2026-08-30',
+                        'tag'     => null,
                         'added'   => [
                             'Synchronized component registry metadata with framework core v0.5.6 release',
                             'Enhanced CSS custom property tokens and component layout polish',
@@ -274,9 +301,20 @@ class ChangelogController
                 'icon'    => 'cli',
                 'releases' => [
                     [
-                        'version' => '0.5.6',
+                        'version' => '0.5.7',
                         'date'    => '2026-08-30',
                         'tag'     => 'latest',
+                        'added'   => [
+                            'Template updated with `veldora/framework: ^0.5.7` and `veldora/ui: ^0.5.7`',
+                            'Clean starter skeleton without `src/` directory — pure standard PSR-4 MVC structure',
+                            'Updated CLI runner with 48 working commands and friendly composer installation notices',
+                        ],
+                        'fixed'   => [],
+                    ],
+                    [
+                        'version' => '0.5.6',
+                        'date'    => '2026-08-30',
+                        'tag'     => null,
                         'added'   => [
                             'Dynamic package version resolution from `package.json` at runtime',
                             'Package lockfile generation and resilient release workflow',

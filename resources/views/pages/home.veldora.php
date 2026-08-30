@@ -85,7 +85,7 @@ $router->post(\'/logout\', [AuthController::class, \'logout\'])->middleware([\'a
                 <div class="stat-label">UI Components</div>
             </div>
             <div class="stat-item">
-                <div class="stat-number">41+</div>
+                <div class="stat-number">48+</div>
                 <div class="stat-label">CLI Commands</div>
             </div>
             <div class="stat-item">
@@ -267,6 +267,65 @@ php veldora serve
                 <p class="feature-desc">PHPUnit integration with HTTP helpers, model factories, and full assertion suite — 87 tests ship with the framework.</p>
             </article>
 
+        </div>
+    </section>
+
+    <!-- ── Frequently Asked Questions ──────────────────────────────── -->
+    <section class="faq-section" style="max-width:960px;margin:5rem auto 3rem;padding:0 1.5rem;" aria-label="FAQ">
+        <div style="text-align:center;margin-bottom:2.5rem;">
+            <div style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#8b5cf6;background:rgba(139,92,246,0.1);padding:4px 12px;border-radius:9999px;border:1px solid rgba(139,92,246,0.25);margin-bottom:0.75rem;">
+                Got Questions?
+            </div>
+            <h2 style="font-size:2rem;font-weight:800;color:#f4f4f5;margin:0 0 0.5rem;">Frequently Asked Questions</h2>
+            <p style="color:#a1a1aa;font-size:1rem;max-width:540px;margin:0 auto;">Quick answers to the most common questions about Veldora.</p>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:0.75rem;">
+            <details style="background:#18181b;border:1px solid #27272a;border-radius:0.75rem;padding:0.75rem 1.25rem;transition:border-color 0.2s;" ontoggle="this.style.borderColor = this.open ? '#8b5cf6' : '#27272a'">
+                <summary style="font-size:1rem;font-weight:600;color:#f4f4f5;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;padding:0.5rem 0;user-select:none;">
+                    <span>What is Veldora and who is it for?</span>
+                    <span style="color:#71717a;font-size:1.25rem;">＋</span>
+                </summary>
+                <div style="font-size:0.95rem;color:#a1a1aa;line-height:1.7;padding:0.75rem 0 0.5rem;border-top:1px solid #27272a;margin-top:0.5rem;">
+                    Veldora is a lightweight, high-performance PHP 8.2+ MVC framework for developers who want the developer experience of Laravel without massive vendor overhead or slow cold starts.
+                </div>
+            </details>
+
+            <details style="background:#18181b;border:1px solid #27272a;border-radius:0.75rem;padding:0.75rem 1.25rem;transition:border-color 0.2s;" ontoggle="this.style.borderColor = this.open ? '#8b5cf6' : '#27272a'">
+                <summary style="font-size:1rem;font-weight:600;color:#f4f4f5;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;padding:0.5rem 0;user-select:none;">
+                    <span>How does Veldora handle CLI commands without Symfony Console?</span>
+                    <span style="color:#71717a;font-size:1.25rem;">＋</span>
+                </summary>
+                <div style="font-size:0.95rem;color:#a1a1aa;line-height:1.7;padding:0.75rem 0 0.5rem;border-top:1px solid #27272a;margin-top:0.5rem;">
+                    Every single command in Veldora (48 commands in total) implements native <code>executeDirect()</code> execution. It runs with zero external console dependencies instantly, while also offering full Symfony Console support if installed.
+                </div>
+            </details>
+
+            <details style="background:#18181b;border:1px solid #27272a;border-radius:0.75rem;padding:0.75rem 1.25rem;transition:border-color 0.2s;" ontoggle="this.style.borderColor = this.open ? '#8b5cf6' : '#27272a'">
+                <summary style="font-size:1rem;font-weight:600;color:#f4f4f5;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;padding:0.5rem 0;user-select:none;">
+                    <span>How do I add UI components to my project?</span>
+                    <span style="color:#71717a;font-size:1.25rem;">＋</span>
+                </summary>
+                <div style="font-size:0.95rem;color:#a1a1aa;line-height:1.7;padding:0.75rem 0 0.5rem;border-top:1px solid #27272a;margin-top:0.5rem;">
+                    Run <code>php veldora ui:list</code> to view all 41+ available components, and install them into your project using <code>php veldora add button card modal</code>.
+                </div>
+            </details>
+
+            <details style="background:#18181b;border:1px solid #27272a;border-radius:0.75rem;padding:0.75rem 1.25rem;transition:border-color 0.2s;" ontoggle="this.style.borderColor = this.open ? '#8b5cf6' : '#27272a'">
+                <summary style="font-size:1rem;font-weight:600;color:#f4f4f5;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;padding:0.5rem 0;user-select:none;">
+                    <span>How is authentication set up?</span>
+                    <span style="color:#71717a;font-size:1.25rem;">＋</span>
+                </summary>
+                <div style="font-size:0.95rem;color:#a1a1aa;line-height:1.7;padding:0.75rem 0 0.5rem;border-top:1px solid #27272a;margin-top:0.5rem;">
+                    Run <code>php veldora make:auth</code> and then <code>php veldora migrate</code>. This creates complete Login, Registration, Password Reset, Profile, and Verification views, controllers, and database migrations.
+                </div>
+            </details>
+        </div>
+
+        <div style="text-align:center;margin-top:1.5rem;">
+            <a href="/faq" style="font-size:0.92rem;font-weight:600;color:#a78bfa;text-decoration:none;display:inline-flex;align-items:center;gap:4px;">
+                View all FAQs & answers &rarr;
+            </a>
         </div>
     </section>
 
