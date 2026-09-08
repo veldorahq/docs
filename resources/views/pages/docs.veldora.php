@@ -30,7 +30,7 @@
                 id="docs-search"
                 class="sidebar-search"
                 type="search"
-                placeholder="Search 22 chapters..."
+                placeholder="Search <?= count($nav) ?> chapters..."
                 autocomplete="off"
                 aria-label="Search documentation"
             >
@@ -116,17 +116,13 @@
                     <span>Veldora AI Developer Assistant Prompt</span>
                 </div>
                 <div class="ai-prompt-card-actions">
-                    <button type="button" class="btn btn-primary btn-sm" id="btn-copy-ai-master" onclick="copyAiMasterPrompt()">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                        Copy Full Master Prompt
-                    </button>
-                    <a href="/download/veldora-ai-prompt.md" class="btn btn-secondary btn-sm" id="btn-download-ai-prompt">
+                    <a href="/download/veldora-ai-prompt" onclick="downloadAiMasterPrompt(event)" class="btn btn-primary btn-sm" id="btn-download-ai-prompt">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                         Download as .md
                     </a>
                 </div>
             </div>
-            <p class="ai-prompt-card-desc">Paste this prompt at the start of any session with Claude, ChatGPT, Gemini, Cursor, or Copilot. It gives the model exact knowledge of Veldora's 30+ modules and prevents framework hallucinations.</p>
+            <p class="ai-prompt-card-desc">Paste this prompt at the start of any session with Claude, ChatGPT, Gemini, Cursor, or Copilot. It gives the model exact knowledge of Veldora's 51 CLI commands, 23 documentation modules, and prevents framework hallucinations.</p>
         </div>
         <?php endif; ?>
 
@@ -233,22 +229,22 @@ if (typeof sessionStorage !== 'undefined') {
     } catch(e) {}
 }
 
-// Copy Master AI Prompt from the code block
-function copyAiMasterPrompt() {
+// Download Master AI Prompt as .md file
+function downloadAiMasterPrompt(e) {
     const codeEl = document.querySelector('#doc-content pre code');
-    if (!codeEl) return;
-    const text = codeEl.innerText || codeEl.textContent;
-    navigator.clipboard.writeText(text).then(() => {
-        const btn = document.getElementById('btn-copy-ai-master');
-        if (btn) {
-            btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied to Clipboard!';
-            btn.classList.add('btn-success');
-            setTimeout(() => {
-                btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy Full Master Prompt';
-                btn.classList.remove('btn-success');
-            }, 2500);
-        }
-    });
+    if (codeEl) {
+        if (e && e.preventDefault) e.preventDefault();
+        const text = codeEl.innerText || codeEl.textContent;
+        const blob = new Blob([text], { type: 'text/markdown;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'veldora-ai-master-prompt.md';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
 }
 </script>
 @endsection

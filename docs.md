@@ -35,9 +35,9 @@ php veldora serve
 
 ```terminal
 Creating a "veldora/veldora" project at "./my-app"
-Installing veldora/veldora (v0.5.1)
-  - Downloading veldora/veldora (v0.5.1)
-  - Installing veldora/veldora (v0.5.1): Extracting archive
+Installing veldora/veldora (v0.6.0)
+  - Downloading veldora/veldora (v0.6.0)
+  - Installing veldora/veldora (v0.6.0): Extracting archive
 Created project in ./my-app
 Generating optimized autoload files
 > @php -r "file_exists('.env') || copy('.env.example', '.env');"
@@ -64,7 +64,7 @@ veldora new my-app
 ```
 
 ```terminal
-  ▲ Veldora Framework  v0.5.1
+  ▲ Veldora Framework  v0.6.0
   The modern PHP framework you actually own.
 
   ? What is your project named? (my-veldora-app): my-blog
@@ -310,20 +310,81 @@ class PostController
 }
 ```
 
-### Response Helpers
+### HTTP Responses & Factories
+
+Veldora provides a dedicated, expressive response system designed for modern APIs and full-stack web apps alike:
 
 ```php
-// Render a view template
+use Veldora\Framework\Http\JsonResponse;
+use Veldora\Framework\Http\RedirectResponse;
+use Veldora\Framework\Http\Response;
+
+// 1. View Responses
 return view('welcome', ['name' => 'World']);
 
-// Return JSON response (sets application/json header)
-return Response::json(['success' => true, 'data' => $user], 200);
+// 2. Global response() Factory
+return response('Custom plain text', 200);
+return response()->noContent();                         // 204 No Content
+return response()->download($filePath, 'invoice.pdf');   // Stream as download
+return response()->file($imagePath);                    // Display inline
 
-// Redirect to URL
-return Response::redirect('/dashboard');
+// 3. JSON Responses
+return json(['user' => $user]);
+return JsonResponse::success(['token' => $token], 'Logged in successfully');
+return JsonResponse::error('Validation failed', 422, ['email' => ['Invalid email']]);
+return JsonResponse::paginate($items, ['total' => 100, 'current_page' => 1]);
 
-// Redirect with flash message
-return Response::redirect('/posts')->with('success', 'Post saved!');
+// 4. Redirect Responses & Session Chaining
+return redirect('/dashboard');
+return redirect()->to('/login', 301);
+return back()->with('status', 'Profile saved!');
+return back()->withErrors($validator->errors())->withInput();
+```
+
+### Handling File Uploads
+
+When receiving multipart form data, uploaded files are automatically wrapped in `Veldora\Framework\Http\UploadedFile`:
+
+```php
+public function uploadAvatar(Request $request): Response
+{
+    if (!$request->hasFile('avatar')) {
+        return back()->with('error', 'Please choose a file to upload.');
+    }
+
+    $file = $request->file('avatar'); // UploadedFile instance
+
+    // Validate type and maximum file size (in KB)
+    $file->validate(['image/jpeg', 'image/png', 'image/webp'], maxKb: 2048);
+
+    // Save with a unique generated UUID to target directory
+    $savedPath = $file->store('storage/app/avatars');
+
+    // Or save with explicit custom filename
+    $customPath = $file->storeAs('storage/app/avatars', 'avatar_1.png');
+
+    return back()->with('success', 'Avatar updated!');
+}
+```
+
+### Session Management
+
+Veldora includes a session wrapper accessible through the global `session()` helper or `$request->session()`:
+
+```php
+// Storing and retrieving values (supports dot-notation)
+session()->put('user.settings.theme', 'dark');
+$theme = session()->get('user.settings.theme', 'light');
+
+// Pull (get and delete)
+$flashNotice = session()->pull('notice');
+
+// Flash messages (persisted for the next request only)
+session()->flash('success', 'Order placed!');
+
+// CSRF Protection
+$token = session()->token();
+$valid = session()->verifyToken($request->input('_token'));
 ```
 
 ---
@@ -589,8 +650,15 @@ Veldora's ActiveRecord ORM supports intuitive relationships between database tab
 | **One-to-Many** | `$this->hasMany(Post::class)` | An Author has many Posts |
 | **Inverse One-to-Many** | `$this->belongsTo(User::class)` | A Post belongs to an Author |
 | **Many-to-Many** | `$this->belongsToMany(Role::class, 'role_user')` | A User has many Roles via a pivot table |
+| **Has-One-Through** | `$this->hasOneThrough(History::class, User::class)` | A Supplier has one History through a User |
+| **Has-Many-Through** | `$this->hasManyThrough(Post::class, User::class)` | A Country has many Posts through its Users |
+| **Polymorphic One-to-One** | `$this->morphOne(Image::class, 'imageable')` | A User or Post has one Image |
+| **Polymorphic One-to-Many** | `$this->morphMany(Comment::class, 'commentable')` | A Post or Video has many Comments |
+| **Polymorphic Many-to-Many** | `$this->morphToMany(Tag::class, 'taggable')` | A Post or Video has many Tags via shared pivot |
+| **Polymorphic Inverse** | `$this->morphTo('commentable')` | A Comment resolves back to Post or Video |
+| **Polymorphic Many Inverse** | `$this->morphedByMany(Post::class, 'taggable')` | A Tag retrieves all tagged Posts or Videos |
 
-### Defining Relationships
+### Defining Standard Relationships
 
 ```php
 namespace App\Models;
@@ -600,6 +668,7 @@ use Veldora\Framework\Database\Relations\BelongsTo;
 use Veldora\Framework\Database\Relations\HasMany;
 use Veldora\Framework\Database\Relations\HasOne;
 use Veldora\Framework\Database\Relations\BelongsToMany;
+use Veldora\Framework\Database\Relations\HasOneThrough;
 
 class User extends Model
 {
@@ -622,56 +691,93 @@ class User extends Model
     }
 }
 
-class Post extends Model
+class Supplier extends Model
 {
-    // Inverse relationship back to User
-    public function author(): BelongsTo
+    // Has-One-Through (Supplier -> User -> History)
+    public function userHistory(): HasOneThrough
     {
-        return $this->belongsTo(User::class, 'user_id');
-    }
-
-    // One-to-Many for Comments
-    public function comments(): HasMany
-    {
-        return $this->hasMany(Comment::class, 'post_id');
+        return $this->hasOneThrough(History::class, User::class, 'supplier_id', 'user_id');
     }
 }
 ```
 
-### Querying and Using Relations
+### Defining Polymorphic Relationships
 
-Access related models as dynamic properties:
+Polymorphic relations allow a single model to belong to more than one other type of model on a single association:
 
 ```php
-$user = User::find(1);
+namespace App\Models;
 
-// Lazy load related posts (returns array/collection of Post models)
-$posts = $user->posts;
+use Veldora\Framework\Database\Model;
+use Veldora\Framework\Database\Relations\MorphTo;
+use Veldora\Framework\Database\Relations\MorphOne;
+use Veldora\Framework\Database\Relations\MorphMany;
+use Veldora\Framework\Database\Relations\MorphToMany;
+use Veldora\Framework\Database\Relations\MorphedByMany;
 
-// Access inverse relation
-$post = Post::find(10);
-$authorName = $post->author->name;
+class Post extends Model
+{
+    // Polymorphic One-to-One
+    public function headerImage(): MorphOne
+    {
+        return $this->morphOne(Image::class, 'imageable');
+    }
 
-// Filter through a relationship query
-$publishedPosts = $user->posts()->where('is_published', '=', 1)->get();
+    // Polymorphic One-to-Many
+    public function comments(): MorphMany
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
+
+    // Polymorphic Many-to-Many
+    public function tags(): MorphToMany
+    {
+        return $this->morphToMany(Tag::class, 'taggable');
+    }
+}
+
+class Comment extends Model
+{
+    // Polymorphic Inverse (resolves owner: Post, Video, Podcast, etc.)
+    public function commentable(): MorphTo
+    {
+        return $this->morphTo('commentable');
+    }
+}
+
+class Tag extends Model
+{
+    // Inverse Polymorphic Many-to-Many
+    public function posts(): MorphedByMany
+    {
+        return $this->morphedByMany(Post::class, 'taggable');
+    }
+}
 ```
 
-### Managing Many-to-Many Pivot Tables
+### Querying and Creating Across Relations
+
+Access related models as dynamic properties or chain queries directly:
 
 ```php
 $user = User::find(1);
 
-// Attach a role ID
-$user->roles()->attach(2);
+// Access relations as dynamic properties
+$posts = $user->posts;
 
-// Detach a role ID
-$user->roles()->detach(1);
+// Query builder chaining via relation proxy
+$published = $user->posts()->where('is_published', '=', 1)->get();
 
-// Sync: ensures only the given IDs are attached (removes all others)
-$user->roles()->sync([2, 3, 5]);
+// Create related polymorphic records directly
+$post = Post::find(10);
+$comment = $post->comments()->create([
+    'body' => 'Great overview of Veldora relationships!',
+]);
 
-// Check if user has a role
-$hasAdminRole = $user->roles()->where('slug', '=', 'admin')->exists();
+// Attach / Detach / Sync on polymorphic and pivot relations
+$post->tags()->attach([1, 2]);
+$post->tags()->detach(1);
+$post->tags()->sync([2, 3, 5]);
 ```
 
 ---
@@ -856,11 +962,56 @@ class StoreUserRequest extends FormRequest
 }
 ```
 
+### Custom Validation Rules
+
+When built-in rules are not enough, generate a dedicated validation rule class:
+
+```bash
+php veldora make:rule Uppercase
+```
+
+This creates `app/Rules/Uppercase.php` implementing `Veldora\Framework\Validation\Rule`:
+
+```php
+namespace App\Rules;
+
+use Veldora\Framework\Validation\Rule;
+
+class Uppercase implements Rule
+{
+    /**
+     * Determine if the validation rule passes.
+     */
+    public function passes(string $attribute, mixed $value): bool
+    {
+        return is_string($value) && strtoupper($value) === $value;
+    }
+
+    /**
+     * Get the validation error message.
+     */
+    public function message(): string
+    {
+        return 'The :attribute must be uppercase.';
+    }
+}
+```
+
+Use your custom rule by passing an array of rules to `$request->validate()`:
+
+```php
+use App\Rules\Uppercase;
+
+$validated = $request->validate([
+    'code' => ['required', 'string', new Uppercase()],
+]);
+```
+
 ---
 
-## 10. CLI Console & 48 Built-in Commands
+## 10. CLI Console & 51 Built-in Commands
 
-Veldora includes a powerful, zero-dependency CLI runner (`php veldora`) featuring **48 built-in commands**. Powered by `executeDirect()`, every command executes instantly in both zero-dependency environments and standard Symfony Console environments.
+Veldora includes a powerful, zero-dependency CLI runner (`php veldora`) featuring **51 built-in commands**. Powered by `executeDirect()`, every command executes instantly in both zero-dependency environments and standard Symfony Console environments.
 
 ```bash
 php veldora <command> [options]
@@ -889,6 +1040,9 @@ php veldora <command> [options]
 | `php veldora make:model <Name> [-m]` | Scaffold an ActiveRecord Model class (`-m` automatically creates migration) |
 | `php veldora make:migration <name>` | Create an anonymous class database migration in `database/migrations/` |
 | `php veldora make:middleware <Name>` | Scaffold an HTTP Middleware class in `app/Http/Middleware/` |
+| `php veldora make:policy <Name>` | Scaffold an authorization Policy class in `app/Policies/` (`--model=Post`) |
+| `php veldora make:observer <Name>` | Scaffold a Model Observer class in `app/Observers/` (`--model=User`) |
+| `php veldora make:rule <Name>` | Scaffold a custom Validation Rule class in `app/Rules/` |
 | `php veldora make:request <Name>` | Create a validated Form Request class in `app/Http/Requests/` |
 | `php veldora make:resource <Name>` | Create an API JSON Resource transformer in `app/Http/Resources/` |
 | `php veldora make:factory <Name>` | Create a Model Factory in `database/factories/` (`--model=User`) |
@@ -2135,41 +2289,159 @@ php vendor/bin/phpunit --testdox
 
 ---
 
-## 20. Veldora UI (21 Components)
+## 20. Veldora UI (41+ Components)
 
-Add pre-built accessible UI components directly into your project:
+Veldora UI provides a library of **41+ production-ready, accessible UI components** built specifically for Veldora's template engine. Unlike traditional CSS frameworks that bundle thousands of unused classes, Veldora UI lets you scaffold only the components you need directly into your `resources/views/components/` directory.
+
+You own 100% of the component markup, styling, and logic.
+
+### Installing Components
 
 ```bash
-# List all 21 components
-php veldora ui:list
+# List all 41+ available UI components
+php veldora list:components
 
-# Install specific components
-php veldora add button input modal tabs card toast alert
+# Install specific components (space-separated)
+php veldora add button card modal tabs alert badge
 
-# Install all components
-php veldora add button input textarea select checkbox radio badge alert card modal spinner avatar dropdown navbar toast tabs accordion progress tooltip breadcrumb table
+# Scaffold a custom component template
+php veldora make:component user-card
 ```
 
-### Using Components in Views
+---
 
+### Component Catalogue by Category
+
+Veldora UI organizes its 41 components into 6 logical categories:
+
+#### 1. Forms & Inputs (9 Components)
+
+| Component | Tag | Description |
+|---|---|---|
+| **Input** | `<x-input>` | Text, email, password, and number input fields with labels & error states |
+| **Textarea** | `<x-textarea>` | Multi-line auto-resizing text input |
+| **Select** | `<x-select>` | Accessible dropdown selection menu with optgroup support |
+| **Checkbox** | `<x-checkbox>` | Custom styled boolean and array checkbox toggles |
+| **Radio** | `<x-radio>` | Accessible single-choice radio button groups |
+| **Input Group** | `<x-inputgroup>` | Inputs with prepended or appended icons, buttons, or currency tags |
+| **File Upload** | `<x-fileupload>` | Drag-and-drop file upload zone with file size & format preview |
+| **Date Picker** | `<x-datepicker>` | Modern calendar date and date-range selection picker |
+| **Combobox** | `<x-combobox>` | Searchable autocomplete filter input with keyboard navigation |
+
+#### 2. Actions & Controls (4 Components)
+
+| Component | Tag | Description |
+|---|---|---|
+| **Button** | `<x-button>` | Versatile button with variants (`primary`, `secondary`, `danger`, `ghost`, `link`), sizes (`sm`, `md`, `lg`), and loading states |
+| **Dropdown** | `<x-dropdown>` | Contextual menu popover triggered on click or hover with divider & item support |
+| **Switch** | `<x-switch>` | Smooth toggle switch control for boolean settings |
+| **DataTable** | `<x-datatable>` | Advanced data grid with client-side sorting, pagination, and search filtering |
+
+#### 3. Feedback & Status (9 Components)
+
+| Component | Tag | Description |
+|---|---|---|
+| **Alert** | `<x-alert>` | Banner feedback message (`info`, `success`, `warning`, `danger`) with optional close button |
+| **Badge** | `<x-badge>` | Compact indicator pill for statuses, tags, counts, and categories |
+| **Toast** | `<x-toast>` | Non-intrusive floating notification toast with timer auto-dismiss |
+| **Spinner** | `<x-spinner>` | Smooth CSS loading animation in multiple sizes and colors |
+| **Progress** | `<x-progress>` | Determinate or indeterminate animated progress bar |
+| **Skeleton** | `<x-skeleton>` | Placeholder loading shimmer lines, circles, and blocks |
+| **Empty State** | `<x-empty>` | Illustrated placeholder for empty datasets or zero-search results |
+| **Confirm** | `<x-confirm>` | Action confirmation dialog for destructive actions (e.g. Delete) |
+| **Rating** | `<x-rating>` | Interactive star/heart rating input and display |
+
+#### 4. Data Display (8 Components)
+
+| Component | Tag | Description |
+|---|---|---|
+| **Card** | `<x-card>` | Structured content container with header, body, footer, and hover effects |
+| **Table** | `<x-table>` | Styled tabular data display with striped rows and sticky headers |
+| **Stat** | `<x-stat>` | Metric KPI card with title, value, change percentage (+/-), and trend icon |
+| **Timeline** | `<x-timeline>` | Vertical sequence of historical events, activities, or status steps |
+| **Accordion** | `<x-accordion>` | Collapsible disclosure panels for FAQs and multi-section content |
+| **Avatar** | `<x-avatar>` | User profile image with fallback initials and online indicator dot |
+| **Tooltip** | `<x-tooltip>` | Hover and focus tooltip popup with positional arrows |
+| **Tabs** | `<x-tabs>` | Tabbed navigation switcher with smooth active pill animations |
+
+#### 5. Navigation (5 Components)
+
+| Component | Tag | Description |
+|---|---|---|
+| **Navbar** | `<x-navbar>` | Responsive top navigation header with logo, links, search, and mobile menu toggle |
+| **Breadcrumb** | `<x-breadcrumb>` | Hierarchical path breadcrumbs for deep page navigation |
+| **Pagination** | `<x-pagination>` | Page number switcher with Next, Previous, and active state indicators |
+| **Stepper** | `<x-stepper>` | Multi-step form or onboarding wizard progress indicator |
+| **Sidebar** | `<x-sidebar>` | Collapsible dashboard sidebar navigation with grouped link sections |
+
+#### 6. Layout & Overlay (6 Components)
+
+| Component | Tag | Description |
+|---|---|---|
+| **Modal** | `<x-modal>` | Accessible dialog overlay with backdrop blur, focus trap, and header/body/footer slots |
+| **Drawer** | `<x-drawer>` | Off-canvas slide-out sheet from left, right, top, or bottom |
+| **Popover** | `<x-popover>` | Floating rich-content popover anchored to a trigger element |
+| **Divider** | `<x-divider>` | Horizontal or vertical separator with optional middle label |
+| **Container** | `<x-container>` | Responsive max-width wrapper with consistent horizontal padding |
+| **Footer** | `<x-footer>` | Multi-column site footer with copyright notice and social links |
+
+---
+
+### Component Code Examples
+
+#### Button Component
 ```html
-<!-- Button -->
-<x-button variant="primary" size="md">Click Me</x-button>
+<x-button variant="primary" size="md">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    Save Changes
+</x-button>
 
-<!-- Modal -->
-<x-modal id="confirm-modal" title="Confirm Action">
-    <p>Are you sure you want to proceed?</p>
+<x-button variant="danger" size="sm" onclick="confirmDelete()">Delete Post</x-button>
+<x-button variant="ghost" size="md">Cancel</x-button>
+```
+
+#### Modal Dialog
+```html
+<x-modal id="create-user-modal" title="Add New Team Member">
+    <form method="POST" action="/users" id="user-form">
+        @csrf
+        <x-input name="name" label="Full Name" placeholder="John Doe" required />
+        <x-input name="email" label="Email Address" type="email" placeholder="john@example.com" required />
+    </form>
+
     <x-slot name="footer">
-        <x-button variant="danger">Delete</x-button>
+        <x-button variant="ghost" onclick="VeldoraUI.closeModal('create-user-modal')">Cancel</x-button>
+        <x-button variant="primary" type="submit" form="user-form">Create Account</x-button>
     </x-slot>
 </x-modal>
+```
 
-<!-- Tabs -->
-<x-tabs :tabs="['overview' => 'Overview', 'settings' => 'Settings']" active="overview">
-    <div id="tab-overview">Overview Content</div>
-    <div id="tab-settings">Settings Content</div>
+#### Card & Metric Stat
+```html
+<x-card title="Monthly Performance" subtitle="Updated 5 minutes ago">
+    <div class="grid-3">
+        <x-stat title="Total Revenue" value="$48,250" change="+12.5%" trend="up" />
+        <x-stat title="Active Users" value="1,420" change="+8.1%" trend="up" />
+        <x-stat title="Bounce Rate" value="24.2%" change="-3.4%" trend="down" />
+    </div>
+</x-card>
+```
+
+#### Tabs Navigation
+```html
+<x-tabs :tabs="['account' => 'Account Info', 'security' => 'Security & Passwords', 'billing' => 'Billing']" active="account">
+    <div id="tab-account">
+        <!-- Account Settings Content -->
+    </div>
+    <div id="tab-security">
+        <!-- Password and 2FA Settings -->
+    </div>
+    <div id="tab-billing">
+        <!-- Invoices and Subscription Plans -->
+    </div>
 </x-tabs>
 ```
+
 
 ---
 
@@ -2209,34 +2481,37 @@ Use this **Complete Veldora AI Master Prompt** to teach any AI model the full fr
 
 ### How to Use
 
-1. Click **Copy Full Master Prompt** below.
+1. Click **Copy Full Master Prompt** or **Download Prompt** below.
 2. Paste it as the first message or System Prompt in your AI assistant conversation (ChatGPT, Claude, Cursor `.cursorrules`, Antigravity, or Copilot).
 3. The AI will immediately understand all Veldora APIs and write 100% correct, runnable Veldora code.
 
 ```
-You are an expert software engineer specialized in the Veldora PHP Framework (v0.5.0).
+You are an expert software engineer specialized in the Veldora PHP Framework (v0.6.0).
 Veldora is a modern, independent, lightweight PHP 8.2+ MVC framework designed for maximum performance, clean developer ergonomics, zero boilerplate magic, and complete developer ownership.
 
 ================================================================================
 1. VELDORA CORE ARCHITECTURE & PHILOSOPHY
 ================================================================================
 - Language: PHP 8.2 or higher (uses strict typing, readonly properties, constructor promotion).
-- Architecture: Classic MVC (Model-View-Controller) with IoC Container, PSR-4 Autoloading, Middleware Pipeline, ActiveRecord ORM, and Blade-inspired Template Engine.
-- Key Difference: Unlike Laravel, Veldora does NOT use global static Facades (like Route::get or DB::table) or heavy runtime magic. Everything is clean, typed, and straightforward.
+- Architecture: Classic MVC (Model-View-Controller) with IoC Container, PSR-4 Autoloading, Middleware Pipeline, ActiveRecord ORM, and Native Blade-inspired Template Engine.
+- Key Principle: Zero unnecessary runtime magic. Everything is type-hinted, explicit, and IDE-friendly. You own the components and code in your application directory.
 
 Directory Layout:
   app/
     Controllers/       -> HTTP Request handlers (methods receive Request $request, return Response)
-    Middleware/        -> HTTP filters (Auth, CSRF, Admin, StartSession, etc.)
+    Http/
+      Middleware/      -> HTTP filters (Auth, CSRF, Admin, StartSession, Throttle, etc.)
+      Requests/        -> Validated Form Request classes (extend Veldora\Framework\Http\FormRequest)
+      Resources/       -> API JSON transformers (extend Veldora\Framework\Http\Resources\JsonResource)
     Models/            -> ActiveRecord database entities (extend Veldora\Framework\Database\Model)
-    Services/          -> Business logic & external service integrations
+    Observers/         -> Model Lifecycle Observers (creating, updating, deleting, etc.)
+    Policies/          -> Authorization Policy classes (extend or define policy gates)
+    Rules/             -> Custom Validation Rules (implement Veldora\Framework\Validation\Rule)
+    Services/          -> Business logic & third-party service integrations
     Events/            -> Event classes (extend Veldora\Framework\Events\Event)
     Listeners/         -> Event listeners (implement Veldora\Framework\Events\Listener)
     Jobs/              -> Background queue jobs (extend Veldora\Framework\Queue\Job)
     Mail/              -> Mailable email classes (extend Veldora\Framework\Mail\Mailable)
-    Http/
-      Requests/        -> Form validation requests (extend Veldora\Framework\Http\FormRequest)
-      Resources/       -> API JSON transformers (extend Veldora\Framework\Http\Resources\JsonResource)
   bootstrap/
     app.php            -> Application bootstrapper & container bindings
   config/              -> app.php, auth.php, database.php, mail.php, queue.php, cache.php, session.php
@@ -2245,16 +2520,18 @@ Directory Layout:
     migrations/        -> Versioned database migrations
     seeders/           -> Database seeders
   public/
-    index.php          -> Single entry point for all HTTP web traffic
+    index.php          -> Single entry point for all HTTP traffic
+    css/               -> Application and UI component styles
+    storage/           -> Public storage symlink (via php veldora storage:link)
   resources/
     views/             -> .veldora.php view templates
-      components/      -> Reusable UI components (<x-button>, <x-modal>, etc.)
+      components/      -> 41+ UI components (<x-button>, <x-modal>, <x-tabs>, etc.)
       layouts/         -> Base application layouts (@extends, @yield)
   routes/
     web.php            -> Application route definitions
   storage/
-    app/               -> Private file storage
-    framework/         -> Compiled views, file sessions, cache
+    app/               -> Private and public file storage
+    framework/         -> Compiled views, file cache, sessions
     logs/              -> Daily rotating log files (app.log)
   .env                 -> Environment variables (loaded automatically before config)
   veldora              -> Framework CLI binary (php veldora <command>)
@@ -2262,148 +2539,229 @@ Directory Layout:
 ================================================================================
 2. INSTALLATION & SETUP
 ================================================================================
-Method A (npm/npx interactive wizard):
+Option A (Interactive Scaffolder via npx / npm):
   npx create-veldora-app my-app
   cd my-app
   php veldora serve
 
-Method B (Composer):
-  composer create-project veldora/veldora my-app
+Option B (Composer):
+  composer create-project veldora/veldora-starter my-app
   cd my-app
   cp .env.example .env
   php veldora serve
 
-Dev Server:
+Development Server:
   php veldora serve --port=8000 --host=127.0.0.1
 
 ================================================================================
-3. COMPLETE CLI COMMANDS REFERENCE (php veldora ...)
+3. COMPLETE 51 CLI COMMANDS REFERENCE (php veldora ...)
 ================================================================================
-Generators:
-  php veldora make:controller <Name>      -> Create app/Controllers/<Name>.php
-  php veldora make:model <Name>           -> Create app/Models/<Name>.php
-  php veldora make:migration <name>       -> Create database/migrations/<timestamp>_<name>.php
-  php veldora make:middleware <Name>      -> Create app/Middleware/<Name>.php
-  php veldora make:request <Name>         -> Create app/Http/Requests/<Name>.php
-  php veldora make:resource <Name>        -> Create app/Http/Resources/<Name>.php
-  php veldora make:job <Name>             -> Create app/Jobs/<Name>.php
-  php veldora make:event <Name>           -> Create app/Events/<Name>.php
-  php veldora make:listener <Name>        -> Create app/Listeners/<Name>.php
-  php veldora make:mail <Name>            -> Create app/Mail/<Name>.php
-  php veldora make:seeder <Name>          -> Create database/seeders/<Name>.php
-  php veldora make:factory <Name>         -> Create database/factories/<Name>.php
-  php veldora make:auth                   -> Scaffold full login, register, dashboard & auth controllers
-  php veldora make:command <Name>         -> Create a custom CLI command
+Application & Diagnostics:
+  php veldora serve                     -> Start local development server with real-time request logs
+  php veldora about                     -> Display framework environment, PHP version, DB driver, cache
+  php veldora doctor                    -> Run system health diagnostics and verify PHP extensions
+  php veldora key:generate              -> Generate a cryptographically secure 32-character APP_KEY in .env
+  php veldora storage:link              -> Create symlink from public/storage to storage/app/public
+  php veldora down [--secret=...]       -> Put application into maintenance mode (with secret bypass)
+  php veldora up                        -> Bring application out of maintenance mode
+  php veldora env                       -> Display current application environment name
+  php veldora env:encrypt [--key=...]   -> Encrypt .env file with AES-256 for safe version control
+  php veldora env:decrypt [--key=...]   -> Decrypt .env.encrypted file using APP_KEY
 
-Database:
-  php veldora migrate                     -> Run all pending migrations
-  php veldora migrate:rollback            -> Roll back the last migration batch
-  php veldora migrate:fresh               -> Drop all tables and re-run all migrations
-  php veldora migrate:status              -> View status of all migrations
-  php veldora db:seed                     -> Run database seeders
+Code Generators (make:*):
+  php veldora make:controller <Name>    -> Scaffold a new HTTP Controller in app/Controllers/
+  php veldora make:model <Name> [-m]    -> Scaffold an ActiveRecord Model (-m creates migration)
+  php veldora make:migration <name>     -> Create a database migration in database/migrations/
+  php veldora make:middleware <Name>    -> Scaffold an HTTP Middleware in app/Http/Middleware/
+  php veldora make:policy <Name>        -> Scaffold an authorization Policy in app/Policies/ (--model=Post)
+  php veldora make:observer <Name>      -> Scaffold a Model Observer in app/Observers/ (--model=User)
+  php veldora make:rule <Name>          -> Scaffold a custom Validation Rule in app/Rules/
+  php veldora make:request <Name>       -> Create a Form Request validator in app/Http/Requests/
+  php veldora make:resource <Name>      -> Create an API JSON Resource in app/Http/Resources/
+  php veldora make:job <Name>           -> Scaffold a background Queue Job in app/Jobs/
+  php veldora make:event <Name>         -> Scaffold an Event class in app/Events/
+  php veldora make:listener <Name>      -> Scaffold an Event Listener in app/Listeners/
+  php veldora make:mail <Name>          -> Scaffold a Mailable email class in app/Mail/
+  php veldora make:seeder <Name>        -> Create a Database Seeder in database/seeders/
+  php veldora make:factory <Name>       -> Create a Model Factory in database/factories/
+  php veldora make:command <Name>       -> Create a custom Veldora Console Command
+  php veldora make:component <name>     -> Scaffold a UI component template in resources/views/components/
+  php veldora make:auth                 -> Scaffold full authentication (Login, Register, Forgot/Reset Password, Views)
 
-Queue:
-  php veldora queue:work                  -> Start queue worker process (--queue=default --sleep=3)
-  php veldora queue:failed                -> List all failed jobs
-  php veldora queue:retry <id>            -> Retry a failed job
-  php veldora queue:clear                 -> Clear all jobs from queue
+Database Management:
+  php veldora migrate                   -> Run pending database migrations
+  php veldora migrate:rollback          -> Rollback the last migration batch (--step=N)
+  php veldora migrate:fresh             -> Drop all tables and re-run all migrations (--seed)
+  php veldora migrate:status            -> Show status and batch history of all migrations
+  php veldora db:seed                   -> Run database seeders (--class=UserSeeder)
+  php veldora db:wipe                   -> Drop all tables, views, and types in the database
+  php veldora db:show                   -> Display database schema summary, table list, row counts
+
+Routing & Cache:
+  php veldora route:list                -> Display formatted table of all registered routes
+  php veldora route:cache               -> Compile and cache routes for production
+  php veldora route:clear               -> Clear route cache
+  php veldora config:cache              -> Compile config into a single cached file
+  php veldora config:clear              -> Clear configuration cache
+  php veldora config:show [key]         -> Display configuration values for a key
+  php veldora view:cache                -> Precompile all .veldora.php templates
+  php veldora view:clear                -> Clear compiled template cache
+  php veldora cache:clear               -> Flush application and session cache
+  php veldora optimize                  -> Run all cache optimizers for production
+  php veldora optimize:clear            -> Clear all framework caches at once
+
+Queue Processing:
+  php veldora queue:work                -> Start background queue worker daemon (--queue=default --sleep=3)
+  php veldora queue:failed              -> Display list of failed queue jobs
+  php veldora queue:retry <id|all>      -> Retry failed job(s)
+  php veldora queue:clear               -> Delete all pending jobs from queue
 
 UI Components:
-  php veldora ui:list                     -> List all 21 available UI components
-  php veldora add <components...>         -> Copy components into resources/views/components/
+  php veldora list:components           -> List all 41+ available UI components
+  php veldora add <components...>       -> Scaffold components into resources/views/components/
 
 ================================================================================
-4. ROUTING & CONTROLLERS
+4. ROUTING & HTTP LAYER
 ================================================================================
-In routes/web.php (receives $router automatically):
+In routes/web.php ($router is automatically injected):
   $router->get('/', [HomeController::class, 'index']);
-  $router->post('/posts', [PostController::class, 'store']);
-  $router->get('/posts/{id}', [PostController::class, 'show']);
-  $router->put('/posts/{id}', [PostController::class, 'update']);
-  $router->delete('/posts/{id}', [PostController::class, 'destroy']);
+  $router->get('/posts/{slug}', [PostController::class, 'show']);
+  $router->post('/posts', [PostController::class, 'store'])->middleware(['auth']);
+  $router->put('/posts/{id}', [PostController::class, 'update'])->middleware(['auth']);
+  $router->delete('/posts/{id}', [PostController::class, 'destroy'])->middleware(['auth']);
 
   // Route Groups:
   $router->group(['prefix' => '/admin', 'middleware' => ['auth', 'admin']], function ($r) {
-      $r->get('/dashboard', [AdminController::class, 'index']);
-      $r->get('/users', [AdminController::class, 'users']);
+      $r->get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+      $r->get('/users', [AdminController::class, 'users'])->name('admin.users');
   });
 
-Controller Structure:
+Controller Convention:
   namespace App\Controllers;
+
   use Veldora\Framework\Http\Request;
   use Veldora\Framework\Http\Response;
+  use Veldora\Framework\View\Engine;
+  use App\Models\Post;
 
-  class PostController {
-      public function index(Request $request): Response {
-          $posts = Post::paginate(10);
+  class PostController
+  {
+      public function __construct(protected Engine $view) {}
+
+      public function index(Request $request): Response
+      {
+          $posts = Post::where('is_published', '=', 1)->orderBy('created_at', 'DESC')->paginate(10);
           return view('posts.index', ['posts' => $posts]);
       }
 
-      public function store(Request $request): Response {
-          $data = $request->validated(['title' => 'required|min:3', 'body' => 'required']);
-          $post = Post::create($data);
-          return Response::redirect('/posts/' . $post->id)->with('success', 'Published!');
+      public function show(string $slug): Response
+      {
+          $post = Post::where('slug', '=', $slug)->first();
+          if (!$post) {
+              abort(404, 'Post not found');
+          }
+          return view('posts.show', ['post' => $post]);
       }
 
-      public function api(Request $request): Response {
-          return Response::json(['status' => 'ok', 'data' => Post::all()], 200);
+      public function store(Request $request): Response
+      {
+          $data = $request->validated([
+              'title' => 'required|min:3|max:200',
+              'body'  => 'required',
+          ]);
+          $data['user_id'] = auth()->id();
+          $post = Post::create($data);
+
+          return redirect('/posts/' . $post->id)->with('success', 'Post published successfully!');
+      }
+
+      public function api(): Response
+      {
+          return response()->json(['status' => 'ok', 'data' => Post::all()], 200);
       }
   }
 
 ================================================================================
 5. TEMPLATES (.veldora.php)
 ================================================================================
-- Escaping: {{ $var }} (escaped via htmlspecialchars), {!! $raw !!} (raw unescaped)
-- Conditionals: @if($cond) ... @elseif($cond) ... @else ... @endif
-- Loops: @foreach($items as $item) ... @endforeach
-- Forelse: @forelse($items as $item) ... @empty ... @endforelse
-- Auth Directives: @auth ... @endauth, @guest ... @endguest
-- Layouts: @extends('layouts.app'), @section('title', 'Page Title'), @section('content') ... @endsection
-- Yielding: @yield('title', 'Default'), @yield('content')
-- CSRF & Method Spoofing: @csrf, @method('PUT'), @method('DELETE')
-- UI Components: <x-button variant="primary" size="md">Save</x-button>, <x-modal id="my-modal" title="Title">Content</x-modal>
+- Directives:
+  @extends('layouts.app')
+  @section('title', 'Page Title')
+  @section('content') ... @endsection
+  @yield('title', 'Default Title')
+  @yield('content')
+  @include('partials.nav', ['active' => 'home'])
+  @csrf                              -> Injects hidden CSRF token input
+  @method('PUT')                     -> Spoofs PUT/PATCH/DELETE HTTP method
+  @if($condition) ... @elseif(...) ... @else ... @endif
+  @foreach($items as $item) ... @endforeach
+  @forelse($items as $item) ... @empty ... @endforelse
+  @auth ... @endauth                 -> Display only if authenticated
+  @guest ... @endguest               -> Display only if guest
+  @error('field') ... @enderror      -> Validation error block
+- Variable Output:
+  {{ $variable }}                    -> Automatically escaped via htmlspecialchars
+  {!! $rawHtml !!}                   -> Raw unescaped HTML output
+- UI Component Syntax:
+  <x-button variant="primary" size="md">Save Changes</x-button>
+  <x-modal id="my-modal" title="Confirm Action">
+      <p>Modal body content</p>
+      <x-slot name="footer">
+          <x-button variant="danger">Confirm</x-button>
+      </x-slot>
+  </x-modal>
 
 ================================================================================
 6. ACTIVRECORD MODELS, RELATIONSHIPS & MIGRATIONS
 ================================================================================
-Model Definition:
+Model Class:
   namespace App\Models;
+
   use Veldora\Framework\Database\Model;
+  use Veldora\Framework\Database\SoftDeletes;
   use Veldora\Framework\Database\Relations\BelongsTo;
   use Veldora\Framework\Database\Relations\HasMany;
   use Veldora\Framework\Database\Relations\BelongsToMany;
 
-  class Post extends Model {
+  class Post extends Model
+  {
+      use SoftDeletes;
+
       protected ?string $table = 'posts';
       protected array $fillable = ['title', 'slug', 'body', 'user_id', 'is_published'];
       protected array $casts = ['is_published' => 'bool', 'published_at' => 'datetime'];
-      protected array $hidden = ['password'];
+      protected array $hidden = ['deleted_at'];
 
-      public function author(): BelongsTo {
+      public function author(): BelongsTo
+      {
           return $this->belongsTo(User::class, 'user_id');
       }
 
-      public function comments(): HasMany {
+      public function comments(): HasMany
+      {
           return $this->hasMany(Comment::class, 'post_id');
       }
   }
 
-Model CRUD Operations:
-  $post = Post::create(['title' => 'Title', 'body' => 'Body']);
+CRUD & Query Builder:
+  $post = Post::create(['title' => 'My Title', 'body' => 'Content']);
   $post = Post::find(1);
   $posts = Post::where('is_published', '=', 1)->orderBy('created_at', 'DESC')->get();
-  $first = Post::where('slug', '=', 'my-post')->first();
+  $post = Post::where('slug', '=', 'my-slug')->first();
   $paginator = Post::paginate(15);
-  $post->title = 'New Title';
-  $post->save();
+  $post->update(['title' => 'Updated']);
   $post->delete();
+
+Model Observers & Lifecycle:
+  User::observe(UserObserver::class);   -> Auto-wires creating, updating, saving, deleting hooks
+  // Returning false in creating/updating/saving/deleting cancels the database operation
 
 Migrations:
   use Veldora\Framework\Database\Schema\Blueprint;
   use Veldora\Framework\Database\Schema\Migration;
   use Veldora\Framework\Database\Schema\Schema;
 
-  class CreatePostsTable extends Migration {
+  return new class extends Migration {
       public function up(): void {
           Schema::create('posts', function (Blueprint $table) {
               $table->id();
@@ -2413,128 +2771,217 @@ Migrations:
               $table->text('body');
               $table->boolean('is_published')->default(0);
               $table->timestamps();
+              $table->softDeletes();
           });
       }
+
       public function down(): void {
           Schema::dropIfExists('posts');
       }
-  }
+  };
 
 ================================================================================
-7. AUTHENTICATION & MIDDLEWARE
+7. AUTHENTICATION & SECURITY
 ================================================================================
-Helpers:
+Auth Helpers:
   auth()->check()        -> bool (true if user logged in)
-  auth()->user()         -> ?Model (current User instance)
+  auth()->user()         -> ?User (current user model)
   auth()->id()           -> ?int (current user ID)
-  auth()->login($user)   -> logs in the user instance
-  auth()->logout()       -> logs out and destroys session
+  auth()->login($user)   -> Log in a User instance
+  auth()->logout()       -> Log out and flush session
+  auth()->attempt(['email' => $e, 'password' => $p]) -> bool
 
 Built-in Middleware:
-  'auth'                 -> Requires authenticated session (redirects to /login)
+  'auth'                 -> Requires active login (redirects to /login)
   'guest'                -> Requires guest (redirects to / if logged in)
   'admin'                -> Requires user->is_admin == 1
-  'verified'             -> Requires email_verified_at != null
   'csrf'                 -> Verifies CSRF token on POST/PUT/DELETE
-  'start_session'        -> Reads & saves session cookies
+  'start_session'        -> Initializes session cookies
 
 ================================================================================
-8. SUBSYSTEMS REFERENCE
+8. SUBSYSTEMS & GLOBAL HELPERS
 ================================================================================
-Validation:
-  $data = $request->validated([
-      'title' => 'required|min:3|max:255',
-      'email' => 'required|email|unique:users,email',
-      'age'   => 'nullable|integer|min:18'
-  ]);
+Global Helpers:
+  app(Class::class)      -> Resolve dependency from container
+  config('app.name')     -> Read configuration value
+  env('KEY', 'default')  -> Read environment variable
+  view('name', $data)    -> Render a view response
+  response($body, $code) -> Create HTTP response
+  redirect($url)         -> Create redirect response
+  session('key')         -> Read or write session value
+  csrf_token()           -> Get current CSRF token string
+  old('name', 'default') -> Retrieve flashed form input
+  route('name', $params) -> Generate URL for named route
 
-Queues:
-  SendEmailJob::dispatch($user)->onQueue('emails')->delay(60);
-  Worker: php veldora queue:work
+Queues & Background Jobs:
+  SendInvoiceJob::dispatch($order)->onQueue('default')->delay(60);
+  php veldora queue:work
 
 Mail:
   mailer($user->email)->send(new WelcomeEmail($user));
-  mailer($user->email)->queue(new WelcomeEmail($user));
 
 Events:
-  UserRegistered::dispatch($user);
-  event(new UserRegistered($user));
+  OrderPlaced::dispatch($order);
+  event(new OrderPlaced($order));
 
 Cache:
-  cache(['key' => $value], 3600);
+  cache()->remember('stats', 3600, fn() => DB::table('orders')->count());
+  cache()->put('key', $val, 3600);
   $val = cache('key');
-  $val = cache()->remember('key', 3600, fn() => computeValue());
   cache()->forget('key');
-  cache()->increment('views');
 
-Storage:
-  storage('public')->put('avatars/user.png', $data);
-  $content = storage('local')->get('files/doc.pdf');
-  $url = storage('public')->url('avatars/user.png');
-  storage('public')->delete('avatars/user.png');
+File Storage:
+  storage('public')->put('uploads/doc.pdf', $fileContents);
+  $url = storage('public')->url('uploads/doc.pdf');
 
-Logging:
-  log_info('Message', ['context' => 'data']);
-  log_error('Error occurred', ['exception' => $e]);
-  logger()->warning('Warning message');
+PSR-3 Logging:
+  log_info('Payment processed', ['amount' => 100]);
+  log_error('Exception caught', ['exception' => $e]);
 
 HTTP Client:
-  $res = Http::get('https://api.example.com/data');
-  $res = Http::withToken('token')->post('hDatabase & ORM Enhancements:
-  // DB Facade & Transactions
-  db()->transaction(function() {
-      db()->statement("UPDATE accounts SET balance = balance - 100 WHERE id = 1");
-      db()->statement("UPDATE accounts SET balance = balance + 100 WHERE id = 2");
-  });
-
-  // Soft Deletes
-  class Post extends Model {
-      use \Veldora\Framework\Database\SoftDeletes;
-  }
-  Post::withTrashed()->get();
-  Post::onlyTrashed()->get();
-  $post->restore();
-
-  // Model Lifecycle Events
-  Post::creating(function (Post $post) {
-      $post->slug = \Veldora\Framework\Support\Str::slug($post->title);
-  });
-
-Routing & Helpers:
-  $url = route('users.show', ['id' => 42]);
-  ->middleware('throttle:60,1') // 60 requests per 1 minute window
-
-Maintenance Mode:
-  php veldora down --secret=mysecret
-  php veldora up
-
-Authentication Scaffolding (Zero-dependency .veldora.php templates):
-  php veldora make:auth
-  // Generates Login, Register, Forgot Password, Reset Password, Profile, Email Verify
-
-UI Components (41+ available):
-  button, input, textarea, select, checkbox, radio, badge, alert, card,
-  modal, spinner, avatar, dropdown, navbar, toast, tabs, accordion,
-  progress, tooltip, breadcrumb, table, switch, pagination, skeleton,
-  empty, divider, drawer, popover, confirm, datepicker, fileupload,
-  combobox, inputgroup, stat, datatable, timeline, stepper, sidebar,
-  container, footer, rating.
-  Install: php veldora add button input modal tabs footer rating
+  $res = Http::withHeaders(['X-Key' => 'secret'])->get('https://api.example.com/data');
+  $data = $res->json();
 
 ================================================================================
-9. AI DEVELOPER CODE GENERATION RULES
+9. 41+ VELDORA UI COMPONENTS
 ================================================================================
-1. Always declare strict_types=1 at the top of every PHP file.
+Forms & Inputs (9):      input, textarea, select, checkbox, radio, inputgroup, fileupload, datepicker, combobox
+Actions & Controls (4):  button, dropdown, switch, datatable
+Feedback & Status (9):   alert, badge, toast, spinner, progress, skeleton, empty, confirm, rating
+Data Display (8):        card, table, stat, timeline, accordion, avatar, tooltip, tabs
+Navigation (5):          navbar, breadcrumb, pagination, stepper, sidebar
+Layout & Overlay (6):    modal, drawer, popover, divider, container, footer
+
+Install via CLI:
+  php veldora add button card modal tabs alert badge
+
+================================================================================
+10. STRICT AI CODE GENERATION RULES
+================================================================================
+1. Always declare declare(strict_types=1); at the top of every PHP file.
 2. Use exact Veldora namespaces:
    - Veldora\Framework\Http\Request
    - Veldora\Framework\Http\Response
    - Veldora\Framework\Database\Model
-   - Veldora\Framework\Database\DB
-   - Veldora\Framework\Database\SoftDeletes
    - Veldora\Framework\Database\Schema\Schema
    - Veldora\Framework\Database\Schema\Blueprint
    - Veldora\Framework\Database\Schema\Migration
-3. In views (.veldora.php), ALWAYS use native Veldora templating directives (@csrf, @method('PUT'), @if, @foreach, {{ $var }}) and <x-component> tags. Never output raw unstyled HTML forms.
-4. Always generate complete, fully working, syntactically valid code without placeholders or omissions.
+3. In views (.veldora.php), ALWAYS use native Veldora directives (@csrf, @method('PUT'), @if, @foreach, {{ $var }}) and <x-component> tags.
+4. Never generate incomplete placeholders or pseudo-code; always write production-ready, fully functional Veldora code.
 ```
+
+---
+
+## 23. Model Observers & Lifecycle Hooks
+
+Model Observers group lifecycle event listeners for an ActiveRecord model into a dedicated class. Instead of scattering event callbacks across models or controllers, observers encapsulate model-driven business logic such as sending welcome emails, dispatching jobs, clearing caches, or generating slugs.
+
+### Generating an Observer
+
+Use the CLI generator to scaffold an observer class:
+
+```bash
+php veldora make:observer UserObserver --model=User
+```
+
+This creates `app/Observers/UserObserver.php`:
+
+```php
+namespace App\Observers;
+
+use App\Models\User;
+
+class UserObserver
+{
+    public function creating(User $user): void
+    {
+        // Executed before a new record is inserted
+    }
+
+    public function created(User $user): void
+    {
+        // Executed after a new record is inserted
+    }
+
+    public function updating(User $user): void
+    {
+        // Executed before an existing record is updated
+    }
+
+    public function updated(User $user): void
+    {
+        // Executed after an existing record is updated
+    }
+
+    public function saving(User $user): void
+    {
+        // Executed before insert or update
+    }
+
+    public function saved(User $user): void
+    {
+        // Executed after insert or update
+    }
+
+    public function deleting(User $user): void
+    {
+        // Executed before record is deleted
+    }
+
+    public function deleted(User $user): void
+    {
+        // Executed after record is deleted
+    }
+
+    public function restoring(User $user): void
+    {
+        // Executed before a soft-deleted record is restored
+    }
+
+    public function restored(User $user): void
+    {
+        // Executed after a soft-deleted record is restored
+    }
+
+    public function forceDeleted(User $user): void
+    {
+        // Executed after record is permanently deleted
+    }
+}
+```
+
+### Registering Observers
+
+Register an observer using `Model::observe()`, typically in your application bootstrap (`bootstrap/app.php`) or a Service Provider:
+
+```php
+use App\Models\User;
+use App\Observers\UserObserver;
+
+// Pass class-string (instantiated automatically)
+User::observe(UserObserver::class);
+
+// Or pass an existing instance
+User::observe(new UserObserver());
+```
+
+### Supported Lifecycle Events
+
+| Event Hook | When It Fires |
+|---|---|
+| `creating` | Before a new record is inserted into the database |
+| `created` | After a new record has been inserted |
+| `updating` | Before an existing record is updated |
+| `updated` | After an existing record has been updated |
+| `saving` | Before a record is saved (both new and updated) |
+| `saved` | After a record has been saved (both new and updated) |
+| `deleting` | Before a record is deleted from the database |
+| `deleted` | After a record has been deleted |
+| `restoring` | Before a soft-deleted record is restored |
+| `restored` | After a soft-deleted record has been restored |
+| `forceDeleted` | After a record is permanently removed from the database |
+
+> [!TIP]
+> Returning `false` from a `creating`, `updating`, `saving`, or `deleting` observer method will cancel the database operation immediately.
+
 

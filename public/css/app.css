@@ -970,18 +970,20 @@ pre:hover > .code-copy-btn,
 }
 
 .hero-title {
-    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-size: clamp(2.4rem, 5.5vw, 4rem);
     font-weight: 800;
-    letter-spacing: -.04em;
+    letter-spacing: -.045em;
     line-height: 1.1;
     margin-bottom: 22px;
     color: var(--text);
 }
 .hero-title span {
-    background: linear-gradient(135deg, #8b5cf6 0%, #c4b5fd 100%);
+    background: linear-gradient(135deg, #ddd6fe 0%, #a78bfa 40%, #8b5cf6 70%, #7c3aed 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    display: inline-block;
+    filter: drop-shadow(0 2px 20px rgba(139, 92, 246, 0.3));
 }
 
 .hero-sub {
@@ -4332,6 +4334,15 @@ body.nav-open .mobile-drawer {
 }
 .vui-btn-outline-danger:hover { background: rgba(239, 68, 68, 0.08); }
 
+/* ─── Standard Static Page Container ────────────────────────────────────────── */
+.page-container {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: calc(var(--header-h) + 44px) 24px 100px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
 /* ════════════════════════════════════════════════════════════════════════════
    COMPONENTS CATALOG PAGE (Root /components)
    ════════════════════════════════════════════════════════════════════════════ */
@@ -4339,7 +4350,7 @@ body.nav-open .mobile-drawer {
 .components-catalog-page {
     max-width: 1240px;
     margin: 0 auto;
-    padding: 60px 24px 100px;
+    padding: calc(var(--header-h) + 44px) 24px 100px;
 }
 
 .comp-catalog-hero {
@@ -4851,3 +4862,357 @@ body.nav-open .mobile-drawer {
     border-right: none;
 }
 
+/* ─────────────────────────────────────────────────────────────────
+   Static Prose Pages  (Privacy, Terms, License, etc.)
+───────────────────────────────────────────────────────────────── */
+
+/* .static-prose-page — narrows width but PRESERVES .page-container's top padding */
+.static-prose-page {
+    max-width: 860px;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-bottom: 5rem;
+}
+
+/* Page header block (title + last-updated meta line) */
+.static-prose-header {
+    margin-bottom: 2.75rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1.75rem;
+}
+
+.static-page-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--text);
+    margin: 0 0 0.4rem;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+.static-prose-meta {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+/* Individual content sections */
+.static-section {
+    margin-bottom: 2rem;
+}
+
+.static-section-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0 0 0.65rem;
+}
+
+.static-section p,
+.static-prose-page p {
+    font-size: 0.97rem;
+    line-height: 1.8;
+    color: var(--text-muted);
+    margin: 0 0 0.75rem;
+}
+
+.static-section p:last-child,
+.static-prose-page p:last-child {
+    margin-bottom: 0;
+}
+
+/* Bottom navigation row (back / forward links) */
+.static-back-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    gap: 0.75rem;
+}
+
+/* License page monospace text block */
+.license-text-block {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 0.875rem;
+    padding: 2rem;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 0.9rem;
+    line-height: 1.75;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+}
+
+.license-text-block p {
+    margin: 0 0 1rem;
+}
+
+.license-text-block p:last-child {
+    margin-bottom: 0;
+}
+
+.license-disclaimer {
+    text-transform: uppercase;
+    color: var(--text-muted) !important;
+    letter-spacing: 0.01em;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   FAQ Accordion (used on both /faq page and home page teaser)
+───────────────────────────────────────────────────────────────── */
+
+.faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.faq-accordion-item {
+    background: var(--surface-2, #18181b);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    padding: 0.75rem 1.25rem;
+    transition: border-color 0.2s ease;
+}
+
+.faq-accordion-item[open] {
+    border-color: var(--accent, #8b5cf6);
+}
+
+.faq-accordion-summary {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    user-select: none;
+    gap: 1rem;
+}
+
+/* Hide default browser triangle */
+.faq-accordion-summary::-webkit-details-marker { display: none; }
+.faq-accordion-summary::marker { display: none; }
+
+.faq-chevron-icon {
+    flex-shrink: 0;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    transition: transform 0.25s ease, color 0.2s ease;
+}
+
+.faq-accordion-item[open] .faq-chevron-icon {
+    transform: rotate(180deg);
+    color: var(--accent, #8b5cf6);
+}
+
+.faq-accordion-body {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.75;
+    padding: 0.75rem 0 0.5rem;
+    border-top: 1px solid var(--border);
+    margin-top: 0.5rem;
+}
+
+.faq-accordion-body code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.875em;
+    background: var(--surface-3, #27272a);
+    color: var(--accent-light, #c4b5fd);
+    padding: 0.1em 0.4em;
+    border-radius: 4px;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Static Page Hero  (used on About, FAQ, and similar pages)
+───────────────────────────────────────────────────────────────── */
+
+.static-page-hero {
+    text-align: center;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 3rem;
+}
+
+/* The .section-label inside a hero is auto-centered */
+.static-page-hero .section-label {
+    justify-content: center;
+    margin: 0 auto 1rem;
+    width: fit-content;
+}
+
+.static-page-hero .static-page-title {
+    font-size: clamp(1.8rem, 4vw, 2.75rem);
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    margin: 0 0 1rem;
+}
+
+.static-page-sub {
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    line-height: 1.75;
+    max-width: 620px;
+    margin: 0 auto;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   About Page — Pillars Grid
+───────────────────────────────────────────────────────────────── */
+
+.about-pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin: 2.5rem 0;
+}
+
+.about-pillar-card {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem 1.25rem;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.about-pillar-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+}
+
+.about-pillar-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--accent-dim);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    margin-bottom: 1rem;
+}
+
+.about-pillar-title {
+    font-size: 0.975rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0 0 0.5rem;
+}
+
+.about-pillar-desc {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    line-height: 1.65;
+    margin: 0;
+}
+
+.about-pillar-desc code {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    background: var(--surface-3);
+    color: var(--accent);
+    padding: 0.1em 0.4em;
+    border-radius: 4px;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Static CTA Box  (About page & FAQ page bottom call-to-action)
+───────────────────────────────────────────────────────────────── */
+
+.static-cta-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    background: linear-gradient(135deg, var(--surface-2) 0%, rgba(139,92,246,.06) 100%);
+    border: 1px solid rgba(139,92,246,.2);
+    border-radius: var(--radius-xl);
+    padding: 2rem 1.75rem;
+    margin-top: 3rem;
+}
+
+.static-cta-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0 0 0.35rem;
+}
+
+.static-cta-sub {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* When used centered (FAQ page) */
+.static-cta-box[style*="text-align:center"] {
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   FAQ Page — Category Groups
+───────────────────────────────────────────────────────────────── */
+
+.faq-category-group {
+    margin-bottom: 2.5rem;
+}
+
+.faq-category-title {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    padding-bottom: 0.65rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.faq-category-dot {
+    width: 7px;
+    height: 7px;
+    background: var(--accent);
+    border-radius: 50%;
+    flex-shrink: 0;
+    box-shadow: 0 0 6px var(--accent-glow);
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Home Page — Features section centering
+───────────────────────────────────────────────────────────────── */
+
+/* Allow .section-label to be explicitly centered */
+.section-label[style*="justify-content:center"],
+.features-section .section-label {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Responsive — static pages on mobile
+───────────────────────────────────────────────────────────────── */
+
+@media (max-width: 600px) {
+    .about-pillars-grid { grid-template-columns: 1fr; }
+    .static-cta-box { padding: 1.5rem 1.25rem; }
+    .static-page-hero .static-page-title { font-size: 1.75rem; }
+    .static-back-nav { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+}

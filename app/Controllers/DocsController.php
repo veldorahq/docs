@@ -74,11 +74,14 @@ class DocsController
         $data = $this->parser->getSection('22-ai-context-prompt-ai-skills');
         $content = $data['content'] ?? '';
 
+        // Normalize line endings
+        $normalized = str_replace("\r\n", "\n", $content);
+
         // Extract pure master prompt if fenced
-        if (preg_match('/```(?:\w*)\n([\s\S]+?)\n```/', $content, $m)) {
+        if (preg_match('/```(?:\w*)\n([\s\S]+?)\n```/', $normalized, $m)) {
             $promptText = trim($m[1]);
         } else {
-            $promptText = $content ?: '# Veldora AI Developer Master Prompt';
+            $promptText = $normalized ?: '# Veldora AI Developer Master Prompt';
         }
 
         return new Response($promptText, 200, [

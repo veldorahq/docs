@@ -5,14 +5,14 @@
 @section('meta_desc', 'Open source MIT license for the Veldora PHP Framework.')
 
 @section('content')
-<main class="page-container" style="max-width:880px;margin:2rem auto;padding:1rem 1.5rem;line-height:1.8;color:#d4d4d8;">
+<main class="page-container static-prose-page">
 
-    <div style="margin-bottom:2.5rem;">
-        <h1 style="font-size:2.4rem;font-weight:800;color:#f4f4f5;margin:0 0 0.5rem;">MIT License</h1>
-        <p style="color:#71717a;font-size:0.95rem;margin:0;">Copyright (c) 2026 Shahriyar Fahim & Veldora Contributors</p>
+    <div class="static-prose-header">
+        <h1 class="static-page-title" style="font-size:2.2rem;">MIT License</h1>
+        <p class="static-prose-meta">Copyright &copy; 2026 Shahriyar Fahim &amp; Veldora Contributors</p>
     </div>
 
-    <div style="background:#18181b;border:1px solid #27272a;border-radius:0.875rem;padding:2rem;font-family:'JetBrains Mono',monospace;font-size:0.92rem;line-height:1.7;color:#e4e4e7;">
+    <div class="license-text-block">
         <p>
             Permission is hereby granted, free of charge, to any person obtaining a copy
             of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +27,7 @@
             copies or substantial portions of the Software.
         </p>
 
-        <p style="text-transform:uppercase;color:#a1a1aa;">
+        <p class="license-disclaimer">
             THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
             IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
             FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -36,6 +36,17 @@
             OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
             SOFTWARE.
         </p>
+    </div>
+
+    <div class="static-back-nav">
+        <a href="/terms" class="btn btn-ghost btn-sm">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+            Terms of Service
+        </a>
+        <a href="https://github.com/veldorahq/veldora-core/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" class="btn btn-ghost btn-sm">
+            View on GitHub
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </a>
     </div>
 
 </main>

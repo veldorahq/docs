@@ -11,22 +11,21 @@
     <section class="hero" aria-label="Hero">
 
         <div class="hero-badge">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="13 2 13 9 20 9"/><polygon points="22 12 12 2 2 12 2 22 22 22"/></svg>
-            v<?= \Veldora\Framework\Foundation\Application::VERSION ?> &mdash; PHP 8.2+ MVC Framework
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <span>v<?= \Veldora\Framework\Foundation\Application::VERSION ?> &mdash; Modern PHP 8.2+ MVC Framework</span>
         </div>
 
         <h1 class="hero-title">
-            Veldora PHP Framework
+            Veldora <span>PHP Framework</span>
         </h1>
 
         <p class="hero-sub">
-            PHP 8.2+ MVC framework with expressive routing, Blade-style templates, session auth,
-            ActiveRecord ORM, job queues, SMTP mail, and a 21-component UI library.
-            CLI scaffolding gets a project running in seconds.
+            The expressive, zero-dependency core PHP framework designed for speed, simplicity, and full code ownership.
+            Native templating, ActiveRecord ORM, fast routing, CLI scaffolding, and a complete UI component suite.
         </p>
 
         <div class="hero-actions">
-            <a href="/docs/getting-started" class="btn btn-primary" id="hero-get-started">
+            <a href="/docs/1-getting-started-installation" class="btn btn-primary" id="hero-get-started">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                 Get Started
             </a>
@@ -34,7 +33,7 @@
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
                 UI Components
             </a>
-            <a href="https://github.com/veldorahq/veldora-core" class="btn btn-ghost" target="_blank" rel="noopener noreferrer" id="hero-github">
+            <a href="https://github.com/veldorahq/veldora" class="btn btn-ghost" target="_blank" rel="noopener noreferrer" id="hero-github">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
                 GitHub
             </a>
@@ -85,7 +84,7 @@ $router->post(\'/logout\', [AuthController::class, \'logout\'])->middleware([\'a
                 <div class="stat-label">UI Components</div>
             </div>
             <div class="stat-item">
-                <div class="stat-number">48+</div>
+                <div class="stat-number">51+</div>
                 <div class="stat-label">CLI Commands</div>
             </div>
             <div class="stat-item">
@@ -273,58 +272,68 @@ php veldora serve
     <!-- ── Frequently Asked Questions ──────────────────────────────── -->
     <section class="faq-section" style="max-width:960px;margin:5rem auto 3rem;padding:0 1.5rem;" aria-label="FAQ">
         <div style="text-align:center;margin-bottom:2.5rem;">
-            <div style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#8b5cf6;background:rgba(139,92,246,0.1);padding:4px 12px;border-radius:9999px;border:1px solid rgba(139,92,246,0.25);margin-bottom:0.75rem;">
+            <div class="section-label" style="margin:0 auto 0.75rem;width:fit-content;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                 Got Questions?
             </div>
             <h2 style="font-size:2rem;font-weight:800;color:#f4f4f5;margin:0 0 0.5rem;">Frequently Asked Questions</h2>
             <p style="color:#a1a1aa;font-size:1rem;max-width:540px;margin:0 auto;">Quick answers to the most common questions about Veldora.</p>
         </div>
 
-        <div style="display:flex;flex-direction:column;gap:0.75rem;">
-            <details style="background:#18181b;border:1px solid #27272a;border-radius:0.75rem;padding:0.75rem 1.25rem;transition:border-color 0.2s;" ontoggle="this.style.borderColor = this.open ? '#8b5cf6' : '#27272a'">
-                <summary style="font-size:1rem;font-weight:600;color:#f4f4f5;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;padding:0.5rem 0;user-select:none;">
+        <div class="faq-list">
+            <details class="faq-accordion-item" ontoggle="this.style.borderColor = this.open ? '#8b5cf6' : 'var(--border)'">
+                <summary class="faq-accordion-summary">
                     <span>What is Veldora and who is it for?</span>
-                    <span style="color:#71717a;font-size:1.25rem;">＋</span>
+                    <span class="faq-chevron-icon" aria-hidden="true">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                    </span>
                 </summary>
-                <div style="font-size:0.95rem;color:#a1a1aa;line-height:1.7;padding:0.75rem 0 0.5rem;border-top:1px solid #27272a;margin-top:0.5rem;">
+                <div class="faq-accordion-body">
                     Veldora is a lightweight, high-performance PHP 8.2+ MVC framework for developers who want the developer experience of Laravel without massive vendor overhead or slow cold starts.
                 </div>
             </details>
 
-            <details style="background:#18181b;border:1px solid #27272a;border-radius:0.75rem;padding:0.75rem 1.25rem;transition:border-color 0.2s;" ontoggle="this.style.borderColor = this.open ? '#8b5cf6' : '#27272a'">
-                <summary style="font-size:1rem;font-weight:600;color:#f4f4f5;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;padding:0.5rem 0;user-select:none;">
+            <details class="faq-accordion-item" ontoggle="this.style.borderColor = this.open ? '#8b5cf6' : 'var(--border)'">
+                <summary class="faq-accordion-summary">
                     <span>How does Veldora handle CLI commands without Symfony Console?</span>
-                    <span style="color:#71717a;font-size:1.25rem;">＋</span>
+                    <span class="faq-chevron-icon" aria-hidden="true">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                    </span>
                 </summary>
-                <div style="font-size:0.95rem;color:#a1a1aa;line-height:1.7;padding:0.75rem 0 0.5rem;border-top:1px solid #27272a;margin-top:0.5rem;">
-                    Every single command in Veldora (48 commands in total) implements native <code>executeDirect()</code> execution. It runs with zero external console dependencies instantly, while also offering full Symfony Console support if installed.
+                <div class="faq-accordion-body">
+                    Every single command in Veldora (51 commands in total) implements native <code>executeDirect()</code> execution. It runs with zero external console dependencies instantly, while also offering full Symfony Console support if installed.
                 </div>
             </details>
 
-            <details style="background:#18181b;border:1px solid #27272a;border-radius:0.75rem;padding:0.75rem 1.25rem;transition:border-color 0.2s;" ontoggle="this.style.borderColor = this.open ? '#8b5cf6' : '#27272a'">
-                <summary style="font-size:1rem;font-weight:600;color:#f4f4f5;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;padding:0.5rem 0;user-select:none;">
+            <details class="faq-accordion-item" ontoggle="this.style.borderColor = this.open ? '#8b5cf6' : 'var(--border)'">
+                <summary class="faq-accordion-summary">
                     <span>How do I add UI components to my project?</span>
-                    <span style="color:#71717a;font-size:1.25rem;">＋</span>
+                    <span class="faq-chevron-icon" aria-hidden="true">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                    </span>
                 </summary>
-                <div style="font-size:0.95rem;color:#a1a1aa;line-height:1.7;padding:0.75rem 0 0.5rem;border-top:1px solid #27272a;margin-top:0.5rem;">
+                <div class="faq-accordion-body">
                     Run <code>php veldora ui:list</code> to view all 41+ available components, and install them into your project using <code>php veldora add button card modal</code>.
                 </div>
             </details>
 
-            <details style="background:#18181b;border:1px solid #27272a;border-radius:0.75rem;padding:0.75rem 1.25rem;transition:border-color 0.2s;" ontoggle="this.style.borderColor = this.open ? '#8b5cf6' : '#27272a'">
-                <summary style="font-size:1rem;font-weight:600;color:#f4f4f5;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;padding:0.5rem 0;user-select:none;">
+            <details class="faq-accordion-item" ontoggle="this.style.borderColor = this.open ? '#8b5cf6' : 'var(--border)'">
+                <summary class="faq-accordion-summary">
                     <span>How is authentication set up?</span>
-                    <span style="color:#71717a;font-size:1.25rem;">＋</span>
+                    <span class="faq-chevron-icon" aria-hidden="true">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                    </span>
                 </summary>
-                <div style="font-size:0.95rem;color:#a1a1aa;line-height:1.7;padding:0.75rem 0 0.5rem;border-top:1px solid #27272a;margin-top:0.5rem;">
+                <div class="faq-accordion-body">
                     Run <code>php veldora make:auth</code> and then <code>php veldora migrate</code>. This creates complete Login, Registration, Password Reset, Profile, and Verification views, controllers, and database migrations.
                 </div>
             </details>
         </div>
 
         <div style="text-align:center;margin-top:1.5rem;">
-            <a href="/faq" style="font-size:0.92rem;font-weight:600;color:#a78bfa;text-decoration:none;display:inline-flex;align-items:center;gap:4px;">
-                View all FAQs & answers &rarr;
+            <a href="/faq" style="font-size:0.92rem;font-weight:600;color:#a78bfa;text-decoration:none;display:inline-flex;align-items:center;gap:6px;">
+                View all FAQs &amp; answers
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
             </a>
         </div>
     </section>

@@ -46,9 +46,32 @@ class ChangelogController
                 'icon'    => 'core',
                 'releases' => [
                     [
+                        'version' => '0.6.0',
+                        'date'    => '2026-09-08',
+                        'tag'     => 'latest',
+                        'added'   => [
+                            '**Blueprint Column Helpers**: Added `date()`, `dateTime()`, `decimal()`, `float()`, `bigInteger()`, `unsignedInteger()`, `foreignId()`, `json()`, and `enum()` column types with SQLite & MySQL SQL compilation',
+                            '**Model ORM Enhancements**: Native `Model::create()`, `Model::firstOrCreate()`, and `Model::updateOrCreate()` implementations',
+                            '**Advanced & Polymorphic Relations**: `HasOneThrough`, `MorphTo`, `MorphOne`, `MorphMany`, `MorphToMany`, and `MorphedByMany` with model helper methods',
+                            '**Relationship QueryBuilder Proxying**: `Relation` base class implements `__call()` forwarding so `$post->comments()->where(...)->count()` works natively',
+                            '**Dedicated HTTP Layer**: Added `JsonResponse`, `RedirectResponse` (with fluent `with()`, `withErrors()`, `withInput()`), `Session`, `UploadedFile`, and `ResponseFactory`',
+                            '**Global HTTP Helpers**: Added `response()` factory helper and enhanced `redirect()`, `back()`, and `json()`',
+                            '**Model Lifecycle Observers**: `Model::observe()` auto-wires observer classes to all lifecycle events (`creating`, `created`, `updating`, `updated`, `saving`, `saved`, `deleting`, `deleted`, `restoring`, `restored`, `forceDeleted`)',
+                            '**Built-in `make:observer` CLI Generator**: Scaffold model observers in `app/Observers/` with `--model=` flag support',
+                            '**Custom Validation Rules & `make:rule`**: Scaffold rule classes implementing `Veldora\Framework\Validation\Rule` with `passes()` and `message()` methods',
+                            '**Built-in `make:policy` CLI Generator**: Scaffold authorization policy classes in `app/Policies/`',
+                            '**51 Built-in CLI Commands**: Complete standalone and Symfony Console dual-mode runner expanded to 51 built-in commands',
+                            '**Comprehensive Test Suite**: Expanded to 110 tests and 458 assertions passing with zero failures',
+                        ],
+                        'fixed'   => [
+                            'Guarded `remember_token` handling in `SessionGuard::login()` and `logout()` to gracefully handle database tables without remember_token column',
+                            'Relationship `get()` alias on `Relation` base class for explicit query resolution',
+                        ],
+                    ],
+                    [
                         'version' => '0.5.7',
                         'date'    => '2026-08-30',
-                        'tag'     => 'latest',
+                        'tag'     => null,
                         'added'   => [
                             '**48 Built-in CLI Commands**: Complete standalone and Symfony Console dual-mode runner with all 48 commands properly wired',
                             '**`executeDirect()` on all commands**: `MakeControllerCommand`, `MakeModelCommand`, `MakeMigrationCommand`, `MakeSeederCommand`, `MakeMiddlewareCommand`, `MakeRequestCommand`, `MakeResourceCommand`, `MakeFactoryCommand`, `DownCommand`, `UpCommand` callable with zero dependencies',
@@ -189,9 +212,19 @@ class ChangelogController
                 'icon'    => 'ui',
                 'releases' => [
                     [
+                        'version' => '0.6.0',
+                        'date'    => '2026-09-08',
+                        'tag'     => 'latest',
+                        'added'   => [
+                            'Synchronized component registry metadata with framework core v0.6.0 release',
+                            'Full verification of all 41+ UI components across Skeuomorphic 3D, Neumorphic Soft UI, Flat Minimalist, and Glassmorphic variants',
+                        ],
+                        'fixed'   => [],
+                    ],
+                    [
                         'version' => '0.5.7',
                         'date'    => '2026-08-30',
-                        'tag'     => 'latest',
+                        'tag'     => null,
                         'added'   => [
                             'Synchronized component registry metadata with framework core v0.5.7 release',
                             '41+ UI components verified and tested across all style variants (Skeuomorphic, Neumorphic, Flat, Glassmorphic)',
@@ -301,9 +334,20 @@ class ChangelogController
                 'icon'    => 'cli',
                 'releases' => [
                     [
+                        'version' => '0.6.0',
+                        'date'    => '2026-09-08',
+                        'tag'     => 'latest',
+                        'added'   => [
+                            'Template updated with `veldora/framework: ^0.6.0` and `veldora/ui: ^0.6.0`',
+                            'Pre-configured 51 working built-in commands including `make:observer`, `make:rule`, and `make:policy` CLI generators',
+                            'Updated starter environment configurations and SQLite auto-initialization',
+                        ],
+                        'fixed'   => [],
+                    ],
+                    [
                         'version' => '0.5.7',
                         'date'    => '2026-08-30',
-                        'tag'     => 'latest',
+                        'tag'     => null,
                         'added'   => [
                             'Template updated with `veldora/framework: ^0.5.7` and `veldora/ui: ^0.5.7`',
                             'Clean starter skeleton without `src/` directory — pure standard PSR-4 MVC structure',
@@ -386,9 +430,19 @@ class ChangelogController
                 'icon'    => 'vscode',
                 'releases' => [
                     [
+                        'version' => '0.6.0',
+                        'date'    => '2026-09-08',
+                        'tag'     => 'latest',
+                        'added'   => [
+                            'Synchronized version with Veldora Core and UI registry v0.6.0',
+                            'Added snippets for new policy generation and directive bindings',
+                        ],
+                        'fixed'   => [],
+                    ],
+                    [
                         'version' => '0.5.6',
                         'date'    => '2026-08-30',
-                        'tag'     => 'latest',
+                        'tag'     => null,
                         'added'   => [
                             '**Multi-Aesthetic Design System Snippets**: Dedicated IntelliSense snippets for Skeuomorphic 3D (`vc-*-skeuo`), Neumorphic (`vc-*-neumorphic`), Glassmorphic (`vc-*-glass`), and Flat Minimalist (`vc-*-flat`) variants across buttons, radios, checkboxes, and switches',
                             '**Modern Template Directives Snippets**: Added `v-props`, `v-slot`, `v-push`, `v-stack`, `v-once`, and `v-error` snippets',
@@ -424,6 +478,39 @@ class ChangelogController
                             'Initial TextMate grammar syntax highlighting for `.veldora.php` and `.veldora` files',
                             '32 core template directive & UI component snippets',
                             'Auto-closing tags, bracket matching, and code folding configuration',
+                        ],
+                        'fixed'   => [],
+                    ],
+                ],
+            ],
+
+            // ── veldora/veldora ──────────────────────────────────────────────────
+            [
+                'repo'    => 'veldora/veldora',
+                'label'   => 'Starter App',
+                'github'  => 'https://github.com/veldorahq/veldora',
+                'color'   => 'purple',
+                'icon'    => 'app',
+                'releases' => [
+                    [
+                        'version' => '0.6.0',
+                        'date'    => '2026-09-08',
+                        'tag'     => 'latest',
+                        'added'   => [
+                            'Upgraded framework core and UI components to `^0.6.0`',
+                            '51 working built-in CLI commands with zero external dependencies',
+                            'Native support for Blueprint `date`, `decimal`, `bigInteger`, and `foreignId` column helpers',
+                            'Pre-configured SQLite database, environment encryption, and session auth guards',
+                        ],
+                        'fixed'   => [],
+                    ],
+                    [
+                        'version' => '0.5.7',
+                        'date'    => '2026-08-30',
+                        'tag'     => null,
+                        'added'   => [
+                            'Synchronized starter template dependencies with v0.5.7 release',
+                            'Integrated 48 built-in CLI commands and standalone runner',
                         ],
                         'fixed'   => [],
                     ],

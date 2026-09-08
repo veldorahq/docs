@@ -15,7 +15,7 @@ class ExtensionController
     public function index(Request $request): Response
     {
         $html = $this->view->render('pages.extension', [
-            'version'     => '0.5.3',
+            'version'     => '0.6.0',
             'downloads'   => '1,200+',
             'marketplace' => 'https://marketplace.visualstudio.com/items?itemName=veldora.veldora-vscode',
             'github'      => 'https://github.com/veldorahq/veldora-vscode',

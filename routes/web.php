@@ -12,6 +12,7 @@ $router->get('/docs', [App\Controllers\DocsController::class, 'index']);
 $router->get('/docs/{section}', [App\Controllers\DocsController::class, 'section']);
 
 // AI Context & Skill Downloads
+$router->get('/download/veldora-ai-prompt', [App\Controllers\DocsController::class, 'downloadPrompt']);
 $router->get('/download/veldora-ai-prompt.md', [App\Controllers\DocsController::class, 'downloadPrompt']);
 
 // VS Code Extension page
