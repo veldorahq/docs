@@ -46,10 +46,24 @@ class ChangelogController
                 'icon'    => 'core',
                 'releases' => [
                     [
-                        'version' => '0.6.0',
-                        'date'    => '2026-09-08',
+                        'version' => '0.7.0',
+                        'date'    => '2026-09-12',
                         'tag'     => 'latest',
                         'added'   => [
+                            '**Veldora Connect Ecosystem**: Framework v0.7.0 is the stable foundation for the `veldora-connect` integration monorepo, starting with `veldora/connect-stripe`',
+                            'Compatibility verified with `veldora/connect-stripe ^0.7.0` service provider auto-discovery and container binding',
+                            '`php veldora connect [service]` CLI command — install integrations, publish config, and view setup instructions from the terminal',
+                            '52 built-in CLI commands (added `connect` to the suite)',
+                        ],
+                        'fixed'   => [
+                            'Stability improvements and dependency compatibility for third-party package integration',
+                            'Connect service provider auto-wiring support validated across all container resolution paths',
+                        ],
+                    ],
+                    [
+                        'version' => '0.6.0',
+                        'date'    => '2026-09-08',
+                        'tag'     => null,
                             '**Blueprint Column Helpers**: Added `date()`, `dateTime()`, `decimal()`, `float()`, `bigInteger()`, `unsignedInteger()`, `foreignId()`, `json()`, and `enum()` column types with SQLite & MySQL SQL compilation',
                             '**Model ORM Enhancements**: Native `Model::create()`, `Model::firstOrCreate()`, and `Model::updateOrCreate()` implementations',
                             '**Advanced & Polymorphic Relations**: `HasOneThrough`, `MorphTo`, `MorphOne`, `MorphMany`, `MorphToMany`, and `MorphedByMany` with model helper methods',
@@ -212,9 +226,19 @@ class ChangelogController
                 'icon'    => 'ui',
                 'releases' => [
                     [
+                        'version' => '0.7.0',
+                        'date'    => '2026-09-12',
+                        'tag'     => 'latest',
+                        'added'   => [
+                            'Synchronized component registry metadata with framework core v0.7.0 release',
+                            'Compatibility verified with Veldora Connect ecosystem (`veldora/connect-stripe`)',
+                        ],
+                        'fixed'   => [],
+                    ],
+                    [
                         'version' => '0.6.0',
                         'date'    => '2026-09-08',
-                        'tag'     => 'latest',
+                        'tag'     => null,
                         'added'   => [
                             'Synchronized component registry metadata with framework core v0.6.0 release',
                             'Full verification of all 41+ UI components across Skeuomorphic 3D, Neumorphic Soft UI, Flat Minimalist, and Glassmorphic variants',
@@ -334,9 +358,21 @@ class ChangelogController
                 'icon'    => 'cli',
                 'releases' => [
                     [
+                        'version' => '0.7.0',
+                        'date'    => '2026-09-12',
+                        'tag'     => 'latest',
+                        'added'   => [
+                            'Template updated with `veldora/framework: ^0.7.0` and `veldora/ui: ^0.7.0`',
+                            'Scaffold template compatible with `veldora/connect-stripe` Stripe integration',
+                        ],
+                        'fixed'   => [
+                            'Template `.gitattributes` export-ignore rules — `composer create-project` now only downloads application files (no `.github/`, `CHANGELOG.md`, governance docs, or `tests/`)',
+                        ],
+                    ],
+                    [
                         'version' => '0.6.0',
                         'date'    => '2026-09-08',
-                        'tag'     => 'latest',
+                        'tag'     => null,
                         'added'   => [
                             'Template updated with `veldora/framework: ^0.6.0` and `veldora/ui: ^0.6.0`',
                             'Pre-configured 51 working built-in commands including `make:observer`, `make:rule`, and `make:policy` CLI generators',
@@ -430,9 +466,18 @@ class ChangelogController
                 'icon'    => 'vscode',
                 'releases' => [
                     [
+                        'version' => '0.7.0',
+                        'date'    => '2026-09-12',
+                        'tag'     => 'latest',
+                        'added'   => [
+                            'Synchronized version with Veldora Core v0.7.0 and Connect ecosystem launch',
+                        ],
+                        'fixed'   => [],
+                    ],
+                    [
                         'version' => '0.6.0',
                         'date'    => '2026-09-08',
-                        'tag'     => 'latest',
+                        'tag'     => null,
                         'added'   => [
                             'Synchronized version with Veldora Core and UI registry v0.6.0',
                             'Added snippets for new policy generation and directive bindings',
@@ -493,9 +538,20 @@ class ChangelogController
                 'icon'    => 'app',
                 'releases' => [
                     [
+                        'version' => '0.7.0',
+                        'date'    => '2026-09-12',
+                        'tag'     => 'latest',
+                        'added'   => [
+                            'Upgraded framework core and UI components to `^0.7.0`',
+                            'Compatible with `veldora/connect-stripe` for Stripe payment integration',
+                            'Fixed `.gitattributes` export-ignore — `composer create-project` now downloads only the application skeleton',
+                        ],
+                        'fixed'   => [],
+                    ],
+                    [
                         'version' => '0.6.0',
                         'date'    => '2026-09-08',
-                        'tag'     => 'latest',
+                        'tag'     => null,
                         'added'   => [
                             'Upgraded framework core and UI components to `^0.6.0`',
                             '51 working built-in CLI commands with zero external dependencies',
@@ -511,6 +567,52 @@ class ChangelogController
                         'added'   => [
                             'Synchronized starter template dependencies with v0.5.7 release',
                             'Integrated 48 built-in CLI commands and standalone runner',
+                        ],
+                        'fixed'   => [],
+                    ],
+                ],
+            ],
+
+            // ── veldora/connect ──────────────────────────────────────────────────
+            [
+                'repo'    => 'veldora/connect',
+                'label'   => 'Connect',
+                'github'  => 'https://github.com/veldorahq/connect',
+                'color'   => 'green',
+                'icon'    => 'connect',
+                'releases' => [
+                    [
+                        'version' => '0.7.1',
+                        'date'    => '2026-09-15',
+                        'tag'     => 'latest',
+                        'added'   => [
+                            '`Stripe` Facade (`Veldora\\Connect\\Stripe\\Facades\\Stripe`) for static access to all Stripe services',
+                            '`stripe()` global helper function — use `stripe()->checkout()->create([...])` anywhere in your app',
+                            '`php veldora connect stripe` CLI command — installs the integration, publishes config, and prints setup instructions',
+                        ],
+                        'fixed'   => [
+                            'Root `veldora/connect` package type changed from `project` to `library` — now fully installable via `composer require veldora/connect`',
+                            'Root `composer.json` declares proper `require` (`veldora/framework`, `stripe/stripe-php`) and autoloading',
+                            '`StripeServiceProvider` container calls use `get()` for full compatibility with Veldora 0.6.x and 0.7.x',
+                            '`config/stripe.php` now supports fallback env keys: `STRIPE_SECRET` / `STRIPE_KEY` / `STRIPE_CURRENCY`',
+                            '`replace: veldora/connect-stripe` declared so `composer require veldora/connect` satisfies any dependency on `veldora/connect-stripe`',
+                        ],
+                    ],
+                    [
+                        'version' => '0.7.0',
+                        'date'    => '2026-09-12',
+                        'tag'     => null,
+                        'added'   => [
+                            '**Official Stripe Integration (`veldora/connect-stripe`)**: Full support for Veldora Framework `^0.6.0|^0.7.0`',
+                            '`StripeClient` wrapper with auto-configuration from `.env` and `config/stripe.php`',
+                            '`StripeServiceProvider` with automatic container binding (`stripe` and `StripeClient::class`)',
+                            'Checkout Session creation and retrieval helpers',
+                            'PaymentIntent creation, confirmation, and capture helpers',
+                            'Customer management (create, retrieve, update, delete)',
+                            'Webhook event verification and parsing',
+                            'Robust error handling wrapping Stripe API exceptions with detailed context',
+                            'Complete test suite with 33 unit and integration tests passing',
+                            'Monorepo structure with future roadmap: SSLCommerz, Resend, S3, Sentry',
                         ],
                         'fixed'   => [],
                     ],
