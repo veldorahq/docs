@@ -43,7 +43,7 @@
             <div class="about-pillar-icon">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
             </div>
-            <h3 class="about-pillar-title">51 Built-in Commands</h3>
+            <h3 class="about-pillar-title">53 Built-in Commands</h3>
             <p class="about-pillar-desc">
                 Complete CLI suite with <code>executeDirect()</code> technology, enabling instant execution in any environment or container.
             </p>

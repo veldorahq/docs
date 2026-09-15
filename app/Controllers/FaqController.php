@@ -65,7 +65,7 @@ class FaqController
                 'items' => [
                     [
                         'q' => 'How many CLI commands are included?',
-                        'a' => 'Veldora includes <strong>48 built-in CLI commands</strong> covering application serving, diagnostics, generators (<code>make:*</code>), database migrations, seeding, caching, maintenance mode, queue processing, and UI component management.',
+                        'a' => 'Veldora includes <strong>53 built-in CLI commands</strong> covering application serving, diagnostics, generators (<code>make:*</code>), database migrations, seeding, caching, maintenance mode, queue processing, UI component management, and ecosystem integrations (<code>connect</code>).',
                     ],
                     [
                         'q' => 'How does Maintenance Mode work in Veldora?',
@@ -73,7 +73,7 @@ class FaqController
                     ],
                     [
                         'q' => 'Can I run commands without Symfony Console installed?',
-                        'a' => 'Yes! All 48 commands implement native <code>executeDirect()</code> execution, meaning they work seamlessly in minimalist environments and shared hosting without requiring Symfony Console packages.',
+                        'a' => 'Yes! All 53 commands implement native <code>executeDirect()</code> execution, meaning they work seamlessly in minimalist environments and shared hosting without requiring Symfony Console packages.',
                     ],
                 ],
             ],

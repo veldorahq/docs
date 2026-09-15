@@ -1009,9 +1009,9 @@ $validated = $request->validate([
 
 ---
 
-## 10. CLI Console & 51 Built-in Commands
+## 10. CLI Console & 53 Built-in Commands
 
-Veldora includes a powerful, zero-dependency CLI runner (`php veldora`) featuring **51 built-in commands**. Powered by `executeDirect()`, every command executes instantly in both zero-dependency environments and standard Symfony Console environments.
+Veldora includes a powerful, zero-dependency CLI runner (`php veldora`) featuring **53 built-in commands**. Powered by `executeDirect()`, every command executes instantly in both zero-dependency environments and standard Symfony Console environments.
 
 ```bash
 php veldora <command> [options]
@@ -1103,6 +1103,12 @@ php veldora <command> [options]
 |---|---|
 | `php veldora ui:list` | List all 41+ available UI components and their installation status |
 | `php veldora add <components...>` | Install UI components into `resources/views/components/` (e.g. `php veldora add button card modal`) |
+
+### Integrations & Ecosystem
+
+| Command | Description |
+|---|---|
+| `php veldora connect <service>` | Install & configure official Veldora Connect packages (e.g. `php veldora connect stripe`) |
 
 
 ---

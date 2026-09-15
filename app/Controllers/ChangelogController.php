@@ -53,7 +53,7 @@ class ChangelogController
                             '**Veldora Connect Ecosystem**: Framework v0.7.0 is the stable foundation for the `veldora-connect` integration monorepo, starting with `veldora/connect-stripe`',
                             'Compatibility verified with `veldora/connect-stripe ^0.7.0` service provider auto-discovery and container binding',
                             '`php veldora connect [service]` CLI command — install integrations, publish config, and view setup instructions from the terminal',
-                            '52 built-in CLI commands (added `connect` to the suite)',
+                            '**53 Built-in CLI Commands**: Added `connect [service]` command to the suite, expanding CLI to 53 built-in commands with dual-mode runner',
                         ],
                         'fixed'   => [
                             'Stability improvements and dependency compatibility for third-party package integration',

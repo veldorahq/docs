@@ -84,7 +84,7 @@ $router->post(\'/logout\', [AuthController::class, \'logout\'])->middleware([\'a
                 <div class="stat-label">UI Components</div>
             </div>
             <div class="stat-item">
-                <div class="stat-number">51+</div>
+                <div class="stat-number">53+</div>
                 <div class="stat-label">CLI Commands</div>
             </div>
             <div class="stat-item">
@@ -301,7 +301,7 @@ php veldora serve
                     </span>
                 </summary>
                 <div class="faq-accordion-body">
-                    Every single command in Veldora (51 commands in total) implements native <code>executeDirect()</code> execution. It runs with zero external console dependencies instantly, while also offering full Symfony Console support if installed.
+                    Every single command in Veldora (53 commands in total) implements native <code>executeDirect()</code> execution. It runs with zero external console dependencies instantly, while also offering full Symfony Console support if installed.
                 </div>
             </details>
 
