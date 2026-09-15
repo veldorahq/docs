@@ -39,7 +39,7 @@ cp .env.example .env
 composer install
 
 # Start development server
-php -S localhost:8080 -t public/
+php veldora serve
 ```
 
 Then visit `http://localhost:8080` in your browser.
