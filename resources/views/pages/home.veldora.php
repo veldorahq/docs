@@ -12,7 +12,7 @@
 
         <div class="hero-badge">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-            <span>v<?= \Veldora\Framework\Foundation\Application::VERSION ?> &mdash; Modern PHP 8.2+ MVC Framework</span>
+            <span>v0.7.1 &mdash; Modern PHP 8.2+ MVC Framework</span>
         </div>
 
         <h1 class="hero-title">
