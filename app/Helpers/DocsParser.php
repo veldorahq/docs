@@ -190,6 +190,10 @@ class DocsParser
             'ai-skills'              => '22-ai-context-prompt-ai-skills',
             'observers'              => '23-model-observers-lifecycle-hooks',
             'model-observers'        => '23-model-observers-lifecycle-hooks',
+            'connect'                => '24-veldora-connect-integrations-ecosystem',
+            'veldora-connect'        => '24-veldora-connect-integrations-ecosystem',
+            'stripe'                 => '24-veldora-connect-integrations-ecosystem',
+            'integrations'           => '24-veldora-connect-integrations-ecosystem',
         ];
 
         if (isset($aliases[$slug])) {

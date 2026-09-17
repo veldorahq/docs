@@ -46,9 +46,19 @@ class ChangelogController
                 'icon'    => 'core',
                 'releases' => [
                     [
+                        'version' => '0.7.1',
+                        'date'    => '2026-09-17',
+                        'tag'     => 'latest',
+                        'added'   => [],
+                        'fixed'   => [
+                            '**CLI Development Server (`serve`)**: Fixed issue #8 where static assets in `public/` (e.g. `/css/veldora-ui.css`, `/favicon.svg`) returned 404 when started via `php veldora serve`. Added `-t public` document root parameter alongside `server.php` router script.',
+                            '**Project Base Directory Validation**: Resolved `public/` directory and `server.php` existence using project base `$appBase` rather than relative working directory paths.',
+                        ],
+                    ],
+                    [
                         'version' => '0.7.0',
                         'date'    => '2026-09-12',
-                        'tag'     => 'latest',
+                        'tag'     => null,
                         'added'   => [
                             '**Veldora Connect Ecosystem**: Framework v0.7.0 is the stable foundation for the `veldora-connect` integration monorepo, starting with `veldora/connect-stripe`',
                             'Compatibility verified with `veldora/connect-stripe ^0.7.0` service provider auto-discovery and container binding',
@@ -64,6 +74,7 @@ class ChangelogController
                         'version' => '0.6.0',
                         'date'    => '2026-09-08',
                         'tag'     => null,
+                        'added'   => [
                             '**Blueprint Column Helpers**: Added `date()`, `dateTime()`, `decimal()`, `float()`, `bigInteger()`, `unsignedInteger()`, `foreignId()`, `json()`, and `enum()` column types with SQLite & MySQL SQL compilation',
                             '**Model ORM Enhancements**: Native `Model::create()`, `Model::firstOrCreate()`, and `Model::updateOrCreate()` implementations',
                             '**Advanced & Polymorphic Relations**: `HasOneThrough`, `MorphTo`, `MorphOne`, `MorphMany`, `MorphToMany`, and `MorphedByMany` with model helper methods',
@@ -358,9 +369,20 @@ class ChangelogController
                 'icon'    => 'cli',
                 'releases' => [
                     [
+                        'version' => '0.7.1',
+                        'date'    => '2026-09-17',
+                        'tag'     => 'latest',
+                        'added'   => [
+                            'Template updated with `veldora/framework: ^0.7.1`',
+                        ],
+                        'fixed'   => [
+                            'Updated `template/veldora` serve runner to include `-t public` document root parameter and project root validation for static asset support',
+                        ],
+                    ],
+                    [
                         'version' => '0.7.0',
                         'date'    => '2026-09-12',
-                        'tag'     => 'latest',
+                        'tag'     => null,
                         'added'   => [
                             'Template updated with `veldora/framework: ^0.7.0` and `veldora/ui: ^0.7.0`',
                             'Scaffold template compatible with `veldora/connect-stripe` Stripe integration',
@@ -538,9 +560,21 @@ class ChangelogController
                 'icon'    => 'app',
                 'releases' => [
                     [
+                        'version' => '0.7.1',
+                        'date'    => '2026-09-17',
+                        'tag'     => 'latest',
+                        'added'   => [
+                            'Starter dependencies upgraded to `veldora/framework: ^0.7.1`',
+                        ],
+                        'fixed'   => [
+                            '**CLI Development Server (`serve`)**: Fixed issue #8 where static assets in `public/` (e.g. `/css/veldora-ui.css`, `/favicon.svg`) returned 404 when started via `php veldora serve`. Added `-t public` document root parameter alongside `server.php` router script.',
+                            '**Project Base Directory Validation**: Development server now validates `public/` directory existence and resolves paths using project base `$appBase` rather than relative working directory paths.',
+                        ],
+                    ],
+                    [
                         'version' => '0.7.0',
                         'date'    => '2026-09-12',
-                        'tag'     => 'latest',
+                        'tag'     => null,
                         'added'   => [
                             'Upgraded framework core and UI components to `^0.7.0`',
                             'Compatible with `veldora/connect-stripe` for Stripe payment integration',

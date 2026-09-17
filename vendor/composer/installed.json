@@ -117,27 +117,32 @@
         },
         {
             "name": "veldora/framework",
-            "version": "0.5.6",
-            "version_normalized": "0.5.6.0",
+            "version": "0.7.1",
+            "version_normalized": "0.7.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/veldorahq/veldora-core.git",
-                "reference": "bba9399184899d4c79471586ed72e5008e600bbc"
+                "reference": "20d9f10a65da86e5fc823caa4c780be09a514491"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/veldorahq/veldora-core/zipball/bba9399184899d4c79471586ed72e5008e600bbc",
-                "reference": "bba9399184899d4c79471586ed72e5008e600bbc",
+                "url": "https://api.github.com/repos/veldorahq/veldora-core/zipball/20d9f10a65da86e5fc823caa4c780be09a514491",
+                "reference": "20d9f10a65da86e5fc823caa4c780be09a514491",
                 "shasum": ""
             },
             "require": {
                 "php": "^8.2 || ^8.3",
                 "psr/container": "^2.0"
             },
+            "require-dev": {
+                "phpstan/phpstan": "^1.10",
+                "phpunit/phpunit": "^10.5 || ^11.0",
+                "symfony/console": "^6.4 || ^7.0"
+            },
             "suggest": {
                 "symfony/console": "Required only if using the full Symfony Console integration (^6.0|^7.0). A built-in polyfill is included for zero-dependency environments."
             },
-            "time": "2026-08-30T12:33:34+00:00",
+            "time": "2026-09-15T18:13:09+00:00",
             "bin": [
                 "bin/veldora"
             ],
@@ -173,30 +178,30 @@
             ],
             "support": {
                 "issues": "https://github.com/veldorahq/veldora-core/issues",
-                "source": "https://github.com/veldorahq/veldora-core/tree/v0.5.6"
+                "source": "https://github.com/veldorahq/veldora-core/tree/v0.7.0"
             },
             "install-path": "../veldora/framework"
         },
         {
             "name": "veldora/ui",
-            "version": "0.5.6",
-            "version_normalized": "0.5.6.0",
+            "version": "0.7.0",
+            "version_normalized": "0.7.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/veldorahq/veldora-ui.git",
-                "reference": "bdc1fb316f626f36076a326725ce2df387f7d75e"
+                "reference": "9c79f7a3e5c6bec883b7381a41034fcdf455b0e7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/veldorahq/veldora-ui/zipball/bdc1fb316f626f36076a326725ce2df387f7d75e",
-                "reference": "bdc1fb316f626f36076a326725ce2df387f7d75e",
+                "url": "https://api.github.com/repos/veldorahq/veldora-ui/zipball/9c79f7a3e5c6bec883b7381a41034fcdf455b0e7",
+                "reference": "9c79f7a3e5c6bec883b7381a41034fcdf455b0e7",
                 "shasum": ""
             },
             "require": {
                 "php": "^8.2",
                 "veldora/framework": "*"
             },
-            "time": "2026-08-30T12:33:38+00:00",
+            "time": "2026-09-15T17:24:54+00:00",
             "type": "library",
             "extra": {
                 "veldora": {
@@ -228,7 +233,7 @@
             ],
             "support": {
                 "issues": "https://github.com/veldorahq/veldora-ui/issues",
-                "source": "https://github.com/veldorahq/veldora-ui/tree/v0.5.6"
+                "source": "https://github.com/veldorahq/veldora-ui/tree/v0.7.0"
             },
             "install-path": "../veldora/ui"
         }

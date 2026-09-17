@@ -1009,9 +1009,9 @@ $validated = $request->validate([
 
 ---
 
-## 10. CLI Console & 53 Built-in Commands
+## 10. CLI Console & 51 Built-in Commands
 
-Veldora includes a powerful, zero-dependency CLI runner (`php veldora`) featuring **53 built-in commands**. Powered by `executeDirect()`, every command executes instantly in both zero-dependency environments and standard Symfony Console environments.
+Veldora includes a powerful, zero-dependency CLI runner (`php veldora`) featuring **51 built-in commands**. Powered by `executeDirect()`, every command executes instantly in both zero-dependency environments and standard Symfony Console environments.
 
 ```bash
 php veldora <command> [options]
@@ -1103,12 +1103,6 @@ php veldora <command> [options]
 |---|---|
 | `php veldora ui:list` | List all 41+ available UI components and their installation status |
 | `php veldora add <components...>` | Install UI components into `resources/views/components/` (e.g. `php veldora add button card modal`) |
-
-### Integrations & Ecosystem
-
-| Command | Description |
-|---|---|
-| `php veldora connect <service>` | Install & configure official Veldora Connect packages (e.g. `php veldora connect stripe`) |
 
 
 ---
@@ -2987,7 +2981,180 @@ User::observe(new UserObserver());
 | `restored` | After a soft-deleted record has been restored |
 | `forceDeleted` | After a record is permanently removed from the database |
 
-> [!TIP]
 > Returning `false` from a `creating`, `updating`, `saving`, or `deleting` observer method will cancel the database operation immediately.
 
+
+---
+
+## 24. Veldora Connect — Integrations Ecosystem
+
+**Veldora Connect** is the official first-party integrations monorepo for the Veldora Framework. It provides battle-tested, production-ready connectors for essential third-party services, starting with payment gateways.
+
+> Install only what you need — each integration is an independent Composer package.
+
+### Available Packages
+
+| Package | Status | Description |
+|---|---|---|
+| `veldora/connect-stripe` | **Active (v0.7.0)** | Stripe payment gateway — Checkout, PaymentIntents, Customers, Webhooks |
+| `veldora/connect-sslcommerz` | *Upcoming* | SSLCommerz payment gateway for Bangladesh |
+| `veldora/connect-resend` | *Upcoming* | Resend transactional email service |
+| `veldora/connect-s3` | *Upcoming* | AWS S3 / S3-compatible cloud storage |
+| `veldora/connect-sentry` | *Upcoming* | Sentry crash reporting & telemetry |
+
+---
+
+### Stripe Integration (`veldora/connect-stripe`)
+
+#### Installation
+
+```bash
+composer require veldora/connect-stripe
+```
+
+#### Environment Configuration
+
+Add your Stripe API keys to `.env`:
+
+```ini
+STRIPE_KEY=pk_test_...
+STRIPE_SECRET=sk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+STRIPE_CURRENCY=usd
+```
+
+#### Service Provider (if not auto-discovered)
+
+```php
+// config/app.php
+'providers' => [
+    // ...
+    Veldora\Connect\Stripe\StripeServiceProvider::class,
+],
+```
+
+#### Checkout Session
+
+Create a Stripe Checkout session and redirect the user:
+
+```php
+use Veldora\Connect\Stripe\Facades\Stripe;
+
+Route::post('/checkout', function () {
+    $session = Stripe::checkout()->create([
+        'payment_method_types' => ['card'],
+        'line_items' => [[
+            'price_data' => [
+                'currency'     => 'usd',
+                'product_data' => ['name' => 'Veldora Pro'],
+                'unit_amount'  => 2000,
+            ],
+            'quantity' => 1,
+        ]],
+        'mode'        => 'payment',
+        'success_url' => url('/success?session_id={CHECKOUT_SESSION_ID}'),
+        'cancel_url'  => url('/cancel'),
+    ]);
+
+    return redirect($session->url);
+});
+```
+
+#### PaymentIntents
+
+```php
+use Veldora\Connect\Stripe\Facades\Stripe;
+
+// Create a PaymentIntent
+$intent = Stripe::paymentIntents()->create([
+    'amount'   => 2000,
+    'currency' => 'usd',
+]);
+
+// Confirm a PaymentIntent
+$confirmed = Stripe::paymentIntents()->confirm($intent->id, [
+    'payment_method' => 'pm_card_visa',
+]);
+```
+
+#### Customer Management
+
+```php
+use Veldora\Connect\Stripe\Facades\Stripe;
+
+// Create
+$customer = Stripe::customers()->create([
+    'email' => 'user@example.com',
+    'name'  => 'John Doe',
+]);
+
+// Retrieve
+$customer = Stripe::customers()->retrieve($customer->id);
+
+// Update
+Stripe::customers()->update($customer->id, ['name' => 'Jane Doe']);
+
+// Delete
+Stripe::customers()->delete($customer->id);
+```
+
+#### Webhook Handling
+
+Verify and process incoming Stripe webhook events:
+
+```php
+use Veldora\Connect\Stripe\Facades\Stripe;
+use Veldora\Framework\Http\Request;
+use Veldora\Framework\Http\Response;
+
+Route::post('/webhook/stripe', function (Request $request) {
+    $payload   = $request->getContent();
+    $sigHeader = $request->header('stripe-signature');
+
+    try {
+        $event = Stripe::webhook()->constructEvent(
+            $payload,
+            $sigHeader,
+            config('stripe.webhook_secret')
+        );
+
+        match ($event->type) {
+            'checkout.session.completed' => handleCheckout($event->data->object),
+            'payment_intent.succeeded'   => handlePayment($event->data->object),
+            default                      => null,
+        };
+
+        return Response::json(['status' => 'success']);
+    } catch (\Exception $e) {
+        return Response::json(['error' => $e->getMessage()], 400);
+    }
+});
+```
+
+#### Facade Reference
+
+| Method | Description |
+|---|---|
+| `Stripe::checkout()->create($params)` | Create a Checkout Session |
+| `Stripe::checkout()->retrieve($id)` | Retrieve a Checkout Session |
+| `Stripe::paymentIntents()->create($params)` | Create a PaymentIntent |
+| `Stripe::paymentIntents()->confirm($id, $params)` | Confirm a PaymentIntent |
+| `Stripe::paymentIntents()->capture($id)` | Capture a PaymentIntent |
+| `Stripe::customers()->create($params)` | Create a Customer |
+| `Stripe::customers()->retrieve($id)` | Retrieve a Customer |
+| `Stripe::customers()->update($id, $params)` | Update a Customer |
+| `Stripe::customers()->delete($id)` | Delete a Customer |
+| `Stripe::webhook()->constructEvent($payload, $sig, $secret)` | Verify & parse a webhook |
+
+> [!NOTE]
+> All Connect packages use the Veldora service container. The `stripe` binding and `StripeClient::class` binding are both registered automatically by `StripeServiceProvider`.
+
+> [!TIP]
+> Connect packages fire Veldora events on webhook dispatch: `StripeWebhookHandled` (success) and `StripeWebhookFailed` (on exception). Listen to them via the standard Veldora event system.
+
+---
+
+### Connect Repository
+
+Source code and full monorepo: [github.com/veldorahq/connect](https://github.com/veldorahq/connect)
 
